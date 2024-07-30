@@ -110,17 +110,15 @@ name = "PGP Key"
 url = "https://keys.openpgp.org/vks/v1/by-fingerprint/FDEAA5F05C3B8D3A9A96DC7DE4465C42D44B171A"
 params.icon = "brand-key"
 
-[Params.comment]
-enabled = false
+[Params.Comments]
+enabled = true
 provider = "giscus"
 
-[Params.comments.giscus]
-repo = ""
-repoID = ""
-category = ""
-categoryID = ""
-mapping = ""
-lightTheme = ""
-darkTheme = ""
+[Params.Comments.Giscus]
+repo = "ShadowObj/blog"
+repoID = "R_kgDOMcbEhw"
+category = "Announcements"
+categoryID = "DIC_kwDOMcbEh84ChRoq"
+mapping = "pathname"
 reactionsEnabled = 1
 emitMetadata = 0
