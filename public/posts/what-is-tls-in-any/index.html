@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="流量分类? 这是什么闻所未闻的审查策略? TLS代理仍安全、隐蔽吗? 它离我们还有多远?">
+<title>流量分类精准识别代理? 初探TLS in Any问题</title>
+
+<link rel='canonical' href='//localhost:1313/posts/what-is-tls-in-any/'>
+
+<link rel="stylesheet" href="/scss/style.min.ae2a4e04ef264c0cb8e5d2ea5cd5145aded59fea9df95c01bfe9d95529a8baa3.css"><meta property='og:title' content="流量分类精准识别代理? 初探TLS in Any问题">
+<meta property='og:description' content="流量分类? 这是什么闻所未闻的审查策略? TLS代理仍安全、隐蔽吗? 它离我们还有多远?">
+<meta property='og:url' content='//localhost:1313/posts/what-is-tls-in-any/'>
+<meta property='og:site_name' content='ObjShadow&#39;s Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts' /><meta property='article:published_time' content='2024-07-29T20:00:00&#43;08:00'/><meta property='article:modified_time' content='2024-07-29T20:00:00&#43;08:00'/>
+<meta name="twitter:title" content="流量分类精准识别代理? 初探TLS in Any问题">
+<meta name="twitter:description" content="流量分类? 这是什么闻所未闻的审查策略? TLS代理仍安全、隐蔽吗? 它离我们还有多远?">
+  
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/avatar_hude6f86a7b4117462b6b69e18024e8d1b_51140_300x0_resize_q75_box.jpg" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">👀</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="//localhost:1313/">ObjShadow&#39;s Blog</a></h1>
+            <h2 class="site-description">May a Censorship Researcher.</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='mailto:shadowobject@protonmail.com'
+                        target="_blank"
+                        title="Email"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-mail"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" /><path d="M3 7l9 6l9 -6" /></svg>
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://keys.openpgp.org/vks/v1/by-fingerprint/FDEAA5F05C3B8D3A9A96DC7DE4465C42D44B171A'
+                        target="_blank"
+                        title="PGP Key"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-key"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M16.555 3.843l3.602 3.602a2.877 2.877 0 0 1 0 4.069l-2.643 2.643a2.877 2.877 0 0 1 -4.069 0l-.301 -.301l-6.558 6.558a2 2 0 0 1 -1.239 .578l-.175 .008h-1.172a1 1 0 0 1 -.993 -.883l-.007 -.117v-1.172a2 2 0 0 1 .467 -1.284l.119 -.13l.414 -.414h2v-2h2v-2l2.144 -2.144l-.301 -.301a2.877 2.877 0 0 1 0 -4.069l2.643 -2.643a2.877 2.877 0 0 1 4.069 0z" /><path d="M15 9h.01" /></svg>
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://signal.me/#eu/1-a3Slz1elCbLBF_RkBBZbhlwoA47hFcTChiP7lq_2yrjuoClBJFF6ZF_ij4ORo_'
+                        target="_blank"
+                        title="Signal"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-message-circle"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 20l1.3 -3.9c-2.324 -3.437 -1.426 -7.872 2.1 -10.374c3.526 -2.501 8.59 -2.296 11.845 .48c3.255 2.777 3.695 7.266 1.029 10.501c-2.666 3.235 -7.615 4.215 -11.574 2.293l-4.7 1" /></svg>
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://t.me/objshadow'
+                        target="_blank"
+                        title="Telegram"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-brand-telegram"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4" /></svg>
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com/objectshadow'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#ℹ-前言">ℹ️ 前言</a></li>
+        <li><a href="#-tls-in-any问题是什么导致的">🔍 TLS in Any问题是什么导致的?</a></li>
+        <li><a href="#为什么tls-in-any问题需要得到重视">🤔为什么TLS in Any问题需要得到重视?</a></li>
+        <li><a href="#基于流量分类的审查策略带来的启示">💡基于流量分类的审查策略带来的启示</a></li>
+        <li><a href="#针对tls-in-any问题的设想规避策略">🧰针对TLS in Any问题的设想规避策略</a></li>
+        <li><a href="#审查者大规模部署基于流量分类的审查策略的几个挑战">🧱审查者大规模部署基于流量分类的审查策略的几个挑战</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%8F%8D%E5%AE%A1%E6%9F%A5/" >
+                反审查
+            </a>
+        
+            <a href="/categories/%E6%B5%81%E9%87%8F%E5%88%86%E7%B1%BB/" >
+                流量分类
+            </a>
+        
+            <a href="/categories/tls/" >
+                TLS
+            </a>
+        
+            <a href="/categories/%E4%BB%A3%E7%90%86/" >
+                代理
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/posts/what-is-tls-in-any/">流量分类精准识别代理? 初探TLS in Any问题</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            流量分类? 这是什么闻所未闻的审查策略? TLS代理仍安全、隐蔽吗? 它离我们还有多远?
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2024-07-29 PM</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    11 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <p>📢首先回答上面提出的问题 <del>请看VCR</del>：</p>
+<ol>
+<li>
+<p>流量分类，是指<strong>在不破坏数据原有加密、完整性</strong>的前提下，通过<strong>被动地</strong>记录流量的某些可见指标，来判断流量来源或目的地的某些特征，比如属于什么类型的客户端、什么类型的服务器、是什么用途的流量。</p>
+</li>
+<li>
+<p>这种审查策略的确是闻所未闻的；在学术领域提出基于流量分类的审查策略之前，人们和审查者注意的重点都是将流量中<strong>特定位置的数据</strong>与某些数据集作匹配、或是观察客户端/服务端对精心构造的数据包的<strong>特定反应</strong>，以此来实现审查目的(同时配合网络测量等方式探索反审查策略)。</p>
+</li>
+<li>
+<p>TLS代理仍然<strong>安全</strong>，但是截至文章发布，所有已投入使用的开源TLS代理在下面提到的<a class="link" href="https://www.usenix.org/conference/usenixsecurity24/presentation/xue-fingerprinting"  target="_blank" rel="noopener"
+    >论文</a>的实验数据中都属于<strong>隐蔽性存疑</strong>的一类，包括一些<strong>使用了多路复用</strong>的代理实现。</p>
+<p>注意: 在这里我们需要明确&quot;安全性&quot;和&quot;隐蔽性&quot;的区别。在反审查的语境下，安全性一般指在目前算力条件下，数据在<strong>不可信通道</strong>中传输时的<strong>不可见性</strong>和<strong>完整性</strong>；而隐蔽性一般指数据在不可信通道中传输时与<strong>某些特定数据</strong>的<strong>负相似性</strong>。</p>
+</li>
+</ol>
+<p>下面我们进入正文。</p>
+<p>之所以写这篇普及向的文章，是因为今年初我在<a class="link" href="https://censoredplanet.org/"  target="_blank" rel="noopener"
+    >Censored Planet</a>上看到一篇名为&quot;<a class="link" href="https://www.usenix.org/conference/usenixsecurity24/presentation/xue-fingerprinting"  target="_blank" rel="noopener"
+    >Fingerprinting Obfuscated Proxy Traffic with Encapsulated TLS Handshakes</a>&ldquo;的论文，在翻墙圈也引起了一些讨论，于是决定仔细研究下，希望能在此向读者解释一些核心概念和编者自己的想法。这个博客就是为了这篇文章而诞生的。</p>
+<p>（注: 本文中所称&quot;规避工具&rdquo;，指用于规避网络流量审查的系统或协议）</p>
+<h3 id="ℹ-前言">ℹ️ 前言
+</h3><p>目前被广泛认可的规避审查的策略，可以被抽象地归纳为两种：</p>
+<ol>
+<li>隐写：使流量看起来像被允许的流量。</li>
+<li>多态：使流量看起来不像任何其他流量。</li>
+</ol>
+<p>&ldquo;多态&quot;就是shadowsocks等一众协议所采用的策略。他们将流量进行加密、填充、重排序等等操作，从而处理为随机字节流，使得审查者看到的流量中没有任何明文，审查者也就无法找出固定的正则式进行匹配，以此避免被识别并封锁。
+(PS.实际上互联网中完全随机的流量占比极低，因此<strong>随机本身便是一个特征</strong>，这也直接导致了中国大陆的GFW使用<strong>基于熵的规则</strong>(这里的<strong>熵</strong>意为数据的随机程度)粗略识别并封锁shadowsocks等规避工具，见论文 <a class="link" href="https://gfw.report/publications/usenixsecurity23/data/paper/paper.pdf"  target="_blank" rel="noopener"
+    >How the Great Firewall of China Detects and Blocks Fully Encrypted Traffic</a>，当然后来开发者们采用诸如填充改变熵的策略突破了这一审查规则)</p>
+<p>&ldquo;隐写&quot;的<strong>必要前提</strong>是至少要有一种被而允许的流量，比如微信通话、TLS，接下来几段称这种被允许的流量为&quot;该协议&rdquo;。
+&ldquo;隐写&quot;又可抽象地细分为两种:</p>
+<ol>
+<li>模仿: <strong>伪装</strong>自己是该协议下的某种实现进行传输。</li>
+<li>隧道传输: <strong>直接</strong>使用该协议下某种实现进行传输。</li>
+</ol>
+<p>这俩隐写方式看起来似乎并没有太大区别，但实际上他们大相径庭。打个比方，&ldquo;隐写&quot;就像是给Windows电脑换Mac图标包、用仿Mac桌面，但不论如何底层都是Windows，始终运行不了访达 <em>(MacOS的官方文件管理器)</em>。而&quot;隧道传输&quot;就像是直接使用Mac，不会有任何&quot;破绽&rdquo;。</p>
+<p>&ldquo;模仿&quot;被广泛认为不可能被用于规避审查，因为当宣称是该协议的某种实现时，必须实现该实现的种种不同反应、实现怪癖甚至Bug，否则审查者可以通过确认该实现是否具有本该有的这些细节，来辨别正常流量和规避流量。对于规避工具的开发者，常见的实现往往及其复杂，不可能实现完美的模仿。然而倘若模仿简单的实现，往往该实现自身又不够常见，只会被审查者一起封杀。论文 <a class="link" href="https://ieeexplore.ieee.org/document/6547102"  target="_blank" rel="noopener"
+    >The Parrot Is Dead: Observing Unobservable Network Communications</a>更加周密且详细地分析了这一问题。</p>
+<p>因此，&ldquo;隧道传输&quot;成为了被广泛使用的隐写方式。它通过调用某个常见实现提供的接口，将数据传递给这个接口并由该实现进行封装和传输。现在基于TLS的代理协议都属于&quot;隐写&quot;中的这种类型。</p>
+<h3 id="-tls-in-any问题是什么导致的">🔍 TLS in Any问题是什么导致的?
+</h3><p>流量之所以称流量，正是因为它是一个连接内一系列数据包构成的，这些数据包有自己的大小、先后顺序。而每种类型的流量开头，往往会有为了一些<strong>满足特定需求而遵循特定规范</strong>的数据包，这些数据包被称作 <strong>&ldquo;握手包&rdquo;</strong> 。微信通话有自己的握手包，浏览网页用的HTTP有自己的握手包，而TLS为了实现数据的安全性，需要在连接开头以安全方式交换加密、认证用的数据(密钥和证书等)，因此也会有自己的握手包。</p>
+<p>正是<strong>TLS的这些握手包</strong>导致了TLS in Any问题。还记得前面对&quot;握手包&quot;的定义吗? 它们是 <strong>&ldquo;一些满足特定规范&rdquo;</strong> 的数据包。这个&quot;规范&quot;定义了握手包的结构、先后顺序、收发方向 —— 当规范规定了结构、而这一结构中的各项数据大小可预测时，这些握手包的大小其实已经变得<strong>可预测</strong>了。再加上TLS规范定义的先后顺序、收发方向与审查者对于握手包大小的估计值一一对应的关系，流量分类系统就可以粗略地区别出TLS流量。</p>
+<p>举个栗子，这里规定一个人畜无害的Cat协议，它的握手包都在开头发送，它的规范中对结构、先后顺序、收发方向的规定如下:</p>
+<ul>
+<li>结构 &amp; 先后顺序:
+<ul>
+<li>第一个包: 200位的猫体重</li>
+<li>第二个包: 700位的品种编号</li>
+<li>第三个包: 1400位的猫猫喜爱程度</li>
+<li>第四个包: 1400位的猫粮剩余量</li>
+</ul>
+</li>
+<li>收发方向
+<ul>
+<li>第一个包: A -&gt; B</li>
+<li>第二个包: A -&gt; B</li>
+<li>第三个包: A &lt;- B</li>
+<li>第四个包: A &lt;- B</li>
+</ul>
+</li>
+</ul>
+<p>同时我们在传输前对Cat协议的每个包进行加密，<strong>使它们在加密后变大10-200位</strong>。<em>(现代密码学定义下的加密，只可能使数据在加密后的大小不变或增加)</em></p>
+<p>那么流量分类系统在试图识别<strong>加密过后的Cat协议</strong>时，只需要在每个连接开始时观察并这样判断:</p>
+<ul>
+<li>第一个包: 大小在210位到400位之间，方向是A -&gt; B</li>
+<li>第二个包: 大小在710位到900位之间，方向是A -&gt; B</li>
+<li>第三个包: 大小在1410位到1600位之间，方向是A &lt;- B</li>
+<li>第四个包: 大小在1410位到1600位之间，方向是A &lt;- B</li>
+</ul>
+<p>如果观察到某个连接的开头符合这种流量模式，那它很可能就是Cat协议。现代密码学定义下的加密至多只能使流量中各个握手包的大小在可预测的范围内浮动，并且加密不可能改变先后顺序和收发方向，因此这种流量模式是加密无法完全改变的，也就解决不了TLS in Any问题。</p>
+<p>万一是误判怎么办? 误判的确是有可能的，但是现实中的用户每访问一个HTTPS网站，打开的TLS连接往往就有好几个，这些连接都有TLS握手包，都存在被流量分类系统识别的可能性。
+只要<strong>误判的概率(假阳性率)远比正确识别的概率小</strong>，那么审查者只需要观察当某个用户在访问某台国外服务器时，是否有较多连接被流量分类系统识别为规避流量，再以此判断用户是否在使用规避工具。
+因为误判概率远远小于正确识别概率，所以未使用规避工具的普通用户的被误判的连接一定较少，自然难以达到&quot;被审查者判断为在使用规避工具&quot;的程度。</p>
+<h3 id="为什么tls-in-any问题需要得到重视">🤔为什么TLS in Any问题需要得到重视?
+</h3><ol>
+<li>
+<p>先前已经有过中国大陆的审查者利用<strong>基于熵的规则</strong>粗略识别并封锁全加密代理的先例，然而这种审查策略在<a class="link" href="https://gfw.report/publications/usenixsecurity23/zh/#sec:blocking-analysis"  target="_blank" rel="noopener"
+    >GFW.REPORT的实验(节7.2)</a>中GFW的误判率(假阳性率)仍然高达0.6%。因为审查者面临着<a class="link" href="https://zh.wikipedia.org/wiki/%e5%9f%ba%e6%9c%ac%e6%af%94%e7%8e%87%e8%ac%ac%e8%aa%a4"  target="_blank" rel="noopener"
+    >基本比率谬误问题</a>，0.6%的假阳性率意味着当该审查策略被GFW广泛应用于所有流量时，也会导致误伤很多的正常流量。</p>
+<p>因此审查者需要使用<strong>额外的审查策略</strong>，从而在扩大审查范围时控制误伤数量。TLS in Any问题引出的基于流量分类的审查策略，正是一个<strong>绝佳的额外审查策略</strong>。这两个审查策略的共同运用将会有效提高审查者识别并封锁规避流量的能力。</p>
+</li>
+<li>
+<p>本文开头提到的<a class="link" href="https://www.usenix.org/conference/usenixsecurity24/presentation/xue-fingerprinting"  target="_blank" rel="noopener"
+    >论文</a>中，作者在论文第8节提出了两个针对现有规避工具的<strong>流量预分类器</strong>，分类标准相对粗略，但是它们也可以作为1.中所提到的**&ldquo;额外的审查策略&rdquo;**，在与其他审查策略共同使用的情况下进一步提高审查者的识别能力。</p>
+<ul>
+<li>
+<p>预分类器1基于&quot;TCP连接<strong>在外层TLS握手完成后</strong>的前15个包距离内的<strong>往返计数</strong>&rdquo;</p>
+<p>如何理解? 在正常的TCP连接中，服务端在每次收到来自客户端的数据包时，总会响应一个ACK包 <em>(即TCP报头中ACK标志位的值设置为下一个预期收到的SEQ序列号的值的TCP数据包)</em> ，因此审查者通过记录在用户的TCP连接中经过审查者端的ACK包，即可知道在用户和服务器之间一共传输了<strong>几个来回</strong>的数据。我称之为**“往返计数”<strong>。在典型的HTTPS访问网站的过程中，用户发起的TCP连接在完成TLS握手后，通常只会有一个GET请求 <em>(一次上行)</em>，还有来自Web服务器的一系列响应包 <em>(一次下行)</em>，一共仅</strong>1次往返**。</p>
+<p>换作规避工具代理同样的HTTPS请求，在规避工具的TLS握手完成后，会<strong>先有1次(嵌套的)TLS握手被代理</strong>，然后才是上面提到的1次往返的HTTP请求过程。而这一个被代理的(嵌套的)TLS握手<strong>至少会给规避工具发起的连接增加1次往返</strong>。因此在使用该预处理器时，将往返计数较大的连接过滤出来，将能够避免对绝大多数正常流量的处理和误伤。</p>
+</li>
+<li>
+<p>预分类器2基于”TCP连接<strong>在外层TLS握手完成后</strong>的第一个包序列(burst)的<strong>总计大小</strong>“</p>
+<p>如何理解? 在正常的TCP连接中，鉴于网络路径中的各个路由承载量不同，需要把一个较大的包分割为几部分(即分片)，然后再按一定的时间间隔，<strong>逐个部分发送</strong>。逐个部分发送的过程中构成了一系列包，这一系列包称作一个包序列(burst)。由于规避工具在代理HTTPS请求时，<strong>需要代理1次(嵌套的)TLS握手</strong>，再加上加密带来的大小膨胀，会使得第一个包序列的<strong>总计大小</strong>比正常HTTPS流量的第一个包序列更大。</p>
+</li>
+</ul>
+<p>这两个流量预分类器的分类标准尽管粗略，但是它们在开头提到的<a class="link" href="https://www.usenix.org/conference/usenixsecurity24/presentation/xue-fingerprinting"  target="_blank" rel="noopener"
+    >论文</a>中的表现并不差。按照该论文第8节中的实验数据，当设定为 预分类器1为小于2.5个往返计数、预分类器2为小于300个字节 时，预分类器能够筛选出82.5%的正常流量和1.5%的代理流量。</p>
+</li>
+</ol>
+<h3 id="基于流量分类的审查策略带来的启示">💡基于流量分类的审查策略带来的启示
+</h3><p>谈完TLS in Any问题的流量分类识别原理后，我自己也作了两条总结，希望能帮助读者更加深入地理解问题本质。</p>
+<ol>
+<li>
+<p><strong>包级别</strong>的混淆策略(对于单个包内的数据的填充、加密、重排序等)不足以对抗<strong>连接级别</strong>的审查策略，用流行词解释就是&quot;降维打击&rdquo;。</p>
+</li>
+<li>
+<p>对于连接级别的特征(每个连接前n个包距离内的大小分布、往返计数，甚至包收发延时分布等)也应当通过填充包、分割包、延迟发包等方式进行处理。</p>
+</li>
+</ol>
+<h3 id="针对tls-in-any问题的设想规避策略">🧰针对TLS in Any问题的设想规避策略
+</h3><p>同时我也设想了以下几个存在可行性的解决方案 (规避策略)，希望能够启发读者找到更加可行的规避策略。以下这些规避策略的本质都是尽量提高流量分类系统的误判率。</p>
+<ol>
+<li>
+<p>解构上行和下行连接 <em>(缺点是可靠性较差)</em></p>
+</li>
+<li>
+<p>分片发送被代理的TLS握手包，且在接收方接收到某个握手包的最后一个分片之前，对每一个已经接收到的分片都要作出响应 <em>(如构造校验和错误的包以响应)</em>，避免审查者合并分片或产生更明显的特征。</p>
+<p>(这一策略已经在规避工具 Restls Protocol <a class="link" href="https://github.com/3andne/restls"  target="_blank" rel="noopener"
+    >(Github仓库链接)</a> 中得到了实践，然而该策略很可能会对用户体验产生显著影响)</p>
+</li>
+<li>
+<p>切换到基于QUIC的规避工具，借助udp的不可靠性增加对其进行流量分类的复杂性，进而使审查者至少迟缓其审查技术的研发和部署进度。</p>
+<p>(很不幸，在2024年7月15日至18日中共举行<a class="link" href="https://zh.wikipedia.org/wiki/%e4%b8%ad%e5%9b%bd%e5%85%b1%e4%ba%a7%e5%85%9a%e7%ac%ac%e4%ba%8c%e5%8d%81%e5%b1%8a%e4%b8%ad%e5%a4%ae%e5%a7%94%e5%91%98%e4%bc%9a%e7%ac%ac%e4%b8%89%e6%ac%a1%e5%85%a8%e4%bd%93%e4%bc%9a%e8%ae%ae"  target="_blank" rel="noopener"
+    >第二十届三中全会</a>期间，中国大陆出现了基于UDP的规避工具遭到大规模封锁的用户自发报告(<a class="link" href="https://linux.do/t/topic/136940/3"  target="_blank" rel="noopener"
+    >链接</a>来自LinuxDo论坛))</p>
+</li>
+</ol>
+<h3 id="审查者大规模部署基于流量分类的审查策略的几个挑战">🧱审查者大规模部署基于流量分类的审查策略的几个挑战
+</h3><ol>
+<li>附带损害仍然相当高。尤其是当下TLS1.3正在不断扩大部署，TLS1.2部署不断减少，而依照本文开头提到的<a class="link" href="https://www.usenix.org/conference/usenixsecurity24/presentation/xue-fingerprinting"  target="_blank" rel="noopener"
+    >论文</a>中部署在美国运营商<a class="link" href="https://www.merit.edu/"  target="_blank" rel="noopener"
+    >Merit Network</a>的网络出口上的流量分类系统的实验数据，TLS1.3分类器以实验中约26%的真阳性率的模式运行时，其误判率(假阳性率)对比真阳性率略低(约为24%)的TLS1.2分类器，增加了40倍(0.025%→1%)。</li>
+<li>对于使用<strong>激进的随机填充策略</strong>的规避工具(如XTLS-Vision, obfs4)，审查者需要使用额外的定制分类器对流量进行处理；并且由于包大小不再适用于分类，误判率(假阳性率)理应有所增加。</li>
+<li>对于既基于TLS、又使用激进的随机填充策略的规避工具，由于正常TLS流量中仅握手包具有较低的熵，理论上无法用基于熵的规则对这些规避工具的代理流量进行预分类，理应会进一步提高误判率(假阳性率)。</li>
+</ol>
+<p><em>(推荐相关阅读 : )</em></p>
+<p>1.<a class="link" href="https://github.com/XTLS/Xray-core/discussions/1295"  target="_blank" rel="noopener"
+    >XTLS Vision, fixes TLS in TLS, to the star and beyond · XTLS/Xray-core · Discussion #1295 (github.com)</a></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under <a class="link" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"  target="_blank" rel="noopener"
+    >CC BY-NC-SA 4.0</a></span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2024 ObjShadow&#39;s Blog
+    </section>
+    
+    <section class="powerby">
+        
+            与自由拥抱。<br>
+Supports 
+<a href="https://ready.chair6.net/?url=https%3A%2F%2Fobjshadow.pages.dev" target="_blank" rel="noopener">
+    <b>IPv6</b>
+</a>, 
+<a href="https://http3check.net/?host=objshadow.pages.dev" target="_blank" rel="noopener">
+    <b>HTTP/3</b>
+</a>, 
+<a href="https://datatracker.ietf.org/doc/html/rfc8446" target="_blank" rel="noopener">
+    <b>TLS 1.3</b>
+</a> with 
+<a href="https://hstspreload.org/?domain=objshadow.pages.dev" target="_blank" rel="noopener">
+    <b>HSTS Preload</b>
+</a> &amp; 
+<a href="https://www.cloudflare.com/dns/dnssec/how-dnssec-works/" target="_blank" rel="noopener">
+    <b>DNSSEC</b>
+</a>
+ <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.26.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

@@ -1,0 +1,3 @@
+[submodule "themes/hexo-theme-stack"]
+	path = themes/hexo-theme-stack
+	url = git@github.com:ShadowObj/hugo-theme-stack.git

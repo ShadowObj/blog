@@ -1,0 +1,49 @@
+// Body Font Color
+:root {
+    --body-background: #EBEBEB;
+    --accent-color: #1B365D;
+    --accent-color-darker: #202A44;
+    --accent-color-text: #FFF;
+    --body-text-color: #202A44;
+  }
+  
+  :root {
+    --card-background: #FFF;
+    --card-background-selected: #EBEBEB;
+    --card-text-color-main: #202A44;
+    --card-text-color-secondary: #53565A;
+    --card-text-color-tertiary: #888B8D;
+  }
+
+// Tag Color
+//.article-list article:nth-child(n) .article-category a {
+//    background: #1B365D!important;
+//    color: #fff;
+//  }
+//  
+//  .article-category a, .article-tags a {
+//    background-color: #1B365D!important;
+//    color: #fff;
+//  }
+
+// Links Double Coloum
+@media (min-width: 1024px) {
+    .article-list--compact.links {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        background: none;
+        box-shadow: none;
+        
+        article {
+            background: var(--card-background);
+            border: none;
+            box-shadow: var(--shadow-l2);
+            margin-bottom: 8px;
+            border-radius: 10px;
+            &:nth-child(odd) {
+                margin-right: 8px;
+            }
+        }
+    }
+  }
+  

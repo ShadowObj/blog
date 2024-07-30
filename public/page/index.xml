@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Pages on ObjShadow&#39;s Blog</title>
+        <link>//localhost:1313/page/</link>
+        <description>Recent content in Pages on ObjShadow&#39;s Blog</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <lastBuildDate>Tue, 30 Jul 2024 00:00:00 +0800</lastBuildDate><atom:link href="//localhost:1313/page/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>About</title>
+        <link>//localhost:1313/page/about/</link>
+        <pubDate>Tue, 30 Jul 2024 00:00:00 +0800</pubDate>
+        
+        <guid>//localhost:1313/page/about/</guid>
+        <description>&lt;p&gt;&lt;font size=5&gt;用最平常易懂的语言，写最硬核的反审查技术内容。&lt;/font&gt;&lt;/p&gt;
+&lt;p&gt;这是本博客的slogan，也是本博客创办的目标、主旨、初心。&lt;br&gt;
+写这些技术内容，是希望读者既理解反审查背后蕴含的自由精神与人类伦理，&lt;br&gt;
+也能够洞察反审查背后的技术原理，了解前沿的反审查研究，&lt;br&gt;
+能够捍卫自己在数字空间的信息自由、隐私安全、与个人尊严。&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;本博客的主要导向是一些目前已有实际运用的规避审查工具，&lt;br&gt;
+同时以易于理解的方式向读者普及一些基础的反审查技术原理，&lt;br&gt;
+并且跟进&lt;a class=&#34;link&#34; href=&#34;https://foci.community/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;FOCI&lt;/a&gt;, &lt;a class=&#34;link&#34; href=&#34;https://www.usenix.org/conference/usenixsecurity24&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;USENIX Security&lt;/a&gt;等学术性质的大型反审查会议，&lt;br&gt;
+尽力为读者提供最易懂、最实用、最前沿的反审查技术内容。&lt;/p&gt;
+&lt;p&gt;最好，祝愿正在阅读这篇文章的读者，&lt;br&gt;
+能够见证这个世界不再有审查与极权，&lt;br&gt;
+能够见证这个博客再没有存在的必要，&lt;br&gt;
+能够在自由的光辉中，永远地铭记那些曾经&lt;br&gt;
+为反审查作出贡献的研究者、开发者、宣传者，&lt;br&gt;
+以及，曾经尽力追求自由的一个个普通人。&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>Archives</title>
+        <link>//localhost:1313/page/archives/</link>
+        <pubDate>Tue, 30 Jul 2024 00:00:00 +0800</pubDate>
+        
+        <guid>//localhost:1313/page/archives/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Links</title>
+        <link>//localhost:1313/page/links/</link>
+        <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+        
+        <guid>//localhost:1313/page/links/</guid>
+        <description>&lt;p&gt;欢迎互换友链!&lt;/p&gt;
+&lt;p&gt;请在评论区留下你的常用邮箱和网站主页地址。&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>Search</title>
+        <link>//localhost:1313/page/search/</link>
+        <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+        
+        <guid>//localhost:1313/page/search/</guid>
+        <description></description>
+        </item>
+        
+    </channel>
+</rss>

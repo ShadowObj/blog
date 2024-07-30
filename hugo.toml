@@ -1,0 +1,127 @@
+languageCode = 'zh-cn'
+title = "ObjShadow's Blog"
+theme = "hexo-theme-stack"
+favicon = "assets/favicon.png"
+hasCJKLanguage = true
+
+[Params]
+description = "May a Censorship Researcher."
+mainSections = ["posts"]
+rssFullContent = true
+
+[Params.Sidebar]
+subtitle = "May a Censorship Researcher."
+emoji = "👀"
+
+[Params.colorScheme]
+toggle = true
+default = "auto"
+
+[Params.Sidebar.avatar]
+enabled = true
+local = true
+src = "avatar.jpg"
+
+[Params.Footer]
+since = 2024
+customText = """
+与自由拥抱。<br>
+Supports 
+<a href="https://ready.chair6.net/?url=https%3A%2F%2Fobjshadow.pages.dev" target="_blank" rel="noopener">
+    <b>IPv6</b>
+</a>, 
+<a href="https://http3check.net/?host=objshadow.pages.dev" target="_blank" rel="noopener">
+    <b>HTTP/3</b>
+</a>, 
+<a href="https://datatracker.ietf.org/doc/html/rfc8446" target="_blank" rel="noopener">
+    <b>TLS 1.3</b>
+</a> with 
+<a href="https://hstspreload.org/?domain=objshadow.pages.dev" target="_blank" rel="noopener">
+    <b>HSTS Preload</b>
+</a> &amp; 
+<a href="https://www.cloudflare.com/dns/dnssec/how-dnssec-works/" target="_blank" rel="noopener">
+    <b>DNSSEC</b>
+</a>
+"""
+
+[Params.Article]
+toc = true
+wordCount = true
+readingTime = true
+license.enabled = true
+license.default = "Licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)"
+
+[Params.DateFormat]
+published = "2006-01-02 PM"
+lastUpdated = "2006-01-02 PM"
+
+[markup]
+goldmark.renderer.unsafe = true
+
+[Params.widgets]
+[[Params.widgets.homepage]]
+type = "search"
+
+[[Params.widgets.homepage]]
+type = "archives"
+[Params.widgets.homepage.params]
+limit = 5
+
+[[Params.widgets.homepage]]
+type = "categories"
+[Params.widgets.homepage.params]
+limit = 10
+
+#[[Params.widgets.homepage]]
+#type = "tag-cloud"
+#[Params.widgets.homepage.params]
+#limit = 10
+
+[[Params.widgets.page]]
+type = "toc"
+
+[menu]
+[[menu.social]]
+identifier = "email"
+name = "Email"
+url = "mailto:shadowobject@protonmail.com"
+params.icon = "brand-mail"
+
+[[menu.social]]
+identifier = "twitter"
+name = "Twitter"
+url = "https://twitter.com/objectshadow"
+params.icon = "brand-twitter"
+
+[[menu.social]]
+identifier = "telegram"
+name = "Telegram"
+url = "https://t.me/objshadow"
+params.icon = "brand-telegram"
+
+[[menu.social]]
+identifier = "signal"
+name = "Signal"
+url = "https://signal.me/#eu/1-a3Slz1elCbLBF_RkBBZbhlwoA47hFcTChiP7lq_2yrjuoClBJFF6ZF_ij4ORo_"
+params.icon = "brand-signal"
+
+[[menu.social]]
+identifier = "pgpkey"
+name = "PGP Key"
+url = "https://keys.openpgp.org/vks/v1/by-fingerprint/FDEAA5F05C3B8D3A9A96DC7DE4465C42D44B171A"
+params.icon = "brand-key"
+
+[Params.comment]
+enabled = false
+provider = "giscus"
+
+[Params.comments.giscus]
+repo = ""
+repoID = ""
+category = ""
+categoryID = ""
+mapping = ""
+lightTheme = ""
+darkTheme = ""
+reactionsEnabled = 1
+emitMetadata = 0
