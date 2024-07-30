@@ -71,10 +71,10 @@ type = "categories"
 [Params.widgets.homepage.params]
 limit = 10
 
-#[[Params.widgets.homepage]]
-#type = "tag-cloud"
-#[Params.widgets.homepage.params]
-#limit = 10
+[[Params.widgets.homepage]]
+type = "tag-cloud"
+[Params.widgets.homepage.params]
+limit = 10
 
 [[Params.widgets.page]]
 type = "toc"

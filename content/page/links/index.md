@@ -3,8 +3,8 @@ title: Links
 links:
   - title: ObjShadow's Blog
     description: May a Censorship Researcher.
-    website: https://objshadow.pages.dev
-    image: assets/avatar.jpg
+    website: https://objshadow.pages.dev/
+    image: /img/avatar.jpg
 menu:
     main: 
         weight: -50

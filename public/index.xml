@@ -110,7 +110,7 @@
 &lt;ul&gt;
 &lt;li&gt;第一个包: 大小在210位到400位之间，方向是A -&amp;gt; B&lt;/li&gt;
 &lt;li&gt;第二个包: 大小在710位到900位之间，方向是A -&amp;gt; B&lt;/li&gt;
-&lt;li&gt;第三个包: 大小在1410位到1600位之间，方向是A &amp;lt;- B&lt;/li&gt;
+&lt;li&gt;第三个包: 大小在1410位到1600位之间，方向是A &amp;lt;- B&amp;rdquo;&lt;/li&gt;
 &lt;li&gt;第四个包: 大小在1410位到1600位之间，方向是A &amp;lt;- B&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;如果观察到某个连接的开头符合这种流量模式，那它很可能就是Cat协议。现代密码学定义下的加密至多只能使流量中各个握手包的大小在可预测的范围内浮动，并且加密不可能改变先后顺序和收发方向，因此这种流量模式是加密无法完全改变的，也就解决不了TLS in Any问题。&lt;/p&gt;
@@ -131,11 +131,11 @@
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;预分类器1基于&amp;quot;TCP连接&lt;strong&gt;在外层TLS握手完成后&lt;/strong&gt;的前15个包距离内的&lt;strong&gt;往返计数&lt;/strong&gt;&amp;rdquo;&lt;/p&gt;
-&lt;p&gt;如何理解? 在正常的TCP连接中，服务端在每次收到来自客户端的数据包时，总会响应一个ACK包 &lt;em&gt;(即TCP报头中ACK标志位的值设置为下一个预期收到的SEQ序列号的值的TCP数据包)&lt;/em&gt; ，因此审查者通过记录在用户的TCP连接中经过审查者端的ACK包，即可知道在用户和服务器之间一共传输了&lt;strong&gt;几个来回&lt;/strong&gt;的数据。我称之为**“往返计数”&lt;strong&gt;。在典型的HTTPS访问网站的过程中，用户发起的TCP连接在完成TLS握手后，通常只会有一个GET请求 &lt;em&gt;(一次上行)&lt;/em&gt;，还有来自Web服务器的一系列响应包 &lt;em&gt;(一次下行)&lt;/em&gt;，一共仅&lt;/strong&gt;1次往返**。&lt;/p&gt;
+&lt;p&gt;如何理解? 在正常的TCP连接中，服务端在每次收到来自客户端的数据包时，总会响应一个ACK包 &lt;em&gt;(即TCP报头中ACK标志位的值设置为下一个预期收到的SEQ序列号的值的TCP数据包)&lt;/em&gt; ，因此审查者通过记录在用户的TCP连接中经过审查者端的ACK包，即可知道在用户和服务器之间一共传输了&lt;strong&gt;几个来回&lt;/strong&gt;的数据。我称之为 &lt;strong&gt;&amp;ldquo;往返计数&amp;rdquo;&lt;/strong&gt;。在典型的HTTPS访问网站的过程中，用户发起的TCP连接在完成TLS握手后，通常只会有一个GET请求 &lt;em&gt;(一次上行)&lt;/em&gt;，还有来自Web服务器的一系列响应包 &lt;em&gt;(一次下行)&lt;/em&gt;，一共仅&lt;strong&gt;1次往返&lt;/strong&gt;。&lt;/p&gt;
 &lt;p&gt;换作规避工具代理同样的HTTPS请求，在规避工具的TLS握手完成后，会&lt;strong&gt;先有1次(嵌套的)TLS握手被代理&lt;/strong&gt;，然后才是上面提到的1次往返的HTTP请求过程。而这一个被代理的(嵌套的)TLS握手&lt;strong&gt;至少会给规避工具发起的连接增加1次往返&lt;/strong&gt;。因此在使用该预处理器时，将往返计数较大的连接过滤出来，将能够避免对绝大多数正常流量的处理和误伤。&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;预分类器2基于”TCP连接&lt;strong&gt;在外层TLS握手完成后&lt;/strong&gt;的第一个包序列(burst)的&lt;strong&gt;总计大小&lt;/strong&gt;“&lt;/p&gt;
+&lt;p&gt;预分类器2基于&amp;quot;TCP连接&lt;strong&gt;在外层TLS握手完成后&lt;/strong&gt;的第一个包序列(burst)的&lt;strong&gt;总计大小&lt;/strong&gt;&amp;rdquo;&lt;/p&gt;
 &lt;p&gt;如何理解? 在正常的TCP连接中，鉴于网络路径中的各个路由承载量不同，需要把一个较大的包分割为几部分(即分片)，然后再按一定的时间间隔，&lt;strong&gt;逐个部分发送&lt;/strong&gt;。逐个部分发送的过程中构成了一系列包，这一系列包称作一个包序列(burst)。由于规避工具在代理HTTPS请求时，&lt;strong&gt;需要代理1次(嵌套的)TLS握手&lt;/strong&gt;，再加上加密带来的大小膨胀，会使得第一个包序列的&lt;strong&gt;总计大小&lt;/strong&gt;比正常HTTPS流量的第一个包序列更大。&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
