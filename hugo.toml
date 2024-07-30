@@ -1,7 +1,6 @@
 languageCode = 'zh-cn'
 title = "ObjShadow's Blog"
 theme = "hexo-theme-stack"
-favicon = "assets/favicon.png"
 hasCJKLanguage = true
 
 [Params]
