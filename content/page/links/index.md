@@ -1,5 +1,5 @@
 ---
-title: Links
+title: 友链
 links:
   - title: ObjShadow's Blog
     description: May a Censorship Researcher.

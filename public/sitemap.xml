@@ -1,53 +1,18 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-  xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  <url>
-    <loc>//localhost:1313/</loc>
-    <lastmod>2024-07-30T00:00:00+08:00</lastmod>
-  </url><url>
-    <loc>//localhost:1313/page/about/</loc>
-    <lastmod>2024-07-30T00:00:00+08:00</lastmod>
-  </url><url>
-    <loc>//localhost:1313/page/archives/</loc>
-    <lastmod>2024-07-30T00:00:00+08:00</lastmod>
-  </url><url>
-    <loc>//localhost:1313/page/</loc>
-    <lastmod>2024-07-30T00:00:00+08:00</lastmod>
-  </url><url>
-    <loc>//localhost:1313/categories/</loc>
-    <lastmod>2024-07-29T20:00:00+08:00</lastmod>
-  </url><url>
-    <loc>//localhost:1313/posts/</loc>
-    <lastmod>2024-07-29T20:00:00+08:00</lastmod>
-  </url><url>
-    <loc>//localhost:1313/tags/</loc>
-    <lastmod>2024-07-29T20:00:00+08:00</lastmod>
-  </url><url>
-    <loc>//localhost:1313/tags/tls/</loc>
-    <lastmod>2024-07-29T20:00:00+08:00</lastmod>
-  </url><url>
-    <loc>//localhost:1313/categories/tls/</loc>
-    <lastmod>2024-07-29T20:00:00+08:00</lastmod>
-  </url><url>
-    <loc>//localhost:1313/tags/%E4%BB%A3%E7%90%86/</loc>
-    <lastmod>2024-07-29T20:00:00+08:00</lastmod>
-  </url><url>
-    <loc>//localhost:1313/tags/%E5%8F%8D%E5%AE%A1%E6%9F%A5/</loc>
-    <lastmod>2024-07-29T20:00:00+08:00</lastmod>
-  </url><url>
-    <loc>//localhost:1313/categories/%E5%8F%8D%E5%AE%A1%E6%9F%A5/</loc>
-    <lastmod>2024-07-29T20:00:00+08:00</lastmod>
-  </url><url>
-    <loc>//localhost:1313/tags/%E6%B5%81%E9%87%8F%E5%88%86%E7%B1%BB/</loc>
-    <lastmod>2024-07-29T20:00:00+08:00</lastmod>
-  </url><url>
-    <loc>//localhost:1313/posts/what-is-tls-in-any/</loc>
-    <lastmod>2024-07-29T20:00:00+08:00</lastmod>
-  </url><url>
-    <loc>//localhost:1313/archives/</loc>
-  </url><url>
-    <loc>//localhost:1313/page/links/</loc>
-  </url><url>
-    <loc>//localhost:1313/page/search/</loc>
-  </url>
-</urlset>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <sitemap>
+    <loc>//localhost:1313/zh-cn/sitemap.xml</loc>
+    
+      <lastmod>2024-07-30T00:00:00+08:00</lastmod>
+    
+  </sitemap>
+  
+  <sitemap>
+    <loc>//localhost:1313/en/sitemap.xml</loc>
+    
+      <lastmod>2024-07-30T00:00:00+08:00</lastmod>
+    
+  </sitemap>
+  
+</sitemapindex>

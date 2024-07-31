@@ -1,5 +1,5 @@
 ---
-title: About
+title: 关于
 description: 为什么创办这个博客?
 date: 2024-07-30T00:00:00+08:00
 aliases:

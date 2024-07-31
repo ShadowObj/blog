@@ -1,0 +1,6 @@
+languageCode = 'zh-cn'
+title = "ObjShadow's Blog"
+theme = "hexo-theme-stack"
+hasCJKLanguage = true
+defaultContentLanguage = 'zh-cn'
+defaultContentLanguageInSubdir = false

@@ -2,16 +2,16 @@
 <html lang="zh-cn" dir="ltr">
     <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="为什么创办这个博客?">
-<title>About</title>
+<title>关于</title>
 
 <link rel='canonical' href='//localhost:1313/page/about/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae2a4e04ef264c0cb8e5d2ea5cd5145aded59fea9df95c01bfe9d95529a8baa3.css"><meta property='og:title' content="About">
+<link rel="stylesheet" href="/scss/style.min.ae2a4e04ef264c0cb8e5d2ea5cd5145aded59fea9df95c01bfe9d95529a8baa3.css"><meta property='og:title' content="关于">
 <meta property='og:description' content="为什么创办这个博客?">
 <meta property='og:url' content='//localhost:1313/page/about/'>
 <meta property='og:site_name' content='ObjShadow&#39;s Blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='Page' /><meta property='article:published_time' content='2024-07-30T00:00:00&#43;08:00'/><meta property='article:modified_time' content='2024-07-30T00:00:00&#43;08:00'/>
-<meta name="twitter:title" content="About">
+<meta name="twitter:title" content="关于">
 <meta name="twitter:description" content="为什么创办这个博客?">
   
 
@@ -55,7 +55,7 @@
     })();
 </script>
 <div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
-    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
         <span class="hamburger-box">
             <span class="hamburger-inner"></span>
         </span>
@@ -184,7 +184,7 @@
 
 
                 
-                <span>Home</span>
+                <span>主页</span>
             </a>
         </li>
         
@@ -203,7 +203,7 @@
 
 
                 
-                <span>About</span>
+                <span>关于</span>
             </a>
         </li>
         
@@ -223,7 +223,7 @@
 
 
                 
-                <span>Archives</span>
+                <span>归档</span>
             </a>
         </li>
         
@@ -242,7 +242,7 @@
 
 
                 
-                <span>Search</span>
+                <span>搜索</span>
             </a>
         </li>
         
@@ -261,12 +261,35 @@
 
 
                 
-                <span>Links</span>
+                <span>友链</span>
             </a>
         </li>
         
         <li class="menu-bottom-section">
             <ol class="menu">
+                    
+                        <li id="i18n-switch">  
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c-.003 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+
+
+                            <select name="language" title="language" onchange="window.location.href = this.selectedOptions[0].value">
+                                
+                                    <option value="//localhost:1313/" selected>简体中文</option>
+                                
+                                    <option value="//localhost:1313/en/" >English</option>
+                                
+                            </select>
+                        </li>
+                    
+                
 
                 
                     <li id="dark-mode-toggle">
@@ -286,7 +309,7 @@
 
 
 
-                        <span>Dark Mode</span>
+                        <span>暗色模式</span>
                     </li>
                 
             </ol>
@@ -305,7 +328,7 @@
 
     <div class="article-title-wrapper">
         <h2 class="article-title">
-            <a href="/page/about/">About</a>
+            <a href="/page/about/">关于</a>
         </h2>
     
         
@@ -340,6 +363,25 @@
     
 
     
+        <footer class="article-translations">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c-.003 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+
+
+            <div>
+                
+                    <a href="//localhost:1313/en/page/about/" class="link">English</a>
+                
+            </div>
+        </footer>
+    
 </div>
 
 </header>
@@ -352,17 +394,19 @@
 写这些技术内容，是希望读者既理解反审查背后蕴含的自由精神与人类伦理，<br>
 也能够洞察反审查背后的技术原理，了解前沿的反审查研究，<br>
 能够捍卫自己在数字空间的信息自由、隐私安全、与个人尊严。<br></p>
-<p>本博客的主要导向是一些目前已有实际运用的规避审查工具，<br>
+<p>本博客的主要导向是解析目前已有实际运用的规避审查工具，<br>
 同时以易于理解的方式向读者普及一些基础的反审查技术原理，<br>
 并且跟进<a class="link" href="https://foci.community/"  target="_blank" rel="noopener"
     >FOCI</a>, <a class="link" href="https://www.usenix.org/conference/usenixsecurity24"  target="_blank" rel="noopener"
     >USENIX Security</a>等学术性质的大型反审查会议，<br>
 尽力为读者提供最易懂、最实用、最前沿的反审查技术内容。</p>
-<p>最好，祝愿正在阅读这篇文章的读者，<br>
-能够见证这个世界不再有审查与极权，<br>
-能够见证这个博客再没有存在的必要，<br>
-能够在自由的光辉中，永远地铭记那些曾经<br>
-为反审查作出贡献的研究者、开发者、宣传者，<br>
+<p>最后，<br>
+祝愿正在阅读这篇文章的读者，<br>
+终有一日，挣脱这个铁笼，<br>
+见证这个世界再无审查与极权，<br>
+见证这个博客再无存在的必要，<br>
+在自由的光辉中，永远铭记那些<br>
+曾经为反审查作出贡献的研究者、开发者、宣传者，<br>
 以及，曾经尽力追求自由的一个个普通人。</p>
 
 </section>
@@ -458,7 +502,7 @@
     
     <section class="powerby">
         
-            与自由拥抱。<br>
+            与自由拥抱。Embrace Liberty.<br>
 Supports 
 <a href="https://ready.chair6.net/?url=https%3A%2F%2Fobjshadow.pages.dev" target="_blank" rel="noopener">
     <b>IPv6</b>
@@ -476,8 +520,8 @@ Supports
     <b>DNSSEC</b>
 </a>
  <br/>
-        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
-        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.26.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+        使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.26.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
     </section>
 </footer>
 

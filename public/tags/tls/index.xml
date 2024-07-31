@@ -7,7 +7,7 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <lastBuildDate>Mon, 29 Jul 2024 20:00:00 +0800</lastBuildDate><atom:link href="//localhost:1313/tags/tls/index.xml" rel="self" type="application/rss+xml" /><item>
-        <title>流量分类精准识别代理? 初探TLS in Any问题</title>
+        <title>流量分类识别加密代理? 初探TLS in Any问题</title>
         <link>//localhost:1313/posts/what-is-tls-in-any/</link>
         <pubDate>Mon, 29 Jul 2024 20:00:00 +0800</pubDate>
         
@@ -18,12 +18,12 @@
 &lt;p&gt;流量分类，是指&lt;strong&gt;在不破坏数据原有加密、完整性&lt;/strong&gt;的前提下，通过&lt;strong&gt;被动地&lt;/strong&gt;记录流量的某些可见指标，来判断流量来源或目的地的某些特征，比如属于什么类型的客户端、什么类型的服务器、是什么用途的流量。&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;这种审查策略的确是闻所未闻的；在学术领域提出基于流量分类的审查策略之前，人们和审查者注意的重点都是将流量中&lt;strong&gt;特定位置的数据&lt;/strong&gt;与某些数据集作匹配、或是观察客户端/服务端对精心构造的数据包的&lt;strong&gt;特定反应&lt;/strong&gt;，以此来实现审查目的(同时配合网络测量等方式探索反审查策略)。&lt;/p&gt;
+&lt;p&gt;这种审查策略的确是闻所未闻的；在学术领域提出基于流量分类的审查策略之前，人们和审查者注意的重点都是将流量中&lt;strong&gt;特定位置的数据&lt;/strong&gt;与某些数据集作匹配、或是观察客户端/服务端对精心构造的数据包的&lt;strong&gt;特定反应&lt;/strong&gt;，以此来实现审查目的(而反审查工具的开发者、研究者们则配合网络测量等方式探索反审查策略)。&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;TLS代理仍然&lt;strong&gt;安全&lt;/strong&gt;，但是截至文章发布，所有已投入使用的开源TLS代理在下面提到的&lt;a class=&#34;link&#34; href=&#34;https://www.usenix.org/conference/usenixsecurity24/presentation/xue-fingerprinting&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;论文&lt;/a&gt;的实验数据中都属于&lt;strong&gt;隐蔽性存疑&lt;/strong&gt;的一类，包括一些&lt;strong&gt;使用了多路复用&lt;/strong&gt;的代理实现。&lt;/p&gt;
-&lt;p&gt;注意: 在这里我们需要明确&amp;quot;安全性&amp;quot;和&amp;quot;隐蔽性&amp;quot;的区别。在反审查的语境下，安全性一般指在目前算力条件下，数据在&lt;strong&gt;不可信通道&lt;/strong&gt;中传输时的&lt;strong&gt;不可见性&lt;/strong&gt;和&lt;strong&gt;完整性&lt;/strong&gt;；而隐蔽性一般指数据在不可信通道中传输时与&lt;strong&gt;某些特定数据&lt;/strong&gt;的&lt;strong&gt;负相似性&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;注意: 在这里我们需要明确&amp;quot;安全性&amp;quot;和&amp;quot;隐蔽性&amp;quot;的区别。在反审查的语境下，安全性一般指在目前算力条件下，数据在&lt;strong&gt;不可信通道&lt;/strong&gt;中传输时的&lt;strong&gt;不可见性&lt;/strong&gt;和&lt;strong&gt;完整性&lt;/strong&gt;；而隐蔽性一般指数据在不可信通道中传输时与&lt;strong&gt;某些特定数据&lt;/strong&gt;的&lt;strong&gt;负相似性&lt;/strong&gt;，以及客户端和服务端与&lt;strong&gt;某些特定实现&lt;/strong&gt;的&lt;strong&gt;负相似性&lt;/strong&gt;。&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;下面我们进入正文。&lt;/p&gt;
@@ -37,23 +37,23 @@
 &lt;li&gt;隐写：使流量看起来像被允许的流量。&lt;/li&gt;
 &lt;li&gt;多态：使流量看起来不像任何其他流量。&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&amp;ldquo;多态&amp;quot;就是shadowsocks等一众协议所采用的策略。他们将流量进行加密、填充、重排序等等操作，从而处理为随机字节流，使得审查者看到的流量中没有任何明文，审查者也就无法找出固定的正则式进行匹配，以此避免被识别并封锁。
-(PS.实际上互联网中完全随机的流量占比极低，因此&lt;strong&gt;随机本身便是一个特征&lt;/strong&gt;，这也直接导致了中国大陆的GFW使用&lt;strong&gt;基于熵的规则&lt;/strong&gt;(这里的&lt;strong&gt;熵&lt;/strong&gt;意为数据的随机程度)粗略识别并封锁shadowsocks等规避工具，见论文 &lt;a class=&#34;link&#34; href=&#34;https://gfw.report/publications/usenixsecurity23/data/paper/paper.pdf&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;How the Great Firewall of China Detects and Blocks Fully Encrypted Traffic&lt;/a&gt;，当然后来开发者们采用诸如填充改变熵的策略突破了这一审查规则)&lt;/p&gt;
-&lt;p&gt;&amp;ldquo;隐写&amp;quot;的&lt;strong&gt;必要前提&lt;/strong&gt;是至少要有一种被而允许的流量，比如微信通话、TLS，接下来几段称这种被允许的流量为&amp;quot;该协议&amp;rdquo;。
+&lt;p&gt;&amp;ldquo;多态&amp;quot;就是shadowsocks等一众协议所采用的策略。他们将流量进行加密、填充、重排序等等操作，从而处理为随机字节流，使得审查者可见的流量中没有任何明文，审查者也就无法找出固定的正则式进行匹配，以此避免被识别并封锁。
+(注:实际上互联网中完全随机的流量占比极低，因此&lt;strong&gt;随机本身便是一个特征&lt;/strong&gt;，这也直接导致了中国大陆的GFW使用&lt;strong&gt;基于熵的规则&lt;/strong&gt;(这里的&lt;strong&gt;熵&lt;/strong&gt;意为数据的随机程度)粗略识别并封锁shadowsocks等规避工具，见论文 &lt;a class=&#34;link&#34; href=&#34;https://gfw.report/publications/usenixsecurity23/data/paper/paper.pdf&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;How the Great Firewall of China Detects and Blocks Fully Encrypted Traffic&lt;/a&gt;，当然后来反审查工具的开发者们采用诸如填充改变熵的设计规避了这一审查策略)&lt;/p&gt;
+&lt;p&gt;&amp;ldquo;隐写&amp;quot;的&lt;strong&gt;必要前提&lt;/strong&gt;是至少要有一种被允许的流量，比如微信通话、TLS，接下来几段称这种被允许的流量为&amp;quot;该协议&amp;rdquo;。
 &amp;ldquo;隐写&amp;quot;又可抽象地细分为两种:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;模仿: &lt;strong&gt;伪装&lt;/strong&gt;自己是该协议下的某种实现进行传输。&lt;/li&gt;
 &lt;li&gt;隧道传输: &lt;strong&gt;直接&lt;/strong&gt;使用该协议下某种实现进行传输。&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;这俩隐写方式看起来似乎并没有太大区别，但实际上他们大相径庭。打个比方，&amp;ldquo;隐写&amp;quot;就像是给Windows电脑换Mac图标包、用仿Mac桌面，但不论如何底层都是Windows，始终运行不了访达 &lt;em&gt;(MacOS的官方文件管理器)&lt;/em&gt;。而&amp;quot;隧道传输&amp;quot;就像是直接使用Mac，不会有任何&amp;quot;破绽&amp;rdquo;。&lt;/p&gt;
-&lt;p&gt;&amp;ldquo;模仿&amp;quot;被广泛认为不可能被用于规避审查，因为当宣称是该协议的某种实现时，必须实现该实现的种种不同反应、实现怪癖甚至Bug，否则审查者可以通过确认该实现是否具有本该有的这些细节，来辨别正常流量和规避流量。对于规避工具的开发者，常见的实现往往及其复杂，不可能实现完美的模仿。然而倘若模仿简单的实现，往往该实现自身又不够常见，只会被审查者一起封杀。论文 &lt;a class=&#34;link&#34; href=&#34;https://ieeexplore.ieee.org/document/6547102&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+&lt;p&gt;&amp;ldquo;模仿&amp;quot;被广泛认为不可能被用于规避审查，因为当宣称是该协议的某种实现时，必须实现该实现的种种不同反应、实现怪癖甚至Bug，否则审查者可以通过确认该实现是否具有本该有的这些细节，来辨别正常流量和规避流量。对于规避工具的开发者，常见的实现往往及其复杂，不可能实现完美的模仿。倘若规避工具模仿简单的实现，往往这个简单实现自身便不够常见，它们只会被审查者一起封杀。论文 &lt;a class=&#34;link&#34; href=&#34;https://ieeexplore.ieee.org/document/6547102&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;The Parrot Is Dead: Observing Unobservable Network Communications&lt;/a&gt;更加周密且详细地分析了这一问题。&lt;/p&gt;
-&lt;p&gt;因此，&amp;ldquo;隧道传输&amp;quot;成为了被广泛使用的隐写方式。它通过调用某个常见实现提供的接口，将数据传递给这个接口并由该实现进行封装和传输。现在基于TLS的代理协议都属于&amp;quot;隐写&amp;quot;中的这种类型。&lt;/p&gt;
+&lt;p&gt;因此，&amp;ldquo;隧道传输&amp;quot;成为了被广泛使用的隐写方式。它通过调用某个常见实现提供的接口，将数据传递给这个接口并由该实现进行封装和传输。现在被广泛使用的基于TLS的规避工具都属于&amp;quot;隐写&amp;quot;中的这种类型。&lt;/p&gt;
 &lt;h3 id=&#34;-tls-in-any问题是什么导致的&#34;&gt;🔍 TLS in Any问题是什么导致的?
-&lt;/h3&gt;&lt;p&gt;流量之所以称流量，正是因为它是一个连接内一系列数据包构成的，这些数据包有自己的大小、先后顺序。而每种类型的流量开头，往往会有为了一些&lt;strong&gt;满足特定需求而遵循特定规范&lt;/strong&gt;的数据包，这些数据包被称作 &lt;strong&gt;&amp;ldquo;握手包&amp;rdquo;&lt;/strong&gt; 。微信通话有自己的握手包，浏览网页用的HTTP有自己的握手包，而TLS为了实现数据的安全性，需要在连接开头以安全方式交换加密、认证用的数据(密钥和证书等)，因此也会有自己的握手包。&lt;/p&gt;
-&lt;p&gt;正是&lt;strong&gt;TLS的这些握手包&lt;/strong&gt;导致了TLS in Any问题。还记得前面对&amp;quot;握手包&amp;quot;的定义吗? 它们是 &lt;strong&gt;&amp;ldquo;一些满足特定规范&amp;rdquo;&lt;/strong&gt; 的数据包。这个&amp;quot;规范&amp;quot;定义了握手包的结构、先后顺序、收发方向 —— 当规范规定了结构、而这一结构中的各项数据大小可预测时，这些握手包的大小其实已经变得&lt;strong&gt;可预测&lt;/strong&gt;了。再加上TLS规范定义的先后顺序、收发方向与审查者对于握手包大小的估计值一一对应的关系，流量分类系统就可以粗略地区别出TLS流量。&lt;/p&gt;
-&lt;p&gt;举个栗子，这里规定一个人畜无害的Cat协议，它的握手包都在开头发送，它的规范中对结构、先后顺序、收发方向的规定如下:&lt;/p&gt;
+&lt;/h3&gt;&lt;p&gt;流量之所以称作流量，正是因为它是由一个连接内的一系列数据包构成的，这些数据包有自己的大小、先后顺序。而每种类型的流量开头，往往会有为了一些&lt;strong&gt;满足特定需求而遵循特定规范&lt;/strong&gt;的数据包，这些数据包被称作 &lt;strong&gt;&amp;ldquo;握手包&amp;rdquo;&lt;/strong&gt; 。微信通话有自己的握手包，浏览网页用的HTTP有自己的握手包，而TLS为了实现数据的安全性与完整性，需要在连接开头以安全方式交换加密、认证用的数据(密钥和证书等)，因此也会有自己的握手包。&lt;/p&gt;
+&lt;p&gt;正是&lt;strong&gt;TLS的这些握手包&lt;/strong&gt;导致了TLS in Any问题。还记得前面对&amp;quot;握手包&amp;quot;的定义吗? 它们是 &lt;strong&gt;&amp;ldquo;一些满足特定规范&amp;rdquo;&lt;/strong&gt; 的数据包。这个&amp;quot;规范&amp;quot;定义了握手包的结构、先后顺序、收发方向 —— 当规范规定了结构、而这一结构中的各项数据大小可预测时，这些握手包的大小其实已经变得&lt;strong&gt;可预测&lt;/strong&gt;了。再加上TLS规范定义的先后顺序、收发方向与审查者对于握手包大小的估计值之间一一对应的关系，流量分类系统就可以粗略地区别出TLS流量。&lt;/p&gt;
+&lt;p&gt;举个栗子，这里规定一个人畜无害的Cat协议，它的握手包都在连接开始时被发送，它的规范中对结构、先后顺序、收发方向的规定如下:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;结构 &amp;amp; 先后顺序:
 &lt;ul&gt;
@@ -73,7 +73,7 @@
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;同时我们在传输前对Cat协议的每个包进行加密，&lt;strong&gt;使它们在加密后变大10-200位&lt;/strong&gt;。&lt;em&gt;(现代密码学定义下的加密，只可能使数据在加密后的大小不变或增加)&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;那么流量分类系统在试图识别&lt;strong&gt;加密过后的Cat协议&lt;/strong&gt;时，只需要在每个连接开始时观察并这样判断:&lt;/p&gt;
+&lt;p&gt;那么流量分类系统在试图识别&lt;strong&gt;加密后的Cat协议&lt;/strong&gt;时，只需要在每个连接开始时进行被动观察并这样判断:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;第一个包: 大小在210位到400位之间，方向是A -&amp;gt; B&lt;/li&gt;
 &lt;li&gt;第二个包: 大小在710位到900位之间，方向是A -&amp;gt; B&lt;/li&gt;
@@ -81,9 +81,9 @@
 &lt;li&gt;第四个包: 大小在1410位到1600位之间，方向是A &amp;lt;- B&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;如果观察到某个连接的开头符合这种流量模式，那它很可能就是Cat协议。现代密码学定义下的加密至多只能使流量中各个握手包的大小在可预测的范围内浮动，并且加密不可能改变先后顺序和收发方向，因此这种流量模式是加密无法完全改变的，也就解决不了TLS in Any问题。&lt;/p&gt;
-&lt;p&gt;万一是误判怎么办? 误判的确是有可能的，但是现实中的用户每访问一个HTTPS网站，打开的TLS连接往往就有好几个，这些连接都有TLS握手包，都存在被流量分类系统识别的可能性。
+&lt;p&gt;万一是误判怎么办? 误判的确是有可能的，然而现实中的用户每访问一个HTTPS网站，打开的TLS连接往往就有好几个，这些连接的开始都有TLS握手包被规避工具代理，因此这些连接都存在被流量分类系统识别的可能性。
 只要&lt;strong&gt;误判的概率(假阳性率)远比正确识别的概率小&lt;/strong&gt;，那么审查者只需要观察当某个用户在访问某台国外服务器时，是否有较多连接被流量分类系统识别为规避流量，再以此判断用户是否在使用规避工具。
-因为误判概率远远小于正确识别概率，所以未使用规避工具的普通用户的被误判的连接一定较少，自然难以达到&amp;quot;被审查者判断为在使用规避工具&amp;quot;的程度。&lt;/p&gt;
+由于误判概率远远小于正确识别概率，所以未使用规避工具的普通用户的被误判的连接一定较少，自然难以达到&amp;quot;被审查者判断为在使用规避工具&amp;quot;的程度。&lt;/p&gt;
 &lt;h3 id=&#34;为什么tls-in-any问题需要得到重视&#34;&gt;🤔为什么TLS in Any问题需要得到重视?
 &lt;/h3&gt;&lt;ol&gt;
 &lt;li&gt;
@@ -98,16 +98,16 @@
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;预分类器1基于&amp;quot;TCP连接&lt;strong&gt;在外层TLS握手完成后&lt;/strong&gt;的前15个包距离内的&lt;strong&gt;往返计数&lt;/strong&gt;&amp;rdquo;&lt;/p&gt;
-&lt;p&gt;如何理解? 在正常的TCP连接中，服务端在每次收到来自客户端的数据包时，总会响应一个ACK包 &lt;em&gt;(即TCP报头中ACK标志位的值设置为下一个预期收到的SEQ序列号的值的TCP数据包)&lt;/em&gt; ，因此审查者通过记录在用户的TCP连接中经过审查者端的ACK包，即可知道在用户和服务器之间一共传输了&lt;strong&gt;几个来回&lt;/strong&gt;的数据。我称之为 &lt;strong&gt;&amp;ldquo;往返计数&amp;rdquo;&lt;/strong&gt;。在典型的HTTPS访问网站的过程中，用户发起的TCP连接在完成TLS握手后，通常只会有一个GET请求 &lt;em&gt;(一次上行)&lt;/em&gt;，还有来自Web服务器的一系列响应包 &lt;em&gt;(一次下行)&lt;/em&gt;，一共仅&lt;strong&gt;1次往返&lt;/strong&gt;。&lt;/p&gt;
-&lt;p&gt;换作规避工具代理同样的HTTPS请求，在规避工具的TLS握手完成后，会&lt;strong&gt;先有1次(嵌套的)TLS握手被代理&lt;/strong&gt;，然后才是上面提到的1次往返的HTTP请求过程。而这一个被代理的(嵌套的)TLS握手&lt;strong&gt;至少会给规避工具发起的连接增加1次往返&lt;/strong&gt;。因此在使用该预处理器时，将往返计数较大的连接过滤出来，将能够避免对绝大多数正常流量的处理和误伤。&lt;/p&gt;
+&lt;p&gt;如何理解? 在正常的TCP连接中，服务端在每次收到来自客户端的数据包时，总会响应一个ACK包 &lt;em&gt;(即TCP报头中ACK标志位的值设置为下一个服务端应当收到的包的SEQ序列号的值的TCP数据包)&lt;/em&gt; ，因此审查者通过记录在用户的TCP连接中经过审查者端的ACK包，即可知道在用户和服务器之间一共传输了&lt;strong&gt;几个来回&lt;/strong&gt;的数据。我称之为 &lt;strong&gt;&amp;ldquo;往返计数&amp;rdquo;&lt;/strong&gt;。在典型的HTTPS访问网站的过程中，用户发起的TCP连接在完成TLS握手后，通常只会有一个GET请求 &lt;em&gt;(一次上行)&lt;/em&gt;，还有来自Web服务器的一系列响应包 &lt;em&gt;(一次下行)&lt;/em&gt;，一共仅&lt;strong&gt;1次往返&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;换作规避工具代理同样的HTTPS请求，在规避工具的TLS握手完成后，会&lt;strong&gt;先有1次(嵌套的)TLS握手被代理&lt;/strong&gt;，然后才是上面提到的1次往返的HTTP请求过程。而这一个被代理的(嵌套的)TLS握手&lt;strong&gt;至少会给规避工具发起的连接增加1次往返&lt;/strong&gt;。因此在使用该预处理器时，将往返计数较大的连接过滤出来，将能够避免对大多数正常流量的处理和误伤。&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;预分类器2基于&amp;quot;TCP连接&lt;strong&gt;在外层TLS握手完成后&lt;/strong&gt;的第一个包序列(burst)的&lt;strong&gt;总计大小&lt;/strong&gt;&amp;rdquo;&lt;/p&gt;
-&lt;p&gt;如何理解? 在正常的TCP连接中，鉴于网络路径中的各个路由承载量不同，需要把一个较大的包分割为几部分(即分片)，然后再按一定的时间间隔，&lt;strong&gt;逐个部分发送&lt;/strong&gt;。逐个部分发送的过程中构成了一系列包，这一系列包称作一个包序列(burst)。由于规避工具在代理HTTPS请求时，&lt;strong&gt;需要代理1次(嵌套的)TLS握手&lt;/strong&gt;，再加上加密带来的大小膨胀，会使得第一个包序列的&lt;strong&gt;总计大小&lt;/strong&gt;比正常HTTPS流量的第一个包序列更大。&lt;/p&gt;
+&lt;p&gt;如何理解? 在正常的TCP连接中，鉴于网络路径中的各个路由承载量不同，需要把一个较大的包分割为几部分(即分片)，然后再按一定的时间间隔，&lt;strong&gt;逐个部分发送&lt;/strong&gt;。逐个部分发送的过程中构成了一系列包，这原属于同一个包的一系列包称作一个包序列(burst)。由于规避工具在代理HTTPS请求时，&lt;strong&gt;需要代理1次(嵌套的)TLS握手&lt;/strong&gt;，再加上加密带来的大小膨胀，会使得第一个包序列的&lt;strong&gt;总计大小&lt;/strong&gt;比正常HTTPS流量的第一个包序列更大。&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;这两个流量预分类器的分类标准尽管粗略，但是它们在开头提到的&lt;a class=&#34;link&#34; href=&#34;https://www.usenix.org/conference/usenixsecurity24/presentation/xue-fingerprinting&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;论文&lt;/a&gt;中的表现并不差。按照该论文第8节中的实验数据，当设定为 预分类器1为小于2.5个往返计数、预分类器2为小于300个字节 时，预分类器能够筛选出82.5%的正常流量和1.5%的代理流量。&lt;/p&gt;
+    &gt;论文&lt;/a&gt;中的表现并不差。按照该论文第8节中的实验数据，当设定筛选标准为 预分类器1为小于2.5个往返计数、预分类器2为小于300个字节 时，这两个预分类器串连工作，能够筛选出82.5%的正常流量和1.5%的代理流量。&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;h3 id=&#34;基于流量分类的审查策略带来的启示&#34;&gt;💡基于流量分类的审查策略带来的启示
@@ -127,7 +127,7 @@
 &lt;p&gt;解构上行和下行连接 &lt;em&gt;(缺点是可靠性较差)&lt;/em&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;分片发送被代理的TLS握手包，且在接收方接收到某个握手包的最后一个分片之前，对每一个已经接收到的分片都要作出响应 &lt;em&gt;(如构造校验和错误的包以响应)&lt;/em&gt;，避免审查者合并分片或产生更明显的特征。&lt;/p&gt;
+&lt;p&gt;分片发送被代理的TLS握手包，且在接收方接收到某个握手包的最后一个分片之前，对每一个已经接收到的分片都要作出假响应 &lt;em&gt;(如构造校验和错误的包用于响应)&lt;/em&gt;，避免审查者合并分片(重组流量)或产生更明显的特征。&lt;/p&gt;
 &lt;p&gt;(这一策略已经在规避工具 Restls Protocol &lt;a class=&#34;link&#34; href=&#34;https://github.com/3andne/restls&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;(Github仓库链接)&lt;/a&gt; 中得到了实践，然而该策略很可能会对用户体验产生显著影响)&lt;/p&gt;
 &lt;/li&gt;
@@ -140,15 +140,15 @@
 &lt;/ol&gt;
 &lt;h3 id=&#34;审查者大规模部署基于流量分类的审查策略的几个挑战&#34;&gt;🧱审查者大规模部署基于流量分类的审查策略的几个挑战
 &lt;/h3&gt;&lt;ol&gt;
-&lt;li&gt;附带损害仍然相当高。尤其是当下TLS1.3正在不断扩大部署，TLS1.2部署不断减少，而依照本文开头提到的&lt;a class=&#34;link&#34; href=&#34;https://www.usenix.org/conference/usenixsecurity24/presentation/xue-fingerprinting&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+&lt;li&gt;附带损害仍然相当高。尤其是当下TLS1.3正在不断扩大部署规模，TLS1.2部署不断减少，而依照本文开头提到的&lt;a class=&#34;link&#34; href=&#34;https://www.usenix.org/conference/usenixsecurity24/presentation/xue-fingerprinting&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;论文&lt;/a&gt;中部署在美国运营商&lt;a class=&#34;link&#34; href=&#34;https://www.merit.edu/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Merit Network&lt;/a&gt;的网络出口上的流量分类系统的实验数据，TLS1.3分类器以实验中约26%的真阳性率的模式运行时，其误判率(假阳性率)对比真阳性率略低(约为24%)的TLS1.2分类器，增加了40倍(0.025%→1%)。&lt;/li&gt;
 &lt;li&gt;对于使用&lt;strong&gt;激进的随机填充策略&lt;/strong&gt;的规避工具(如XTLS-Vision, obfs4)，审查者需要使用额外的定制分类器对流量进行处理；并且由于包大小不再适用于分类，误判率(假阳性率)理应有所增加。&lt;/li&gt;
-&lt;li&gt;对于既基于TLS、又使用激进的随机填充策略的规避工具，由于正常TLS流量中仅握手包具有较低的熵，理论上无法用基于熵的规则对这些规避工具的代理流量进行预分类，理应会进一步提高误判率(假阳性率)。&lt;/li&gt;
+&lt;li&gt;对于既基于TLS、又使用激进的随机填充策略的规避工具，由于正常TLS流量中仅握手包具有较低的熵，理论上无法使用基于熵的规则对这些规避工具的代理流量进行预分类，这种情况理应会进一步提高误判率(假阳性率)。&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;&lt;em&gt;(推荐相关阅读 : )&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;1.&lt;a class=&#34;link&#34; href=&#34;https://github.com/XTLS/Xray-core/discussions/1295&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;XTLS Vision, fixes TLS in TLS, to the star and beyond · XTLS/Xray-core · Discussion #1295 (github.com)&lt;/a&gt;&lt;/p&gt;
+    &gt;XTLS Vision, fixes TLS in TLS, to the star and beyond · XTLS/Xray-core · Discussion #1295 (github.com)&lt;/a&gt; (&amp;ldquo;生死五包&amp;quot;原始出处)&lt;/p&gt;
 </description>
         </item>
         

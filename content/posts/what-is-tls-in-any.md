@@ -1,10 +1,10 @@
 +++
-title = '流量分类精准识别代理? 初探TLS in Any问题'
+title = '流量分类识别加密代理? 初探TLS in Any问题'
 date = 2024-07-29T20:00:00+08:00
 draft = false
-tags = ["反审查","流量分类","TLS","代理"]
+tags = ["反审查","流量分类","TLS","加密代理"]
 categories = ["反审查","TLS"]
-description = "流量分类? 这是什么闻所未闻的审查策略? TLS代理仍安全、隐蔽吗? 它离我们还有多远?"
+description = "流量分类? 这是什么闻所未闻的审查策略? 它离我们还有多远? TLS代理仍安全、隐蔽吗?"
 +++
 
 📢首先回答上面提出的问题 ~~请看VCR~~：
@@ -132,4 +132,4 @@ description = "流量分类? 这是什么闻所未闻的审查策略? TLS代理�
 
 *(推荐相关阅读 : )*
 
-1.[XTLS Vision, fixes TLS in TLS, to the star and beyond · XTLS/Xray-core · Discussion #1295 (github.com)](https://github.com/XTLS/Xray-core/discussions/1295)
+1.[XTLS Vision, fixes TLS in TLS, to the star and beyond · XTLS/Xray-core · Discussion #1295 (github.com)](https://github.com/XTLS/Xray-core/discussions/1295) ("生死五包"原始出处)
