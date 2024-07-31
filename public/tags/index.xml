@@ -6,10 +6,18 @@
         <description>Recent content in Tags on ObjShadow&#39;s Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Mon, 29 Jul 2024 20:00:00 +0800</lastBuildDate><atom:link href="//localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Wed, 31 Jul 2024 00:00:00 +0800</lastBuildDate><atom:link href="//localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>SNI白名单</title>
+        <link>//localhost:1313/tags/sni%E7%99%BD%E5%90%8D%E5%8D%95/</link>
+        <pubDate>Wed, 31 Jul 2024 00:00:00 +0800</pubDate>
+        
+        <guid>//localhost:1313/tags/sni%E7%99%BD%E5%90%8D%E5%8D%95/</guid>
+        <description></description>
+        </item>
+        <item>
         <title>TLS</title>
         <link>//localhost:1313/tags/tls/</link>
-        <pubDate>Mon, 29 Jul 2024 20:00:00 +0800</pubDate>
+        <pubDate>Wed, 31 Jul 2024 00:00:00 +0800</pubDate>
         
         <guid>//localhost:1313/tags/tls/</guid>
         <description></description>
@@ -17,7 +25,7 @@
         <item>
         <title>反审查</title>
         <link>//localhost:1313/tags/%E5%8F%8D%E5%AE%A1%E6%9F%A5/</link>
-        <pubDate>Mon, 29 Jul 2024 20:00:00 +0800</pubDate>
+        <pubDate>Wed, 31 Jul 2024 00:00:00 +0800</pubDate>
         
         <guid>//localhost:1313/tags/%E5%8F%8D%E5%AE%A1%E6%9F%A5/</guid>
         <description></description>
@@ -25,7 +33,7 @@
         <item>
         <title>加密代理</title>
         <link>//localhost:1313/tags/%E5%8A%A0%E5%AF%86%E4%BB%A3%E7%90%86/</link>
-        <pubDate>Mon, 29 Jul 2024 20:00:00 +0800</pubDate>
+        <pubDate>Wed, 31 Jul 2024 00:00:00 +0800</pubDate>
         
         <guid>//localhost:1313/tags/%E5%8A%A0%E5%AF%86%E4%BB%A3%E7%90%86/</guid>
         <description></description>

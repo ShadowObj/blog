@@ -6,11 +6,11 @@
 
 <link rel='canonical' href='//localhost:1313/tags/%E5%8F%8D%E5%AE%A1%E6%9F%A5/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae2a4e04ef264c0cb8e5d2ea5cd5145aded59fea9df95c01bfe9d95529a8baa3.css"><meta property='og:title' content="Tag: 反审查 - ObjShadow's Blog">
+<link rel="stylesheet" href="/scss/style.min.340891fe47c17ec980bc93daa4d2b44b8d082ebb4f25afee6a93529b2ed2ca66.css"><meta property='og:title' content="Tag: 反审查 - ObjShadow's Blog">
 <meta property='og:description' content="May a Censorship Researcher.">
 <meta property='og:url' content='//localhost:1313/tags/%E5%8F%8D%E5%AE%A1%E6%9F%A5/'>
 <meta property='og:site_name' content='ObjShadow&#39;s Blog'>
-<meta property='og:type' content='website'><meta property='og:updated_time' content=' 2024-07-30T00:00:00&#43;08:00 '/>
+<meta property='og:type' content='website'><meta property='og:updated_time' content=' 2024-07-31T00:00:00&#43;08:00 '/>
 <meta name="twitter:title" content="Tag: 反审查 - ObjShadow's Blog">
 <meta name="twitter:description" content="May a Censorship Researcher."><link rel="alternate" type="application/rss&#43;xml" href="//localhost:1313/tags/%E5%8F%8D%E5%AE%A1%E6%9F%A5/index.xml">
   
@@ -22,11 +22,11 @@
 <link rel="manifest" href="/site.webmanifest">
 
 <script>
-    
-    const MainTitle = "ObjShadow's Blog"
-    if (document.title != MainTitle) {
-        document.title = [document.title,MainTitle].join(" - ")
-    }
+
+const MainTitle = "ObjShadow's Blog"
+if (document.title != MainTitle) {
+    document.title = [document.title,MainTitle].join(" - ")
+}
 </script>
     </head>
     <body class="">
@@ -360,7 +360,7 @@
                     <a href="/page/archives/#2024">
                         
                             <span class="year">2024</span>
-                            <span class="count">1</span>
+                            <span class="count">2</span>
                         
                     </a> 
                 </div>
@@ -387,11 +387,11 @@
 
     <div class="tagCloud-tags">
         
-            <a href="/categories/tls/" class="font_size_1">
+            <a href="/categories/tls/" class="font_size_2">
                 TLS
             </a>
         
-            <a href="/categories/%E5%8F%8D%E5%AE%A1%E6%9F%A5/" class="font_size_1">
+            <a href="/categories/%E5%8F%8D%E5%AE%A1%E6%9F%A5/" class="font_size_2">
                 反审查
             </a>
         
@@ -416,16 +416,20 @@
 
     <div class="tagCloud-tags">
         
-            <a href="/tags/tls/" class="font_size_1">
+            <a href="/tags/tls/" class="font_size_2">
                 TLS
             </a>
         
-            <a href="/tags/%E5%8A%A0%E5%AF%86%E4%BB%A3%E7%90%86/" class="font_size_1">
+            <a href="/tags/%E5%8A%A0%E5%AF%86%E4%BB%A3%E7%90%86/" class="font_size_2">
                 加密代理
             </a>
         
-            <a href="/tags/%E5%8F%8D%E5%AE%A1%E6%9F%A5/" class="font_size_1">
+            <a href="/tags/%E5%8F%8D%E5%AE%A1%E6%9F%A5/" class="font_size_2">
                 反审查
+            </a>
+        
+            <a href="/tags/sni%E7%99%BD%E5%90%8D%E5%8D%95/" class="font_size_1">
+                SNI白名单
             </a>
         
             <a href="/tags/%E6%B5%81%E9%87%8F%E5%88%86%E7%B1%BB/" class="font_size_1">
@@ -449,7 +453,7 @@
 
         <div class="section-card">
             <div class="section-details">
-                <h3 class="section-count">1 个页面</h3>
+                <h3 class="section-count">2 个页面</h3>
                 <h1 class="section-term">反审查</h1>
                 
             </div>
@@ -457,6 +461,17 @@
     </header>
     
     <section class="article-list--compact">
+        
+            <article>
+    <a href="/posts/how-reality-works/">
+        <div class="article-details">
+            <h2 class="article-title">Xray的Reality如何突破白名单? 兼谈基于TLS的规避工具发展历程</h2>
+            <footer class="article-time">
+                <time datetime='2024-07-31T00:00:00&#43;08:00'>2024-07-31 AM</time>
+            </footer>
+        </div>
+    </a>
+</article>
         
             <article>
     <a href="/posts/what-is-tls-in-any/">
@@ -522,5 +537,79 @@ Supports
     }());
 </script>
 
+<script>
+function getWindowScrollTop() {
+    var scroll_top = 0;
+    if (document.documentElement && document.documentElement.scrollTop) {
+      scroll_top = document.documentElement.scrollTop;
+    } else if (document.body) {
+      scroll_top = document.body.scrollTop;
+    }
+    return scroll_top;
+}
+
+function scrollToViewCenter(element) {
+    let { top, height } = element.getBoundingClientRect();
+    let elementCenter = top + height / 2;
+    let center = window.innerHeight / 2;
+    window.scrollTo({
+      top: getWindowScrollTop() - (center - elementCenter),
+      behavior: 'smooth'
+    });
+}
+
+function highlight(element, color = "#8CC7B5") {
+    element.style.color = color;
+    element.style.fontWeight = "bold";
+}
+
+function unhighlight(element, color = "#8CC7B5") {
+    element.style.removeProperty("color");
+    element.style.fontWeight = "normal";
+}
+
+const params = new URLSearchParams(window.location.search);
+const highlightElements = document.getElementsByClassName(params.get("highlight"));
+if (highlightElements != null) {
+    for (let element of highlightElements) {
+        highlight(element);
+    }
+    scrollToViewCenter(highlightElements.item(0));
+    document.body.addEventListener("click", function() {
+        for (let element of highlightElements) {
+            unhighlight(element);
+        }
+    })
+}
+</script>
+
+<script>
+window.onscroll = function () {
+    let currentHeight = document.documentElement.scrollTop || document.body.scrollTop;
+    let visibleHeight = innerHeight||document.documentElement.clientHeight||document.body.clientHeight
+    if (currentHeight > (visibleHeight)) {
+        document.getElementById('scrollTop').style.display = 'block'
+    } else {
+        document.getElementById('scrollTop').style.display = 'none'
+    }
+}
+
+function smoothScrollTop(){
+    let timer  = null;
+    cancelAnimationFrame(timer);
+    timer = requestAnimationFrame(function fn(){
+        let currentHeight = document.body.scrollTop || document.documentElement.scrollTop;
+        if(currentHeight > 0){
+            document.body.scrollTop = document.documentElement.scrollTop = currentHeight - 50;
+            timer = requestAnimationFrame(fn);
+        } else {
+            cancelAnimationFrame(timer);
+        }
+    });
+}
+</script>
+        <button onclick="smoothScrollTop()" id="scrollTop">
+            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-up"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M18 11l-6 -6" /><path d="M6 11l6 -6" /></svg>
+        </button>
     </body>
 </html>
