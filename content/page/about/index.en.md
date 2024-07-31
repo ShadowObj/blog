@@ -14,23 +14,23 @@ menu:
 readingTime: false
 comments: true
 ---
-<font size=5>用最平常易懂的语言，写最硬核的反审查技术内容。</font>
+<font size=5>Use the most common and easy-to-understand language to write the most hardcore anti-censorship technical content. </font>
 
-这是本博客的slogan，也是本博客创办的目标、主旨、初心。<br>
-写这些技术内容，是希望读者既理解反审查背后蕴含的自由精神与人类伦理，<br>
-也能够洞察反审查背后的技术原理，了解前沿的反审查研究，<br>
-能够捍卫自己在数字空间的信息自由、隐私安全、与个人尊严。<br>
+This is the slogan of this blog, and it is also the goal, purpose, and original intention of the blog. <br>
+Writing these technical contents is to hope that readers can understand the spirit of freedom and human ethics behind anti-censorship,<br>
+and also be able to gain insight into the technical principles behind anti-censorship, understand cutting-edge anti-censorship research,<br>
+and be able to defend their own information freedom, privacy security, and personal dignity in the digital space. <br>
 
-本博客的主要导向是解析目前已有实际运用的规避审查工具，<br>
-同时以易于理解的方式向读者普及一些基础的反审查技术原理，<br>
-并且跟进[FOCI](https://foci.community/), [USENIX Security](https://www.usenix.org/conference/usenixsecurity24)等学术性质的大型反审查会议，<br>
-尽力为读者提供最易懂、最实用、最前沿的反审查技术内容。
+The main direction of this blog is to analyze the circumvention tools that are currently in practical use,<br>
+and popularize some basic anti-censorship technical principles to readers in an easy-to-understand way,<br>
+and follow up on large-scale anti-censorship conferences of academic nature such as [FOCI](https://foci.community/), [USENIX Security](https://www.usenix.org/conference/usenixsecurity24),<br>
+try to provide readers with the most understandable, practical, and cutting-edge anti-censorship technical content.
 
-最后，<br>
-祝愿正在阅读这篇文章的读者，<br>
-终有一日，挣脱这个铁笼，<br>
-见证这个世界再无审查与极权，<br>
-见证这个博客再无存在的必要，<br>
-在自由的光辉中，永远铭记那些<br>
-曾经为反审查作出贡献的研究者、开发者、宣传者，<br>
-以及，曾经尽力追求自由的一个个普通人。
+Finally, <br>
+I hope that the readers who are reading this article, <br>
+will one day break free from this iron cage, <br>
+witness that there is no more censorship and totalitarianism in this world, <br>
+witness that this blog is no longer necessary, <br>
+in the glory of freedom, always remember those <br>
+researchers, developers, and propagandists who have contributed to anti-censorship, <br>
+and the ordinary people who have tried their best to pursue freedom.
