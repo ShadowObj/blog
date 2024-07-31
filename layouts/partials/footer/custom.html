@@ -48,28 +48,38 @@ if (highlightElements != null) {
 </script>
 <!--ScrollTop-->
 <script>
-window.onscroll = function () {
-    let currentHeight = document.documentElement.scrollTop || document.body.scrollTop;
-    let visibleHeight = innerHeight||document.documentElement.clientHeight||document.body.clientHeight
-    if (currentHeight > (visibleHeight)) {
+window.onload = () => {
+    let visibleWidth = innerWidth||document.documentElement.clientWidth||document.body.clientWidth;
+    if (visibleWidth > 1024) {
         document.getElementById('scrollTop').style.display = 'block'
     } else {
-        document.getElementById('scrollTop').style.display = 'none'
+        var beforeScroll = 0;
+        window.onscroll = function () {
+            let currentHeight = document.documentElement.scrollTop || document.body.scrollTop;
+            let visibleHeight = innerHeight||document.documentElement.clientHeight||document.body.clientHeight;
+            var afterScroll = document.documentElement ? document.documentElement.scrollTop : document.body.scrollTop;//兼容
+           	if ((currentHeight > (visibleHeight - 50)) & (afterScroll - beforeScroll < 0)) {
+                document.getElementById('scrollTop').style.display = 'block'
+           	}else{
+                document.getElementById('scrollTop').style.display = 'none'
+           	}
+           	beforeScroll = afterScroll;
+        }
     }
 }
 
 function smoothScrollTop(){
     let timer  = null;
     cancelAnimationFrame(timer);
-    timer = requestAnimationFrame(function fn(){
+    fn = function() {
         let currentHeight = document.body.scrollTop || document.documentElement.scrollTop;
         if(currentHeight > 0){
             document.body.scrollTop = document.documentElement.scrollTop = currentHeight - 50;
             timer = requestAnimationFrame(fn);
-            document.getElementById("ScrollTop").style.background = "#4d83af";
         } else {
             cancelAnimationFrame(timer);
         }
-    });
+    }
+    timer = requestAnimationFrame(fn);
 }
 </script>

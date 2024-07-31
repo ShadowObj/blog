@@ -15,19 +15,6 @@
                 href="//localhost:1313/"
                 />
   </url><url>
-    <loc>//localhost:1313/categories/</loc>
-    <lastmod>2024-07-31T00:00:00+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="//localhost:1313/en/categories/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-cn"
-                href="//localhost:1313/categories/"
-                />
-  </url><url>
     <loc>//localhost:1313/posts/</loc>
     <lastmod>2024-07-31T00:00:00+08:00</lastmod>
     <xhtml:link
@@ -40,60 +27,6 @@
                 hreflang="zh-cn"
                 href="//localhost:1313/posts/"
                 />
-  </url><url>
-    <loc>//localhost:1313/tags/sni%E7%99%BD%E5%90%8D%E5%8D%95/</loc>
-    <lastmod>2024-07-31T00:00:00+08:00</lastmod>
-  </url><url>
-    <loc>//localhost:1313/tags/</loc>
-    <lastmod>2024-07-31T00:00:00+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="//localhost:1313/en/tags/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-cn"
-                href="//localhost:1313/tags/"
-                />
-  </url><url>
-    <loc>//localhost:1313/tags/tls/</loc>
-    <lastmod>2024-07-31T00:00:00+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="//localhost:1313/en/tags/tls/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-cn"
-                href="//localhost:1313/tags/tls/"
-                />
-  </url><url>
-    <loc>//localhost:1313/categories/tls/</loc>
-    <lastmod>2024-07-31T00:00:00+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="//localhost:1313/en/categories/tls/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-cn"
-                href="//localhost:1313/categories/tls/"
-                />
-  </url><url>
-    <loc>//localhost:1313/posts/how-reality-works/</loc>
-    <lastmod>2024-07-31T00:00:00+08:00</lastmod>
-  </url><url>
-    <loc>//localhost:1313/tags/%E5%8F%8D%E5%AE%A1%E6%9F%A5/</loc>
-    <lastmod>2024-07-31T00:00:00+08:00</lastmod>
-  </url><url>
-    <loc>//localhost:1313/categories/%E5%8F%8D%E5%AE%A1%E6%9F%A5/</loc>
-    <lastmod>2024-07-31T00:00:00+08:00</lastmod>
-  </url><url>
-    <loc>//localhost:1313/tags/%E5%8A%A0%E5%AF%86%E4%BB%A3%E7%90%86/</loc>
-    <lastmod>2024-07-31T00:00:00+08:00</lastmod>
   </url><url>
     <loc>//localhost:1313/page/</loc>
     <lastmod>2024-07-30T00:00:00+08:00</lastmod>
@@ -133,6 +66,67 @@
                 hreflang="zh-cn"
                 href="//localhost:1313/page/archives/"
                 />
+  </url><url>
+    <loc>//localhost:1313/categories/</loc>
+    <lastmod>2024-07-29T20:00:00+08:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="//localhost:1313/en/categories/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh-cn"
+                href="//localhost:1313/categories/"
+                />
+  </url><url>
+    <loc>//localhost:1313/tags/</loc>
+    <lastmod>2024-07-29T20:00:00+08:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="//localhost:1313/en/tags/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh-cn"
+                href="//localhost:1313/tags/"
+                />
+  </url><url>
+    <loc>//localhost:1313/tags/tls/</loc>
+    <lastmod>2024-07-29T20:00:00+08:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="//localhost:1313/en/tags/tls/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh-cn"
+                href="//localhost:1313/tags/tls/"
+                />
+  </url><url>
+    <loc>//localhost:1313/categories/tls/</loc>
+    <lastmod>2024-07-29T20:00:00+08:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="//localhost:1313/en/categories/tls/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh-cn"
+                href="//localhost:1313/categories/tls/"
+                />
+  </url><url>
+    <loc>//localhost:1313/tags/%E5%8F%8D%E5%AE%A1%E6%9F%A5/</loc>
+    <lastmod>2024-07-29T20:00:00+08:00</lastmod>
+  </url><url>
+    <loc>//localhost:1313/categories/%E5%8F%8D%E5%AE%A1%E6%9F%A5/</loc>
+    <lastmod>2024-07-29T20:00:00+08:00</lastmod>
+  </url><url>
+    <loc>//localhost:1313/tags/%E5%8A%A0%E5%AF%86%E4%BB%A3%E7%90%86/</loc>
+    <lastmod>2024-07-29T20:00:00+08:00</lastmod>
   </url><url>
     <loc>//localhost:1313/tags/%E6%B5%81%E9%87%8F%E5%88%86%E7%B1%BB/</loc>
     <lastmod>2024-07-29T20:00:00+08:00</lastmod>
