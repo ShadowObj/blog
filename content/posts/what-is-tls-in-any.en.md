@@ -1,6 +1,6 @@
 +++
 title = 'Traffic classification can detect encrypted proxies? A First Look at "TLS in Any" vulnerability'
-date = 2024-07-29T20:00:00+08:00
+date = 2024-07-31T16:00:00+08:00
 draft = false
 tags = ["Anti-censorship","Traffic classification","TLS","Encrypted proxy"]
 categories = ["Anti-censorship","TLS"]

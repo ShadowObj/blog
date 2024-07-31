@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='//localhost:1313/posts/what-is-tls-in-any/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae2a4e04ef264c0cb8e5d2ea5cd5145aded59fea9df95c01bfe9d95529a8baa3.css"><meta property='og:title' content="流量分类识别加密代理? 初探TLS in Any问题">
+<link rel="stylesheet" href="/scss/style.min.340891fe47c17ec980bc93daa4d2b44b8d082ebb4f25afee6a93529b2ed2ca66.css"><meta property='og:title' content="流量分类识别加密代理? 初探TLS in Any问题">
 <meta property='og:description' content="流量分类? 这是什么闻所未闻的审查策略? 它离我们还有多远? TLS代理仍安全、隐蔽吗?">
 <meta property='og:url' content='//localhost:1313/posts/what-is-tls-in-any/'>
 <meta property='og:site_name' content='ObjShadow&#39;s Blog'>
@@ -22,11 +22,11 @@
 <link rel="manifest" href="/site.webmanifest">
 
 <script>
-    
-    const MainTitle = "ObjShadow's Blog"
-    if (document.title != MainTitle) {
-        document.title = [document.title,MainTitle].join(" - ")
-    }
+
+const MainTitle = "ObjShadow's Blog"
+if (document.title != MainTitle) {
+    document.title = [document.title,MainTitle].join(" - ")
+}
 </script>
     </head>
     <body class="
@@ -504,7 +504,7 @@
     >The Parrot Is Dead: Observing Unobservable Network Communications</a>更加周密且详细地分析了这一问题。</p>
 <p>因此，&ldquo;隧道传输&quot;成为了被广泛使用的隐写方式。它通过调用某个常见实现提供的接口，将数据传递给这个接口并由该实现进行封装和传输。现在被广泛使用的基于TLS的规避工具都属于&quot;隐写&quot;中的这种类型。</p>
 <h3 id="-tls-in-any问题是什么导致的">🔍 TLS in Any问题是什么导致的?
-</h3><p>流量之所以称作流量，正是因为它是由一个连接内的一系列数据包构成的，这些数据包有自己的大小、先后顺序。而每种类型的流量开头，往往会有为了一些<strong>满足特定需求而遵循特定规范</strong>的数据包，这些数据包被称作 <strong>&ldquo;握手包&rdquo;</strong> 。微信通话有自己的握手包，浏览网页用的HTTP有自己的握手包，而TLS为了实现数据的安全性与完整性，需要在连接开头以安全方式交换加密、认证用的数据(密钥和证书等)，因此也会有自己的握手包。</p>
+</h3><p>流量之所以称作流量，正是因为它是由一个连接内的一系列数据包构成的，这些数据包有自己的大小、先后顺序。<text class="what-is-tls-handshake-hl">而每种类型的流量开头，往往会有为了一些<strong>满足特定需求而遵循特定规范</strong>的数据包，这些数据包被称作 <strong>&ldquo;握手包&rdquo;</strong> 。</text>微信通话有自己的握手包，浏览网页用的HTTP有自己的握手包，<text class="what-is-tls-handshake-hl">而TLS为了实现数据的安全性与完整性，需要在连接开头以安全方式交换加密、认证用的数据(密钥和证书等)，因此也会有自己的握手包。</text></p>
 <p>正是<strong>TLS的这些握手包</strong>导致了TLS in Any问题。还记得前面对&quot;握手包&quot;的定义吗? 它们是 <strong>&ldquo;一些满足特定规范&rdquo;</strong> 的数据包。这个&quot;规范&quot;定义了握手包的结构、先后顺序、收发方向 —— 当规范规定了结构、而这一结构中的各项数据大小可预测时，这些握手包的大小其实已经变得<strong>可预测</strong>了。再加上TLS规范定义的先后顺序、收发方向与审查者对于握手包大小的估计值之间一一对应的关系，流量分类系统就可以粗略地区别出TLS流量。</p>
 <p>举个栗子，这里规定一个人畜无害的Cat协议，它的握手包都在连接开始时被发送，它的规范中对结构、先后顺序、收发方向的规定如下:</p>
 <ul>
@@ -811,5 +811,82 @@ Supports
     }());
 </script>
 
+<script>
+function getWindowScrollTop() {
+    var scroll_top = 0;
+    if (document.documentElement && document.documentElement.scrollTop) {
+      scroll_top = document.documentElement.scrollTop;
+    } else if (document.body) {
+      scroll_top = document.body.scrollTop;
+    }
+    return scroll_top;
+}
+
+function scrollToViewCenter(element) {
+    let { top, height } = element.getBoundingClientRect();
+    let elementCenter = top + height / 2;
+    let center = window.innerHeight / 2;
+    window.scrollTo({
+      top: getWindowScrollTop() - (center - elementCenter),
+      behavior: 'smooth'
+    });
+}
+
+function highlight(element, color = "#8CC7B5") {
+    element.style.color = color;
+    element.style.fontWeight = "bold";
+}
+
+function unhighlight(element, color = "#8CC7B5") {
+    element.style.removeProperty("color");
+    element.style.fontWeight = "normal";
+}
+
+const params = new URLSearchParams(window.location.search);
+const highlightElements = document.getElementsByClassName(params.get("highlight"));
+if (highlightElements != null) {
+    for (let element of highlightElements) {
+        highlight(element);
+    }
+    scrollToViewCenter(highlightElements.item(0));
+    document.body.addEventListener("click", function() {
+        for (let element of highlightElements) {
+            unhighlight(element);
+        }
+        newUrl = window.location.href.replace(/\??&?highlight=what-is-tls-handshake-hl/,"")
+        window.history.replaceState('', '', newUrl);
+    })
+}
+</script>
+
+<script>
+window.onscroll = function () {
+    let currentHeight = document.documentElement.scrollTop || document.body.scrollTop;
+    let visibleHeight = innerHeight||document.documentElement.clientHeight||document.body.clientHeight
+    if (currentHeight > (visibleHeight)) {
+        document.getElementById('scrollTop').style.display = 'block'
+    } else {
+        document.getElementById('scrollTop').style.display = 'none'
+    }
+}
+
+function smoothScrollTop(){
+    let timer  = null;
+    cancelAnimationFrame(timer);
+    timer = requestAnimationFrame(function fn(){
+        let currentHeight = document.body.scrollTop || document.documentElement.scrollTop;
+        if(currentHeight > 0){
+            document.body.scrollTop = document.documentElement.scrollTop = currentHeight - 50;
+            timer = requestAnimationFrame(fn);
+            document.getElementById("ScrollTop").style.background = "#4d83af";
+        } else {
+            cancelAnimationFrame(timer);
+        }
+    });
+}
+</script>
+        <button onclick="smoothScrollTop()" id="scrollTop">
+            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-up"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M18 11l-6 -6" /><path d="M6 11l6 -6" /></svg>
+        </button>
     </body>
 </html>
