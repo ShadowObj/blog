@@ -178,17 +178,9 @@ if (document.title != MainTitle) {
                 
                 
                 
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <polyline points="5 12 3 12 12 3 21 12 19 12" />
-  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
-  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
-</svg>
-
-
-
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-planet"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18.816 13.58c2.292 2.138 3.546 4 3.092 4.9c-.745 1.46 -5.783 -.259 -11.255 -3.838c-5.47 -3.579 -9.304 -7.664 -8.56 -9.123c.464 -.91 2.926 -.444 5.803 .805" /><path d="M12 12m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /></svg>
                 
-                <span>主页</span>
+                <span>主页 | Home</span>
             </a>
         </li>
         
@@ -207,7 +199,7 @@ if (document.title != MainTitle) {
 
 
                 
-                <span>关于</span>
+                <span>关于 | About</span>
             </a>
         </li>
         
@@ -227,7 +219,7 @@ if (document.title != MainTitle) {
 
 
                 
-                <span>归档</span>
+                <span>归档 | Archives</span>
             </a>
         </li>
         
@@ -246,7 +238,7 @@ if (document.title != MainTitle) {
 
 
                 
-                <span>搜索</span>
+                <span>搜索 | Search</span>
             </a>
         </li>
         
@@ -265,7 +257,27 @@ if (document.title != MainTitle) {
 
 
                 
-                <span>友链</span>
+                <span>友链 | Friends</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/index.xml' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-rss" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="5" cy="19" r="1" />
+  <path d="M4 4a16 16 0 0 1 16 16" />
+  <path d="M4 11a9 9 0 0 1 9 9" />
+</svg>
+
+
+
+                
+                <span>订阅 | RSS</span>
             </a>
         </li>
         
@@ -610,29 +622,39 @@ if (highlightElements != null) {
 </script>
 
 <script>
-window.onscroll = function () {
-    let currentHeight = document.documentElement.scrollTop || document.body.scrollTop;
-    let visibleHeight = innerHeight||document.documentElement.clientHeight||document.body.clientHeight
-    if ((currentHeight > visibleHeight) & (screenTop < 0)) {
+window.onload = () => {
+    let visibleWidth = innerWidth||document.documentElement.clientWidth||document.body.clientWidth;
+    if (visibleWidth > 1024) {
         document.getElementById('scrollTop').style.display = 'block'
     } else {
-        document.getElementById('scrollTop').style.display = 'none'
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     }
 }
 
 function smoothScrollTop(){
     let timer  = null;
     cancelAnimationFrame(timer);
-    timer = requestAnimationFrame(function fn(){
+    fn = function() {
         let currentHeight = document.body.scrollTop || document.documentElement.scrollTop;
         if(currentHeight > 0){
             document.body.scrollTop = document.documentElement.scrollTop = currentHeight - 50;
             timer = requestAnimationFrame(fn);
-            document.getElementById("ScrollTop").style.background = "#4d83af";
         } else {
             cancelAnimationFrame(timer);
         }
-    });
+    }
+    timer = requestAnimationFrame(fn);
 }
 </script>
         <button onclick="smoothScrollTop()" id="scrollTop">

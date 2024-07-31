@@ -1,8 +1,8 @@
 ---
 menu:
     main:
-        name: 主页
+        name: 主页 | Home
         weight: -100
         params:
-            icon: home
+            icon: planet
 ---

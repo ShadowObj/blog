@@ -29,7 +29,7 @@ url = "https://keys.openpgp.org/vks/v1/by-fingerprint/FDEAA5F05C3B8D3A9A96DC7DE4
 params.icon = "brand-key"
 
 [[main]]
-name = "订阅 | RSS"
+name = "RSS"
 url = "/index.xml"
 weight = -40
 params.icon = "rss"

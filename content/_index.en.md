@@ -4,5 +4,5 @@ menu:
         name: Home
         weight: -100
         params:
-            icon: home
+            icon: planet
 ---

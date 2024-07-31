@@ -1,5 +1,5 @@
 ---
-title: 友链
+title: 友链 | Friends
 links:
   - title: ObjShadow's Blog
     description: May a Censorship Researcher.
