@@ -6,45 +6,10 @@
         <description>Recent content on ObjShadow&#39;s Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en</language>
-        <lastBuildDate>Tue, 30 Jul 2024 00:00:00 +0800</lastBuildDate><atom:link href="//localhost:1313/en/index.xml" rel="self" type="application/rss+xml" /><item>
-        <title>About</title>
-        <link>//localhost:1313/en/page/about/</link>
-        <pubDate>Tue, 30 Jul 2024 00:00:00 +0800</pubDate>
-        
-        <guid>//localhost:1313/en/page/about/</guid>
-        <description>&lt;p&gt;&lt;font size=5&gt;Use the most common and easy-to-understand language to write the most hardcore anti-censorship technical content. &lt;/font&gt;&lt;/p&gt;
-&lt;p&gt;This is the slogan of this blog, and it is also the goal, purpose, and original intention of the blog. &lt;br&gt;
-Writing these technical contents is to hope that readers can understand the spirit of freedom and human ethics behind anti-censorship,&lt;br&gt;
-and also be able to gain insight into the technical principles behind anti-censorship, understand cutting-edge anti-censorship research,&lt;br&gt;
-and be able to defend their own information freedom, privacy security, and personal dignity in the digital space. &lt;br&gt;&lt;/p&gt;
-&lt;p&gt;The main direction of this blog is to analyze the circumvention tools that are currently in practical use,&lt;br&gt;
-and popularize some basic anti-censorship technical principles to readers in an easy-to-understand way,&lt;br&gt;
-and follow up on large-scale anti-censorship conferences of academic nature such as &lt;a class=&#34;link&#34; href=&#34;https://foci.community/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;FOCI&lt;/a&gt;, &lt;a class=&#34;link&#34; href=&#34;https://www.usenix.org/conference/usenixsecurity24&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;USENIX Security&lt;/a&gt;,&lt;br&gt;
-try to provide readers with the most understandable, practical, and cutting-edge anti-censorship technical content.&lt;/p&gt;
-&lt;p&gt;Finally, &lt;br&gt;
-I hope that the readers who are reading this article, &lt;br&gt;
-will one day break free from this iron cage, &lt;br&gt;
-witness that there is no more censorship and totalitarianism in this world, &lt;br&gt;
-witness that this blog is no longer necessary, &lt;br&gt;
-in the glory of freedom, always remember those &lt;br&gt;
-researchers, developers, and propagandists who have contributed to anti-censorship, &lt;br&gt;
-and the ordinary people who have tried their best to pursue freedom.&lt;/p&gt;
-</description>
-        </item>
-        <item>
-        <title>Archives</title>
-        <link>//localhost:1313/en/page/archives/</link>
-        <pubDate>Tue, 30 Jul 2024 00:00:00 +0800</pubDate>
-        
-        <guid>//localhost:1313/en/page/archives/</guid>
-        <description></description>
-        </item>
-        <item>
+        <lastBuildDate>Wed, 31 Jul 2024 16:00:00 +0800</lastBuildDate><atom:link href="//localhost:1313/en/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>Traffic classification can detect encrypted proxies? A First Look at &#34;TLS in Any&#34; vulnerability</title>
         <link>//localhost:1313/en/posts/what-is-tls-in-any/</link>
-        <pubDate>Mon, 29 Jul 2024 20:00:00 +0800</pubDate>
+        <pubDate>Wed, 31 Jul 2024 16:00:00 +0800</pubDate>
         
         <guid>//localhost:1313/en/posts/what-is-tls-in-any/</guid>
         <description>&lt;p&gt;(All the content below is translated from Chinese by Google Translate ↓)
@@ -181,6 +146,42 @@ Since the probability of misjudgment is much smaller than the probability of cor
 &lt;p&gt;1.&lt;a class=&#34;link&#34; href=&#34;https://github.com/XTLS/Xray-core/discussions/1295&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;XTLS Vision, fixes TLS in TLS, to the star and beyond · XTLS/Xray-core · Discussion #1295 (github.com)&lt;/a&gt; (&amp;ldquo;Five Packets of Life and Death&amp;rdquo; original source)&lt;/p&gt;
 </description>
+        </item>
+        <item>
+        <title>About</title>
+        <link>//localhost:1313/en/page/about/</link>
+        <pubDate>Tue, 30 Jul 2024 00:00:00 +0800</pubDate>
+        
+        <guid>//localhost:1313/en/page/about/</guid>
+        <description>&lt;p&gt;&lt;font size=5&gt;Use the most common and easy-to-understand language, &lt;br&gt;
+to write the most hardcore anti-censorship technical content. &lt;/font&gt;&lt;/p&gt;
+&lt;p&gt;This is the slogan of this blog, and it is also the goal, purpose, and original intention of the blog. &lt;br&gt;
+Writing these technical contents is to hope that readers can understand the spirit of freedom and human ethics behind anti-censorship,&lt;br&gt;
+and also be able to gain insight into the technical principles behind anti-censorship, understand cutting-edge anti-censorship research,&lt;br&gt;
+and be able to defend their own information freedom, privacy security, and personal dignity in the digital space. &lt;br&gt;&lt;/p&gt;
+&lt;p&gt;The main direction of this blog is to analyze the circumvention tools that are currently in practical use,&lt;br&gt;
+and popularize some basic anti-censorship technical principles to readers in an easy-to-understand way,&lt;br&gt;
+and follow up on large-scale anti-censorship conferences of academic nature such as &lt;a class=&#34;link&#34; href=&#34;https://foci.community/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;FOCI&lt;/a&gt;, &lt;a class=&#34;link&#34; href=&#34;https://www.usenix.org/conference/usenixsecurity24&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;USENIX Security&lt;/a&gt;,&lt;br&gt;
+try to provide readers with the most understandable, practical, and cutting-edge anti-censorship technical content.&lt;/p&gt;
+&lt;p&gt;Finally, &lt;br&gt;
+I hope that the readers who are reading this article, &lt;br&gt;
+will one day break free from this iron cage, &lt;br&gt;
+witness that there is no more censorship and totalitarianism in this world, &lt;br&gt;
+witness that this blog is no longer necessary, &lt;br&gt;
+in the glory of freedom, always remember those &lt;br&gt;
+researchers, developers, and propagandists who have contributed to anti-censorship, &lt;br&gt;
+and the ordinary people who have tried their best to pursue freedom.&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>Archives</title>
+        <link>//localhost:1313/en/page/archives/</link>
+        <pubDate>Tue, 30 Jul 2024 00:00:00 +0800</pubDate>
+        
+        <guid>//localhost:1313/en/page/archives/</guid>
+        <description></description>
         </item>
         <item>
         <title>Links</title>

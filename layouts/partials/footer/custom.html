@@ -1,46 +1,75 @@
 <!--Highlight-->
 <script>
-    function getWindowScrollTop() {
-        var scroll_top = 0;
-        if (document.documentElement && document.documentElement.scrollTop) {
-          scroll_top = document.documentElement.scrollTop;
-        } else if (document.body) {
-          scroll_top = document.body.scrollTop;
-        }
-        return scroll_top;
+function getWindowScrollTop() {
+    var scroll_top = 0;
+    if (document.documentElement && document.documentElement.scrollTop) {
+      scroll_top = document.documentElement.scrollTop;
+    } else if (document.body) {
+      scroll_top = document.body.scrollTop;
     }
+    return scroll_top;
+}
 
-    function scrollToViewCenter(element) {
-        let { top, height } = element.getBoundingClientRect();
-        let elementCenter = top + height / 2;
-        let center = window.innerHeight / 2;
-        window.scrollTo({
-          top: getWindowScrollTop() - (center - elementCenter),
-          behavior: 'smooth'
-        });
+function scrollToViewCenter(element) {
+    let { top, height } = element.getBoundingClientRect();
+    let elementCenter = top + height / 2;
+    let center = window.innerHeight / 2;
+    window.scrollTo({
+      top: getWindowScrollTop() - (center - elementCenter),
+      behavior: 'smooth'
+    });
+}
+
+function highlight(element, color = "#8CC7B5") {
+    element.style.color = color;
+    element.style.fontWeight = "bold";
+}
+
+function unhighlight(element, color = "#8CC7B5") {
+    element.style.removeProperty("color");
+    element.style.fontWeight = "normal";
+}
+
+const params = new URLSearchParams(window.location.search);
+const highlightElements = document.getElementsByClassName(params.get("highlight"));
+if (highlightElements != null) {
+    for (let element of highlightElements) {
+        highlight(element);
     }
-
-    function highlight(element, color = "#8CC7B5") {
-        element.style.color = color;
-        element.style.fontWeight = "bold";
-    }
-
-    function unhighlight(element, color = "#8CC7B5") {
-        element.style.removeProperty("color");
-        element.style.fontWeight = "normal";
-    }
-
-    const params = new URLSearchParams(window.location.search);
-    const highlightElements = document.getElementsByClassName(params.get("highlight"));
-    if (highlightElements != null) {
+    scrollToViewCenter(highlightElements.item(0));
+    document.body.addEventListener("click", function() {
         for (let element of highlightElements) {
-            highlight(element);
+            unhighlight(element);
         }
-        scrollToViewCenter(highlightElements.item(0));
-        document.body.addEventListener("click", function() {
-            for (let element of highlightElements) {
-                unhighlight(element);
-            }
-        })
+        newUrl = window.location.href.replace(/\??&?highlight=what-is-tls-handshake-hl/,"")
+        window.history.replaceState('', '', newUrl);
+    })
+}
+</script>
+<!--ScrollTop-->
+<script>
+window.onscroll = function () {
+    let currentHeight = document.documentElement.scrollTop || document.body.scrollTop;
+    let visibleHeight = innerHeight||document.documentElement.clientHeight||document.body.clientHeight
+    if (currentHeight > (visibleHeight)) {
+        document.getElementById('scrollTop').style.display = 'block'
+    } else {
+        document.getElementById('scrollTop').style.display = 'none'
     }
+}
+
+function smoothScrollTop(){
+    let timer  = null;
+    cancelAnimationFrame(timer);
+    timer = requestAnimationFrame(function fn(){
+        let currentHeight = document.body.scrollTop || document.documentElement.scrollTop;
+        if(currentHeight > 0){
+            document.body.scrollTop = document.documentElement.scrollTop = currentHeight - 50;
+            timer = requestAnimationFrame(fn);
+            document.getElementById("ScrollTop").style.background = "#4d83af";
+        } else {
+            cancelAnimationFrame(timer);
+        }
+    });
+}
 </script>

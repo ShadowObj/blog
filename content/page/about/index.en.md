@@ -14,7 +14,8 @@ menu:
 readingTime: false
 comments: true
 ---
-<font size=5>Use the most common and easy-to-understand language to write the most hardcore anti-censorship technical content. </font>
+<font size=5>Use the most common and easy-to-understand language, <br>
+to write the most hardcore anti-censorship technical content. </font>
 
 This is the slogan of this blog, and it is also the goal, purpose, and original intention of the blog. <br>
 Writing these technical contents is to hope that readers can understand the spirit of freedom and human ethics behind anti-censorship,<br>

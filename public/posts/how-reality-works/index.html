@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='//localhost:1313/posts/how-reality-works/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae2a4e04ef264c0cb8e5d2ea5cd5145aded59fea9df95c01bfe9d95529a8baa3.css"><meta property='og:title' content="Xray的Reality如何突破白名单? 兼谈基于TLS的规避工具发展历程">
+<link rel="stylesheet" href="/scss/style.min.340891fe47c17ec980bc93daa4d2b44b8d082ebb4f25afee6a93529b2ed2ca66.css"><meta property='og:title' content="Xray的Reality如何突破白名单? 兼谈基于TLS的规避工具发展历程">
 <meta property='og:description' content="ℹ️前言 主要由RPRX和yuhan维护的Xray，又称Project X，是一个开源的具有规避工具，在反审查领域中以其新颖前卫而实用的各种概念">
 <meta property='og:url' content='//localhost:1313/posts/how-reality-works/'>
 <meta property='og:site_name' content='ObjShadow&#39;s Blog'>
@@ -22,11 +22,11 @@
 <link rel="manifest" href="/site.webmanifest">
 
 <script>
-    
-    const MainTitle = "ObjShadow's Blog"
-    if (document.title != MainTitle) {
-        document.title = [document.title,MainTitle].join(" - ")
-    }
+
+const MainTitle = "ObjShadow's Blog"
+if (document.title != MainTitle) {
+    document.title = [document.title,MainTitle].join(" - ")
+}
 </script>
     </head>
     <body class="
@@ -389,6 +389,7 @@
     
     
     
+    
     <footer class="article-time">
         
             <div>
@@ -402,6 +403,15 @@
   <path d="M18 16.496v1.504l1 1" />
 </svg>
                 <time class="article-time--published">2024-07-31 AM</time>
+            </div>
+        
+
+        
+            <div>
+                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-letter-case"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17.5 15.5m-3.5 0a3.5 3.5 0 1 0 7 0a3.5 3.5 0 1 0 -7 0" /><path d="M3 19v-10.5a3.5 3.5 0 0 1 7 0v10.5" /><path d="M3 13h7" /><path d="M21 12v7" /></svg>
+                <time class="article-time--reading">
+                    共 1111 个字
+                </time>
             </div>
         
 
@@ -439,8 +449,17 @@
     >Chasing Shadows: A security analysis of the ShadowTLS proxy</a>，当然这都是后话了，未来可能会出一期文章讲shadowtls)</p>
 <h3 id="-sni白名单是什么-sni和tls是什么关系">👀 &ldquo;SNI白名单&quot;是什么? SNI和TLS是什么关系?
 </h3><p>你可能知道，现在广泛使用的应用层安全协议，HTTPS的基石——TLS协议在发起连接时有自己的&quot;握手流程&rdquo;。什么? 你不知道&quot;握手&quot;是啥? 你可以看看我的往期文章 &ldquo;<a class="link" href="/posts/what-is-tls-in-any/" >流量分类识别加密代理? 初探TLS in Any问题</a>&rdquo; 中的<a class="link" href="/posts/what-is-tls-in-any/?highlight=what-is-tls-handshake-hl" >这一段</a>。</p>
-<p>在理解<strong>SNI白名单</strong>这种审查策略之前，我们先来看看一个正常TLS1.3连接的握手流程:</p>
-<p>Q:为什么选择TLS1.3作例子?<br>
+<p>在理解<strong>SNI白名单</strong>这种审查策略之前，我们先来看看一个正常TLS1.3连接的握手流程:<br>
+(这里引用一张来自Cloudflare Blog的图片，为加速访问故未引用外链)<br>
+<img src="/img/how-tls-13-handshakes-cloudflare.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+><br>
+Q:为什么选择TLS1.3作例子?<br>
 A: 因为TLS1.3很大程度上就是TLS1.2简化后的版本，它修复了前代的诸多安全漏洞、设计得更加简洁好用，并且其部署规模正在不断扩大。</p>
 <h3 id="-我们来想想如何改变sni">🤔 我们来想想如何改变SNI
 </h3><h3 id="-shall-we-go-into-the-sea-of-code"> 🔍 Shall we go into the sea of code?
@@ -703,39 +722,81 @@ Supports
 </script>
 
 <script>
-    function getWindowScrollTop() {
-        var scroll_top = 0;
-        if (document.documentElement && document.documentElement.scrollTop) {
-          scroll_top = document.documentElement.scrollTop;
-        } else if (document.body) {
-          scroll_top = document.body.scrollTop;
-        }
-        return scroll_top;
+function getWindowScrollTop() {
+    var scroll_top = 0;
+    if (document.documentElement && document.documentElement.scrollTop) {
+      scroll_top = document.documentElement.scrollTop;
+    } else if (document.body) {
+      scroll_top = document.body.scrollTop;
     }
+    return scroll_top;
+}
 
-    function scrollToViewCenter(element) {
-        let { top, height } = element.getBoundingClientRect();
-        let elementCenter = top + height / 2;
-        let center = window.innerHeight / 2;
-        window.scrollTo({
-          top: getWindowScrollTop() - (center - elementCenter),
-          behavior: 'smooth'
-        });
+function scrollToViewCenter(element) {
+    let { top, height } = element.getBoundingClientRect();
+    let elementCenter = top + height / 2;
+    let center = window.innerHeight / 2;
+    window.scrollTo({
+      top: getWindowScrollTop() - (center - elementCenter),
+      behavior: 'smooth'
+    });
+}
+
+function highlight(element, color = "#8CC7B5") {
+    element.style.color = color;
+    element.style.fontWeight = "bold";
+}
+
+function unhighlight(element, color = "#8CC7B5") {
+    element.style.removeProperty("color");
+    element.style.fontWeight = "normal";
+}
+
+const params = new URLSearchParams(window.location.search);
+const highlightElements = document.getElementsByClassName(params.get("highlight"));
+if (highlightElements != null) {
+    for (let element of highlightElements) {
+        highlight(element);
     }
-
-    function highlight(element, color = "#8CC7B5") {
-        element.style.color = color;
-        element.style.fontWeight = "bold";
-    }
-
-    var params = new URLSearchParams(window.location.search);
-    var highlightElements = document.getElementsByClassName(params.get("highlight"));
-    if (highlightElements != null) {
+    scrollToViewCenter(highlightElements.item(0));
+    document.body.addEventListener("click", function() {
         for (let element of highlightElements) {
-            highlight(element);
+            unhighlight(element);
         }
-        scrollToViewCenter(highlightElements.item(0));
-    }
+        newUrl = window.location.href.replace(/\??&?highlight=what-is-tls-handshake-hl/,"")
+        window.history.replaceState('', '', newUrl);
+    })
+}
 </script>
+
+<script>
+window.onscroll = function () {
+    let currentHeight = document.documentElement.scrollTop || document.body.scrollTop;
+    let visibleHeight = innerHeight||document.documentElement.clientHeight||document.body.clientHeight
+    if (currentHeight > (visibleHeight)) {
+        document.getElementById('scrollTop').style.display = 'block'
+    } else {
+        document.getElementById('scrollTop').style.display = 'none'
+    }
+}
+
+function smoothScrollTop(){
+    let timer  = null;
+    cancelAnimationFrame(timer);
+    timer = requestAnimationFrame(function fn(){
+        let currentHeight = document.body.scrollTop || document.documentElement.scrollTop;
+        if(currentHeight > 0){
+            document.body.scrollTop = document.documentElement.scrollTop = currentHeight - 50;
+            timer = requestAnimationFrame(fn);
+            document.getElementById("ScrollTop").style.background = "#4d83af";
+        } else {
+            cancelAnimationFrame(timer);
+        }
+    });
+}
+</script>
+        <button onclick="smoothScrollTop()" id="scrollTop">
+            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-up"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M18 11l-6 -6" /><path d="M6 11l6 -6" /></svg>
+        </button>
     </body>
 </html>
