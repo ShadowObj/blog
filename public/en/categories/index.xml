@@ -7,19 +7,19 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>en</language>
         <lastBuildDate>Mon, 29 Jul 2024 20:00:00 +0800</lastBuildDate><atom:link href="//localhost:1313/en/categories/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Anti-Censorship</title>
+        <link>//localhost:1313/en/categories/anti-censorship/</link>
+        <pubDate>Mon, 29 Jul 2024 20:00:00 +0800</pubDate>
+        
+        <guid>//localhost:1313/en/categories/anti-censorship/</guid>
+        <description></description>
+        </item>
+        <item>
         <title>TLS</title>
         <link>//localhost:1313/en/categories/tls/</link>
         <pubDate>Mon, 29 Jul 2024 20:00:00 +0800</pubDate>
         
         <guid>//localhost:1313/en/categories/tls/</guid>
-        <description></description>
-        </item>
-        <item>
-        <title>反审查</title>
-        <link>//localhost:1313/en/categories/%E5%8F%8D%E5%AE%A1%E6%9F%A5/</link>
-        <pubDate>Mon, 29 Jul 2024 20:00:00 +0800</pubDate>
-        
-        <guid>//localhost:1313/en/categories/%E5%8F%8D%E5%AE%A1%E6%9F%A5/</guid>
         <description></description>
         </item>
         

@@ -347,19 +347,6 @@
 </article>
 
                 
-                    
-<article class="">
-    <a href="/en/categories/%E5%8F%8D%E5%AE%A1%E6%9F%A5/">
-        
-        
-
-        <div class="article-details">
-            <h2 class="article-title">反审查</h2>
-        </div>
-    </a>
-</article>
-
-                
             </div>
         </div>
         
@@ -442,5 +429,40 @@ Supports
     }());
 </script>
 
+<script>
+    function getWindowScrollTop() {
+        var scroll_top = 0;
+        if (document.documentElement && document.documentElement.scrollTop) {
+          scroll_top = document.documentElement.scrollTop;
+        } else if (document.body) {
+          scroll_top = document.body.scrollTop;
+        }
+        return scroll_top;
+    }
+
+    function scrollToViewCenter(element) {
+        let { top, height } = element.getBoundingClientRect();
+        let elementCenter = top + height / 2;
+        let center = window.innerHeight / 2;
+        window.scrollTo({
+          top: getWindowScrollTop() - (center - elementCenter),
+          behavior: 'smooth'
+        });
+    }
+
+    function highlight(element, color = "#8CC7B5") {
+        element.style.color = color;
+        element.style.fontWeight = "bold";
+    }
+
+    var params = new URLSearchParams(window.location.search);
+    var highlightElements = document.getElementsByClassName(params.get("highlight"));
+    if (highlightElements != null) {
+        for (let element of highlightElements) {
+            highlight(element);
+        }
+        scrollToViewCenter(highlightElements.item(0));
+    }
+</script>
     </body>
 </html>

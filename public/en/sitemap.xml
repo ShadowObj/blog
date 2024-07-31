@@ -54,6 +54,12 @@
                 href="//localhost:1313/en/page/"
                 />
   </url><url>
+    <loc>//localhost:1313/en/tags/anti-censorship/</loc>
+    <lastmod>2024-07-29T20:00:00+08:00</lastmod>
+  </url><url>
+    <loc>//localhost:1313/en/categories/anti-censorship/</loc>
+    <lastmod>2024-07-29T20:00:00+08:00</lastmod>
+  </url><url>
     <loc>//localhost:1313/en/categories/</loc>
     <lastmod>2024-07-29T20:00:00+08:00</lastmod>
     <xhtml:link
@@ -66,6 +72,9 @@
                 hreflang="en"
                 href="//localhost:1313/en/categories/"
                 />
+  </url><url>
+    <loc>//localhost:1313/en/tags/encrypted-proxy/</loc>
+    <lastmod>2024-07-29T20:00:00+08:00</lastmod>
   </url><url>
     <loc>//localhost:1313/en/posts/</loc>
     <lastmod>2024-07-29T20:00:00+08:00</lastmod>
@@ -119,57 +128,8 @@
                 href="//localhost:1313/en/categories/tls/"
                 />
   </url><url>
-    <loc>//localhost:1313/en/tags/%E5%8A%A0%E5%AF%86%E4%BB%A3%E7%90%86/</loc>
+    <loc>//localhost:1313/en/tags/traffic-classification/</loc>
     <lastmod>2024-07-29T20:00:00+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-cn"
-                href="//localhost:1313/tags/%E5%8A%A0%E5%AF%86%E4%BB%A3%E7%90%86/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="//localhost:1313/en/tags/%E5%8A%A0%E5%AF%86%E4%BB%A3%E7%90%86/"
-                />
-  </url><url>
-    <loc>//localhost:1313/en/tags/%E5%8F%8D%E5%AE%A1%E6%9F%A5/</loc>
-    <lastmod>2024-07-29T20:00:00+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-cn"
-                href="//localhost:1313/tags/%E5%8F%8D%E5%AE%A1%E6%9F%A5/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="//localhost:1313/en/tags/%E5%8F%8D%E5%AE%A1%E6%9F%A5/"
-                />
-  </url><url>
-    <loc>//localhost:1313/en/categories/%E5%8F%8D%E5%AE%A1%E6%9F%A5/</loc>
-    <lastmod>2024-07-29T20:00:00+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-cn"
-                href="//localhost:1313/categories/%E5%8F%8D%E5%AE%A1%E6%9F%A5/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="//localhost:1313/en/categories/%E5%8F%8D%E5%AE%A1%E6%9F%A5/"
-                />
-  </url><url>
-    <loc>//localhost:1313/en/tags/%E6%B5%81%E9%87%8F%E5%88%86%E7%B1%BB/</loc>
-    <lastmod>2024-07-29T20:00:00+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-cn"
-                href="//localhost:1313/tags/%E6%B5%81%E9%87%8F%E5%88%86%E7%B1%BB/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="//localhost:1313/en/tags/%E6%B5%81%E9%87%8F%E5%88%86%E7%B1%BB/"
-                />
   </url><url>
     <loc>//localhost:1313/en/posts/what-is-tls-in-any/</loc>
     <lastmod>2024-07-29T20:00:00+08:00</lastmod>

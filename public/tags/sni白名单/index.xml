@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>SNI白名单 on ObjShadow&#39;s Blog</title>
+        <link>//localhost:1313/tags/sni%E7%99%BD%E5%90%8D%E5%8D%95/</link>
+        <description>Recent content in SNI白名单 on ObjShadow&#39;s Blog</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <lastBuildDate>Wed, 31 Jul 2024 00:00:00 +0800</lastBuildDate><atom:link href="//localhost:1313/tags/sni%E7%99%BD%E5%90%8D%E5%8D%95/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Xray的Reality如何突破白名单? 兼谈基于TLS的规避工具发展历程</title>
+        <link>//localhost:1313/posts/how-reality-works/</link>
+        <pubDate>Wed, 31 Jul 2024 00:00:00 +0800</pubDate>
+        
+        <guid>//localhost:1313/posts/how-reality-works/</guid>
+        <description>&lt;h3 id=&#34;ℹ前言&#34;&gt;ℹ️前言
+&lt;/h3&gt;&lt;p&gt;主要由RPRX和yuhan维护的Xray，又称Project X，是一个开源的具有规避工具，在反审查领域中以其新颖前卫而实用的各种概念性技术 &lt;del&gt;还有神秘失踪又复活的开发者RPRX&lt;/del&gt; 而闻名，像是VLESS,XTLS-Vision,XUDP&amp;hellip;&lt;/p&gt;
+&lt;p&gt;而自从中国大陆一些地区(已知福建泉州移动是最早的地区)开始实施一种全新的审查策略&amp;ndash;&lt;strong&gt;SNI白名单&lt;/strong&gt;，基于TLS的各种规避工具在那里一夜之间变得不可用。先前ihciah开发的规避工具shadowtls得到广泛关注，这一项目或许就是RPRX开发&lt;strong&gt;Reality&lt;/strong&gt;并将其集成到Xray中的灵感之一。Reality因为可以&lt;strong&gt;突破SNI白名单&lt;/strong&gt;，在反审查领域名声大噪。&lt;/p&gt;
+&lt;p&gt;那么Reality是如何突破这一审查策略的? 从技术角度如何理解其细节? 这两个问题将是本文接下来探讨的重点。同时，本文也将为读者梳理其他被广泛使用(过)的、基于TLS的规避工具的发展历程。
+(小插曲: shadowtls有v1,v2,v3三个不相兼容的版本，其中v2修复了v1存在的可审查漏洞，见论文 &lt;a class=&#34;link&#34; href=&#34;https://www.petsymposium.org/foci/2023/foci-2023-0002.pdf&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Chasing Shadows: A security analysis of the ShadowTLS proxy&lt;/a&gt;，当然这都是后话了，未来可能会出一期文章讲shadowtls)&lt;/p&gt;
+&lt;h3 id=&#34;-sni白名单是什么-sni和tls是什么关系&#34;&gt;👀 &amp;ldquo;SNI白名单&amp;quot;是什么? SNI和TLS是什么关系?
+&lt;/h3&gt;&lt;p&gt;你可能知道，现在广泛使用的应用层安全协议，HTTPS的基石&amp;ndash;TLS协议在发起连接时有自己的&amp;quot;握手流程&amp;rdquo;。什么? 你不认得&amp;quot;握手&amp;quot;? 你可以看看我的往期文章 &amp;ldquo;&lt;a class=&#34;link&#34; href=&#34;https://objshadow.pages.dev/posts/what-is-tls-in-any/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;流量分类识别加密代理? 初探TLS in Any问题&lt;/a&gt;&amp;rdquo; 中的&lt;a class=&#34;link&#34; href=&#34;https://objshadow.pages.dev/posts/what-is-tls-in-any/?highlight=what-is-tls-handshake-hl&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;这一段&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;在理解&lt;strong&gt;SNI白名单&lt;/strong&gt;这种审查策略之前，我们先来看看一个正常TLS1.3连接的握手流程:&lt;/p&gt;
+&lt;p&gt;Q:为什么选择TLS1.3作例子?
+A: 因为TLS1.3很大程度上就是TLS1.2简化后的版本，它修复了前代的诸多安全漏洞、设计得更加简洁好用，并且其部署规模正在不断扩大。&lt;/p&gt;
+&lt;h3 id=&#34;-我们来想想如何改变sni&#34;&gt;🤔 我们来想想如何改变SNI
+&lt;/h3&gt;&lt;h3 id=&#34;-shall-we-go-into-the-sea-of-code&#34;&gt; 🔍 Shall we go into the sea of code?
+&lt;/h3&gt;&lt;p&gt;这一节我们试试深入Reality的源代码，结合第一节的知识，一行行地解析Reality实现&amp;quot;修改SNI&amp;quot;以规避审查的技术细节。
+请先别走! 不论你是编程新手、还是开发小白，我都会用&lt;strong&gt;平常易懂的自然语言&lt;/strong&gt;，仔细地解释这一节出现的所有代码的作用。请记住: &lt;strong&gt;看懂程序是看懂设计思路，不是看懂编程语言知识&lt;/strong&gt;。
+如果你是开发老鸟，也请不要纠结于一些编程细节，比如数据类型，这对于你在这篇文章之内理解Reality的设计无益。&lt;/p&gt;
+&lt;h3 id=&#34;基于tls规避审查这条路上发生过什么&#34;&gt;基于TLS规避审查这条路上，发生过什么
+&lt;/h3&gt;&lt;p&gt;&lt;em&gt;(推荐相关阅读 : )&lt;/em&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://blog.cloudflare.com/rfc-8446-aka-tls-1-3/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;A Detailed Look at RFC 8446 (a.k.a. TLS 1.3) - Cloudflare Blog&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

@@ -6,7 +6,7 @@
         <description>Recent content on ObjShadow&#39;s Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Tue, 30 Jul 2024 00:00:00 +0800</lastBuildDate><atom:link href="//localhost:1313/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Wed, 31 Jul 2024 00:00:00 +0800</lastBuildDate><atom:link href="//localhost:1313/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>关于</title>
         <link>//localhost:1313/page/about/</link>
         <pubDate>Tue, 30 Jul 2024 00:00:00 +0800</pubDate>
@@ -86,7 +86,7 @@
     &gt;The Parrot Is Dead: Observing Unobservable Network Communications&lt;/a&gt;更加周密且详细地分析了这一问题。&lt;/p&gt;
 &lt;p&gt;因此，&amp;ldquo;隧道传输&amp;quot;成为了被广泛使用的隐写方式。它通过调用某个常见实现提供的接口，将数据传递给这个接口并由该实现进行封装和传输。现在被广泛使用的基于TLS的规避工具都属于&amp;quot;隐写&amp;quot;中的这种类型。&lt;/p&gt;
 &lt;h3 id=&#34;-tls-in-any问题是什么导致的&#34;&gt;🔍 TLS in Any问题是什么导致的?
-&lt;/h3&gt;&lt;p&gt;流量之所以称作流量，正是因为它是由一个连接内的一系列数据包构成的，这些数据包有自己的大小、先后顺序。而每种类型的流量开头，往往会有为了一些&lt;strong&gt;满足特定需求而遵循特定规范&lt;/strong&gt;的数据包，这些数据包被称作 &lt;strong&gt;&amp;ldquo;握手包&amp;rdquo;&lt;/strong&gt; 。微信通话有自己的握手包，浏览网页用的HTTP有自己的握手包，而TLS为了实现数据的安全性与完整性，需要在连接开头以安全方式交换加密、认证用的数据(密钥和证书等)，因此也会有自己的握手包。&lt;/p&gt;
+&lt;/h3&gt;&lt;p&gt;流量之所以称作流量，正是因为它是由一个连接内的一系列数据包构成的，这些数据包有自己的大小、先后顺序。&lt;text class=&#34;what-is-tls-handshake-hl&#34;&gt;而每种类型的流量开头，往往会有为了一些&lt;strong&gt;满足特定需求而遵循特定规范&lt;/strong&gt;的数据包，这些数据包被称作 &lt;strong&gt;&amp;ldquo;握手包&amp;rdquo;&lt;/strong&gt; 。&lt;/text&gt;微信通话有自己的握手包，浏览网页用的HTTP有自己的握手包，&lt;text class=&#34;what-is-tls-handshake-hl&#34;&gt;而TLS为了实现数据的安全性与完整性，需要在连接开头以安全方式交换加密、认证用的数据(密钥和证书等)，因此也会有自己的握手包。&lt;/text&gt;&lt;/p&gt;
 &lt;p&gt;正是&lt;strong&gt;TLS的这些握手包&lt;/strong&gt;导致了TLS in Any问题。还记得前面对&amp;quot;握手包&amp;quot;的定义吗? 它们是 &lt;strong&gt;&amp;ldquo;一些满足特定规范&amp;rdquo;&lt;/strong&gt; 的数据包。这个&amp;quot;规范&amp;quot;定义了握手包的结构、先后顺序、收发方向 —— 当规范规定了结构、而这一结构中的各项数据大小可预测时，这些握手包的大小其实已经变得&lt;strong&gt;可预测&lt;/strong&gt;了。再加上TLS规范定义的先后顺序、收发方向与审查者对于握手包大小的估计值之间一一对应的关系，流量分类系统就可以粗略地区别出TLS流量。&lt;/p&gt;
 &lt;p&gt;举个栗子，这里规定一个人畜无害的Cat协议，它的握手包都在连接开始时被发送，它的规范中对结构、先后顺序、收发方向的规定如下:&lt;/p&gt;
 &lt;ul&gt;

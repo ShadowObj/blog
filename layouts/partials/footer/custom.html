@@ -1,0 +1,46 @@
+<!--Highlight-->
+<script>
+    function getWindowScrollTop() {
+        var scroll_top = 0;
+        if (document.documentElement && document.documentElement.scrollTop) {
+          scroll_top = document.documentElement.scrollTop;
+        } else if (document.body) {
+          scroll_top = document.body.scrollTop;
+        }
+        return scroll_top;
+    }
+
+    function scrollToViewCenter(element) {
+        let { top, height } = element.getBoundingClientRect();
+        let elementCenter = top + height / 2;
+        let center = window.innerHeight / 2;
+        window.scrollTo({
+          top: getWindowScrollTop() - (center - elementCenter),
+          behavior: 'smooth'
+        });
+    }
+
+    function highlight(element, color = "#8CC7B5") {
+        element.style.color = color;
+        element.style.fontWeight = "bold";
+    }
+
+    function unhighlight(element, color = "#8CC7B5") {
+        element.style.removeProperty("color");
+        element.style.fontWeight = "normal";
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const highlightElements = document.getElementsByClassName(params.get("highlight"));
+    if (highlightElements != null) {
+        for (let element of highlightElements) {
+            highlight(element);
+        }
+        scrollToViewCenter(highlightElements.item(0));
+        document.body.addEventListener("click", function() {
+            for (let element of highlightElements) {
+                unhighlight(element);
+            }
+        })
+    }
+</script>

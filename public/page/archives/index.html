@@ -363,6 +363,17 @@
         <div class="article-list--compact">
             
                 <article>
+    <a href="/posts/how-reality-works/">
+        <div class="article-details">
+            <h2 class="article-title">Xray的Reality如何突破白名单? 兼谈基于TLS的规避工具发展历程</h2>
+            <footer class="article-time">
+                <time datetime='2024-07-31T00:00:00&#43;08:00'>2024-07-31 AM</time>
+            </footer>
+        </div>
+    </a>
+</article>
+            
+                <article>
     <a href="/posts/what-is-tls-in-any/">
         <div class="article-details">
             <h2 class="article-title">流量分类识别加密代理? 初探TLS in Any问题</h2>
@@ -429,5 +440,40 @@ Supports
     }());
 </script>
 
+<script>
+    function getWindowScrollTop() {
+        var scroll_top = 0;
+        if (document.documentElement && document.documentElement.scrollTop) {
+          scroll_top = document.documentElement.scrollTop;
+        } else if (document.body) {
+          scroll_top = document.body.scrollTop;
+        }
+        return scroll_top;
+    }
+
+    function scrollToViewCenter(element) {
+        let { top, height } = element.getBoundingClientRect();
+        let elementCenter = top + height / 2;
+        let center = window.innerHeight / 2;
+        window.scrollTo({
+          top: getWindowScrollTop() - (center - elementCenter),
+          behavior: 'smooth'
+        });
+    }
+
+    function highlight(element, color = "#8CC7B5") {
+        element.style.color = color;
+        element.style.fontWeight = "bold";
+    }
+
+    var params = new URLSearchParams(window.location.search);
+    var highlightElements = document.getElementsByClassName(params.get("highlight"));
+    if (highlightElements != null) {
+        for (let element of highlightElements) {
+            highlight(element);
+        }
+        scrollToViewCenter(highlightElements.item(0));
+    }
+</script>
     </body>
 </html>

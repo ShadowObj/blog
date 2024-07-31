@@ -1,19 +1,18 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-    <head>
-	<meta name="generator" content="Hugo 0.129.0"><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="May a Censorship Researcher.">
-<title>ObjShadow&#39;s Blog</title>
+<html lang="zh-cn" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="ℹ️前言 主要由RPRX和yuhan维护的Xray，又称Project X，是一个开源的具有规避工具，在反审查领域中以其新颖前卫而实用的各种概念">
+<title>Xray的Reality如何突破白名单? 兼谈基于TLS的规避工具发展历程</title>
 
-<link rel='canonical' href='//localhost:1313/en/'>
+<link rel='canonical' href='//localhost:1313/posts/how-reality-works/'>
 
-<link rel="stylesheet" href="/scss/style.min.ae2a4e04ef264c0cb8e5d2ea5cd5145aded59fea9df95c01bfe9d95529a8baa3.css"><meta property='og:title' content="ObjShadow's Blog">
-<meta property='og:description' content="May a Censorship Researcher.">
-<meta property='og:url' content='//localhost:1313/en/'>
+<link rel="stylesheet" href="/scss/style.min.ae2a4e04ef264c0cb8e5d2ea5cd5145aded59fea9df95c01bfe9d95529a8baa3.css"><meta property='og:title' content="Xray的Reality如何突破白名单? 兼谈基于TLS的规避工具发展历程">
+<meta property='og:description' content="ℹ️前言 主要由RPRX和yuhan维护的Xray，又称Project X，是一个开源的具有规避工具，在反审查领域中以其新颖前卫而实用的各种概念">
+<meta property='og:url' content='//localhost:1313/posts/how-reality-works/'>
 <meta property='og:site_name' content='ObjShadow&#39;s Blog'>
-<meta property='og:type' content='website'><meta property='og:updated_time' content=' 2024-07-30T00:00:00&#43;08:00 '/>
-<meta name="twitter:title" content="ObjShadow's Blog">
-<meta name="twitter:description" content="May a Censorship Researcher."><link rel="alternate" type="application/rss&#43;xml" href="//localhost:1313/en/index.xml">
+<meta property='og:type' content='article'><meta property='article:section' content='Posts' /><meta property='article:tag' content='反审查' /><meta property='article:tag' content='SNI白名单' /><meta property='article:tag' content='TLS' /><meta property='article:tag' content='加密代理' /><meta property='article:published_time' content='2024-07-31T00:00:00&#43;08:00'/><meta property='article:modified_time' content='2024-07-31T00:00:00&#43;08:00'/>
+<meta name="twitter:title" content="Xray的Reality如何突破白名单? 兼谈基于TLS的规避工具发展历程">
+<meta name="twitter:description" content="ℹ️前言 主要由RPRX和yuhan维护的Xray，又称Project X，是一个开源的具有规避工具，在反审查领域中以其新颖前卫而实用的各种概念">
   
 
 
@@ -30,7 +29,9 @@
     }
 </script>
     </head>
-    <body class="">
+    <body class="
+    article-page
+    ">
     <script>
         (function() {
             const colorSchemeKey = 'StackColorScheme';
@@ -54,7 +55,7 @@
     })();
 </script>
 <div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
-    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
         <span class="hamburger-box">
             <span class="hamburger-inner"></span>
         </span>
@@ -64,7 +65,7 @@
         
             
             <figure class="site-avatar">
-                <a href="/en/">
+                <a href="/">
                 
                     
                     
@@ -168,8 +169,8 @@
         
         
         
-        <li  class='current' >
-            <a href='/en/' >
+        <li >
+            <a href='/' >
                 
                 
                 
@@ -183,13 +184,13 @@
 
 
                 
-                <span>Home</span>
+                <span>主页</span>
             </a>
         </li>
         
         
         <li >
-            <a href='/en/page/about/' >
+            <a href='/page/about/' >
                 
                 
                 
@@ -202,13 +203,13 @@
 
 
                 
-                <span>About</span>
+                <span>关于</span>
             </a>
         </li>
         
         
         <li >
-            <a href='/en/page/archives/' >
+            <a href='/page/archives/' >
                 
                 
                 
@@ -222,13 +223,13 @@
 
 
                 
-                <span>Archives</span>
+                <span>归档</span>
             </a>
         </li>
         
         
         <li >
-            <a href='/en/page/search/' >
+            <a href='/page/search/' >
                 
                 
                 
@@ -241,13 +242,13 @@
 
 
                 
-                <span>Search</span>
+                <span>搜索</span>
             </a>
         </li>
         
         
         <li >
-            <a href='/en/page/links/' >
+            <a href='/page/links/' >
                 
                 
                 
@@ -260,7 +261,7 @@
 
 
                 
-                <span>Links</span>
+                <span>友链</span>
             </a>
         </li>
         
@@ -281,9 +282,9 @@
 
                             <select name="language" title="language" onchange="window.location.href = this.selectedOptions[0].value">
                                 
-                                    <option value="//localhost:1313/" >简体中文</option>
+                                    <option value="//localhost:1313/" selected>简体中文</option>
                                 
-                                    <option value="//localhost:1313/en/" selected>English</option>
+                                    <option value="//localhost:1313/en/" >English</option>
                                 
                             </select>
                         </li>
@@ -308,7 +309,7 @@
 
 
 
-                        <span>Dark Mode</span>
+                        <span>暗色模式</span>
                     </li>
                 
             </ol>
@@ -319,61 +320,10 @@
     <aside class="sidebar right-sidebar sticky">
         
             
-                <form action="/en/page/search/" class="search-form widget" >
-        <p>
-            <label>Search</label>
-            <input name="keyword" required placeholder="Type something..." />
-        
-            <button title="Search">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <circle cx="10" cy="10" r="7" />
-  <line x1="21" y1="21" x2="15" y2="15" />
-</svg>
-
-
-
-            </button>
-        </p>
-    </form>
-            
-        
-            
-                <section class="widget archives">
+                
+    <section class="widget archives">
         <div class="widget-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-infinity" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <path d="M9.828 9.172a4 4 0 1 0 0 5.656 a10 10 0 0 0 2.172 -2.828a10 10 0 0 1 2.172 -2.828 a4 4 0 1 1 0 5.656a10 10 0 0 1 -2.172 -2.828a10 10 0 0 0 -2.172 -2.828" />
-</svg>
-
-
-
-        </div>
-        <h2 class="widget-title section-title">Archives</h2>
-
-        
-        
-        
-        
-        
-        <div class="widget-archive--list">
-            <div class="archives-year">
-                    <a href="/en/page/archives/#2024">
-                        
-                            <span class="year">2024</span>
-                            <span class="count">1</span>
-                        
-                    </a> 
-                </div>
-            
-        </div>
-    </section>
-            
-        
-            
-                <section class="widget tagCloud">
-    <div class="widget-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <path stroke="none" d="M0 0h24v24H0z"/>
   <line x1="5" y1="9" x2="19" y2="9" />
   <line x1="5" y1="15" x2="19" y2="15" />
@@ -383,84 +333,44 @@
 
 
 
-    </div>
-    <h2 class="widget-title section-title">Categories</h2>
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#ℹ前言">ℹ️前言</a></li>
+        <li><a href="#-sni白名单是什么-sni和tls是什么关系">👀 &ldquo;SNI白名单&quot;是什么? SNI和TLS是什么关系?</a></li>
+        <li><a href="#-我们来想想如何改变sni">🤔 我们来想想如何改变SNI</a></li>
+        <li><a href="#-shall-we-go-into-the-sea-of-code"> 🔍 Shall we go into the sea of code?</a></li>
+        <li><a href="#基于tls规避审查这条路上发生过什么">基于TLS规避审查这条路上，发生过什么</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+        </div>
+    </section>
 
-    <div class="tagCloud-tags">
-        
-            <a href="/en/categories/anti-censorship/" class="font_size_1">
-                Anti-Censorship
-            </a>
-        
-            <a href="/en/categories/tls/" class="font_size_1">
-                TLS
-            </a>
-        
-    </div>
-</section>
-
-            
-        
-            
-                <section class="widget tagCloud">
-    <div class="widget-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
-  <circle cx="9" cy="9" r="2" />
-</svg>
-
-
-
-    </div>
-    <h2 class="widget-title section-title">Tags</h2>
-
-    <div class="tagCloud-tags">
-        
-            <a href="/en/tags/anti-censorship/" class="font_size_1">
-                Anti-Censorship
-            </a>
-        
-            <a href="/en/tags/encrypted-proxy/" class="font_size_1">
-                Encrypted Proxy
-            </a>
-        
-            <a href="/en/tags/tls/" class="font_size_1">
-                TLS
-            </a>
-        
-            <a href="/en/tags/traffic-classification/" class="font_size_1">
-                Traffic Classification
-            </a>
-        
-    </div>
-</section>
             
         
     </aside>
 
 
             <main class="main full-width">
-    
-    
-    
-    
-
-    <section class="article-list">
-        
-            
-<article class="">
+    <article class="main-article">
     <header class="article-header">
 
     <div class="article-details">
     
     <header class="article-category">
         
-            <a href="/en/categories/anti-censorship/" >
-                Anti-Censorship
+            <a href="/categories/%E5%8F%8D%E5%AE%A1%E6%9F%A5/" >
+                反审查
             </a>
         
-            <a href="/en/categories/tls/" >
+            <a href="/categories/tls/" >
                 TLS
             </a>
         
@@ -469,13 +379,9 @@
 
     <div class="article-title-wrapper">
         <h2 class="article-title">
-            <a href="/en/posts/what-is-tls-in-any/">Traffic classification can detect encrypted proxies? A First Look at &#34;TLS in Any&#34; vulnerability</a>
+            <a href="/posts/how-reality-works/">Xray的Reality如何突破白名单? 兼谈基于TLS的规避工具发展历程</a>
         </h2>
     
-        
-        <h3 class="article-subtitle">
-            Traffic classification? What kind of unheard-of censorship strategy is this? How far away is it from us? Is TLS proxy still safe and hidden?
-        </h3>
         
     </div>
 
@@ -495,7 +401,7 @@
   <path d="M3 11h16" />
   <path d="M18 16.496v1.504l1 1" />
 </svg>
-                <time class="article-time--published">2024-07-29 PM</time>
+                <time class="article-time--published">2024-07-31 AM</time>
             </div>
         
 
@@ -510,7 +416,7 @@
 
 
                 <time class="article-time--reading">
-                    6 minute read
+                    阅读时长: 3 分钟
                 </time>
             </div>
         
@@ -518,32 +424,155 @@
     
 
     
-        <footer class="article-translations">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-  <path d="M4 5h7" />
-  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
-  <path d="M5 9c-.003 2.144 2.952 3.908 6.7 4" />
-  <path d="M12 20l4 -9l4 9" />
-  <path d="M19.1 18h-6.2" />
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h3 id="ℹ前言">ℹ️前言
+</h3><p>主要由RPRX和yuhan维护的Xray，又称Project X，是一个开源的具有规避工具，在反审查领域中以其新颖前卫而实用的各种概念性技术 <del>还有神秘失踪又复活的开发者RPRX</del> 而闻名，像是VLESS,XTLS-Vision,XUDP&hellip;</p>
+<p>而自从中国大陆一些地区(已知福建泉州移动是最早的地区)开始实施一种全新的审查策略&ndash;<strong>SNI白名单</strong>，基于TLS的各种规避工具在那里一夜之间变得不可用。先前ihciah开发的规避工具shadowtls得到广泛关注，这一项目或许就是RPRX开发<strong>Reality</strong>并将其集成到Xray中的灵感之一。Reality因为可以<strong>突破SNI白名单</strong>，在反审查领域名声大噪。</p>
+<p>那么Reality是如何突破这一审查策略的? 从技术角度如何理解其细节? 这两个问题将是本文接下来探讨的重点。同时，本文也将为读者梳理其他被广泛使用(过)的、基于TLS的规避工具的发展历程。</p>
+<p>(小插曲: shadowtls有v1,v2,v3三个不相兼容的版本，其中v2修复了v1存在的可审查漏洞，见论文 <a class="link" href="https://www.petsymposium.org/foci/2023/foci-2023-0002.pdf"  target="_blank" rel="noopener"
+    >Chasing Shadows: A security analysis of the ShadowTLS proxy</a>，当然这都是后话了，未来可能会出一期文章讲shadowtls)</p>
+<h3 id="-sni白名单是什么-sni和tls是什么关系">👀 &ldquo;SNI白名单&quot;是什么? SNI和TLS是什么关系?
+</h3><p>你可能知道，现在广泛使用的应用层安全协议，HTTPS的基石——TLS协议在发起连接时有自己的&quot;握手流程&rdquo;。什么? 你不知道&quot;握手&quot;是啥? 你可以看看我的往期文章 &ldquo;<a class="link" href="/posts/what-is-tls-in-any/" >流量分类识别加密代理? 初探TLS in Any问题</a>&rdquo; 中的<a class="link" href="/posts/what-is-tls-in-any/?highlight=what-is-tls-handshake-hl" >这一段</a>。</p>
+<p>在理解<strong>SNI白名单</strong>这种审查策略之前，我们先来看看一个正常TLS1.3连接的握手流程:</p>
+<p>Q:为什么选择TLS1.3作例子?<br>
+A: 因为TLS1.3很大程度上就是TLS1.2简化后的版本，它修复了前代的诸多安全漏洞、设计得更加简洁好用，并且其部署规模正在不断扩大。</p>
+<h3 id="-我们来想想如何改变sni">🤔 我们来想想如何改变SNI
+</h3><h3 id="-shall-we-go-into-the-sea-of-code"> 🔍 Shall we go into the sea of code?
+</h3><p>这一节我们试试深入Reality的源代码，结合第一节的知识，一行行地解析Reality实现&quot;修改SNI&quot;以规避审查的技术细节。
+请先别走! 不论你是编程新手、还是开发小白，我都会用<strong>平常易懂的自然语言</strong>，仔细地解释这一节出现的所有代码的作用。请记住: <strong>看懂程序是看懂设计思路，不是看懂编程语言知识</strong>。
+如果你是开发老鸟，也请不要纠结于一些编程细节，比如数据类型，这对于你在这篇文章之内理解Reality的设计无益。</p>
+<h3 id="基于tls规避审查这条路上发生过什么">基于TLS规避审查这条路上，发生过什么
+</h3><p><em>(推荐相关阅读 : )</em></p>
+<ol>
+<li><a class="link" href="https://blog.cloudflare.com/rfc-8446-aka-tls-1-3/"  target="_blank" rel="noopener"
+    >A Detailed Look at RFC 8446 (a.k.a. TLS 1.3) - Cloudflare Blog</a></li>
+</ol>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E5%8F%8D%E5%AE%A1%E6%9F%A5/">反审查</a>
+        
+            <a href="/tags/sni%E7%99%BD%E5%90%8D%E5%8D%95/">SNI白名单</a>
+        
+            <a href="/tags/tls/">TLS</a>
+        
+            <a href="/tags/%E5%8A%A0%E5%AF%86%E4%BB%A3%E7%90%86/">加密代理</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
 </svg>
 
 
 
-            <div>
-                
-                    <a href="//localhost:1313/posts/what-is-tls-in-any/" class="link">简体中文</a>
-                
-            </div>
-        </footer>
-    
-</div>
-
-</header>
-</article>
-        
+        <span>Licensed under <a class="link" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"  target="_blank" rel="noopener"
+    >CC BY-NC-SA 4.0</a></span>
     </section>
-<footer class="site-footer">
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/posts/what-is-tls-in-any/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">流量分类识别加密代理? 初探TLS in Any问题</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <script
+    src="https://giscus.app/client.js"
+    data-repo="ShadowObj/blog"
+    data-repo-id="R_kgDOMcbEhw"
+    data-category="Announcements"
+    data-category-id="DIC_kwDOMcbEh84ChRoq"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme="light"
+    data-lang="en"
+    crossorigin="anonymous"
+    async
+></script>
+<script>
+    function setGiscusTheme(theme) {
+        let giscus = document.querySelector("iframe.giscus-frame");
+        if (giscus) {
+            giscus.contentWindow.postMessage(
+                {
+                    giscus: {
+                        setConfig: {
+                            theme: theme,
+                        },
+                    },
+                },
+                "https://giscus.app"
+            );
+        }
+    }
+
+    (function () {
+        addEventListener("message", (e) => {
+            if (event.origin !== "https://giscus.app") return;
+            handler();
+        });
+        window.addEventListener("onColorSchemeChange", handler);
+
+        function handler() {
+            if (document.documentElement.dataset.scheme === "light") {
+                setGiscusTheme('light');
+            } else {
+                setGiscusTheme('dark_dimmed');
+            }
+        }
+    })();
+</script>
+
+    
+
+    <footer class="site-footer">
     <section class="copyright">
         &copy; 
         
@@ -570,10 +599,89 @@ Supports
     <b>DNSSEC</b>
 </a>
  <br/>
-        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
-        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.26.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+        使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.26.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
     </section>
 </footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
 
             </main>
         </div>

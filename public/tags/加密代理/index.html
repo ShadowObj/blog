@@ -10,7 +10,7 @@
 <meta property='og:description' content="May a Censorship Researcher.">
 <meta property='og:url' content='//localhost:1313/tags/%E5%8A%A0%E5%AF%86%E4%BB%A3%E7%90%86/'>
 <meta property='og:site_name' content='ObjShadow&#39;s Blog'>
-<meta property='og:type' content='website'><meta property='og:updated_time' content=' 2024-07-30T00:00:00&#43;08:00 '/>
+<meta property='og:type' content='website'><meta property='og:updated_time' content=' 2024-07-31T00:00:00&#43;08:00 '/>
 <meta name="twitter:title" content="Tag: 加密代理 - ObjShadow's Blog">
 <meta name="twitter:description" content="May a Censorship Researcher."><link rel="alternate" type="application/rss&#43;xml" href="//localhost:1313/tags/%E5%8A%A0%E5%AF%86%E4%BB%A3%E7%90%86/index.xml">
   
@@ -360,7 +360,7 @@
                     <a href="/page/archives/#2024">
                         
                             <span class="year">2024</span>
-                            <span class="count">1</span>
+                            <span class="count">2</span>
                         
                     </a> 
                 </div>
@@ -387,11 +387,11 @@
 
     <div class="tagCloud-tags">
         
-            <a href="/categories/tls/" class="font_size_1">
+            <a href="/categories/tls/" class="font_size_2">
                 TLS
             </a>
         
-            <a href="/categories/%E5%8F%8D%E5%AE%A1%E6%9F%A5/" class="font_size_1">
+            <a href="/categories/%E5%8F%8D%E5%AE%A1%E6%9F%A5/" class="font_size_2">
                 反审查
             </a>
         
@@ -416,16 +416,20 @@
 
     <div class="tagCloud-tags">
         
-            <a href="/tags/tls/" class="font_size_1">
+            <a href="/tags/tls/" class="font_size_2">
                 TLS
             </a>
         
-            <a href="/tags/%E5%8A%A0%E5%AF%86%E4%BB%A3%E7%90%86/" class="font_size_1">
+            <a href="/tags/%E5%8A%A0%E5%AF%86%E4%BB%A3%E7%90%86/" class="font_size_2">
                 加密代理
             </a>
         
-            <a href="/tags/%E5%8F%8D%E5%AE%A1%E6%9F%A5/" class="font_size_1">
+            <a href="/tags/%E5%8F%8D%E5%AE%A1%E6%9F%A5/" class="font_size_2">
                 反审查
+            </a>
+        
+            <a href="/tags/sni%E7%99%BD%E5%90%8D%E5%8D%95/" class="font_size_1">
+                SNI白名单
             </a>
         
             <a href="/tags/%E6%B5%81%E9%87%8F%E5%88%86%E7%B1%BB/" class="font_size_1">
@@ -449,7 +453,7 @@
 
         <div class="section-card">
             <div class="section-details">
-                <h3 class="section-count">1 个页面</h3>
+                <h3 class="section-count">2 个页面</h3>
                 <h1 class="section-term">加密代理</h1>
                 
             </div>
@@ -457,6 +461,17 @@
     </header>
     
     <section class="article-list--compact">
+        
+            <article>
+    <a href="/posts/how-reality-works/">
+        <div class="article-details">
+            <h2 class="article-title">Xray的Reality如何突破白名单? 兼谈基于TLS的规避工具发展历程</h2>
+            <footer class="article-time">
+                <time datetime='2024-07-31T00:00:00&#43;08:00'>2024-07-31 AM</time>
+            </footer>
+        </div>
+    </a>
+</article>
         
             <article>
     <a href="/posts/what-is-tls-in-any/">
@@ -522,5 +537,40 @@ Supports
     }());
 </script>
 
+<script>
+    function getWindowScrollTop() {
+        var scroll_top = 0;
+        if (document.documentElement && document.documentElement.scrollTop) {
+          scroll_top = document.documentElement.scrollTop;
+        } else if (document.body) {
+          scroll_top = document.body.scrollTop;
+        }
+        return scroll_top;
+    }
+
+    function scrollToViewCenter(element) {
+        let { top, height } = element.getBoundingClientRect();
+        let elementCenter = top + height / 2;
+        let center = window.innerHeight / 2;
+        window.scrollTo({
+          top: getWindowScrollTop() - (center - elementCenter),
+          behavior: 'smooth'
+        });
+    }
+
+    function highlight(element, color = "#8CC7B5") {
+        element.style.color = color;
+        element.style.fontWeight = "bold";
+    }
+
+    var params = new URLSearchParams(window.location.search);
+    var highlightElements = document.getElementsByClassName(params.get("highlight"));
+    if (highlightElements != null) {
+        for (let element of highlightElements) {
+            highlight(element);
+        }
+        scrollToViewCenter(highlightElements.item(0));
+    }
+</script>
     </body>
 </html>
