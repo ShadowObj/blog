@@ -1,8 +1,8 @@
 [[social]]
-identifier = "email"
-name = "Email"
-url = "mailto:shadowobject@protonmail.com"
-params.icon = "brand-mail"
+identifier = "github"
+name = "Github"
+url = "https://github.com/ShadowObj/blog"
+params.icon = "brand-github"
 
 [[social]]
 identifier = "twitter"
