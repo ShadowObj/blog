@@ -1,0 +1,5 @@
+title = "ObjShadow's Blog"
+theme = "hexo-theme-stack"
+defaultContentLanguage = 'zh-cn'
+defaultContentLanguageInSubdir = false
+TimeZone = "Asia/Shanghai"
