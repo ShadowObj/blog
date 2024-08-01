@@ -18,8 +18,8 @@ src = "avatar.jpg"
 [Footer]
 since = 2024
 customText = """
-与自由拥抱。Embrace Liberty.<br>
-支持
+Embrace Liberty.<br>
+Supports 
 <a href="https://ready.chair6.net/?url=https%3A%2F%2Fobjshadow.pages.dev" target="_blank" rel="noopener">
     <b>IPv6</b>
 </a>, 
@@ -28,7 +28,7 @@ customText = """
 </a>, 
 <a href="https://datatracker.ietf.org/doc/html/rfc8446" target="_blank" rel="noopener">
     <b>TLS 1.3</b>
-</a> 及
+</a> with 
 <a href="https://hstspreload.org/?domain=objshadow.pages.dev" target="_blank" rel="noopener">
     <b>HSTS Preload</b>
 </a> &amp; 
