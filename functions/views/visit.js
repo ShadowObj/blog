@@ -13,5 +13,5 @@ export async function onRequestGet(context) {
         ps = context.env.BLOG_DB.prepare('ALTER TABLE views ADD ?1 INTEGER NOT NULL DEFAULT ?2').bind(pathname,1);
     }
     ok = await ps.all().success;
-    return Response.json({"ok": ok});
+    return Response.json({"ok": ok.toString()});
 }
