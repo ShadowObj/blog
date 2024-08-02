@@ -74,8 +74,9 @@ window.onload = () => {
         node.innerText = node.innerText.replace("NaN",Object.values(data).reduce((acr, cur) => {return acr + cur;}))
         for (let element of document.getElementsByClassName("article-details")) {
             let pathname = element
-            .querySelector('footer.article-title-wrapper > h2.article-title > a').href
-            .replace(window.location.origin+"/","");
+            .querySelector('div.article-title-wrapper > h2.article-title > a').href
+            .replace(window.location.origin,"");
+            console.log(pathname)
             let child = element.querySelector('.article-time > div:last-child > time')
             child.innerText = child.innerText.replace("NaN",data[pathname])
         }
