@@ -14,7 +14,7 @@ export async function onRequestGet(context) {
         );
         originData[pathname] = parseInt(originData[pathname])+1;
     } else {
-        ps = context.env.BLOG_DB.prepare('ALTER TABLE views ADD ?1 INTEGER NOT NULL DEFAULT 1'
+        ps = context.env.BLOG_DB.prepare('ALTER TABLE views ADD ?1 INTEGER DEFAULT 1'
             .replace("?1",pathname)
         );
         originData[pathname] = 1;
