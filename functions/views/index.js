@@ -7,7 +7,7 @@ export async function onRequestGet(context) {
     const originData = await originPS.first();
 
     var ps;
-    if (originData.hasOwnProperty(pathname)) {
+    if (typeof(originData[pathname]) == "number") {
         ps = context.env.BLOG_DB.prepare('UPDATE views SET ?1 = ?2'
             .replace("?1",pathname)
             .replace("?2",parseInt(originData[pathname])+1)
