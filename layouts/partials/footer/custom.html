@@ -68,8 +68,8 @@ function smoothScrollTop(){
 // Views Count
 window.onload = () => {
     fetch("/views?q="+encodeURI(window.location.pathname))
-    .then((response) => { response.json() })
     .then((data) => {
+        data = data.json();
         let node = document.querySelector('footer.site-footer > section.powerby')
         node.innerText = node.innerText.replace("NaN",Object.values(data).reduce((acr, cur) => {return acr + cur;}))
         for (let element of document.getElementsByClassName("article-details")) {
