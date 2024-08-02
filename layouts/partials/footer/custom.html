@@ -12,7 +12,7 @@ function getWindowScrollTop() {
 }
 
 function scrollToViewCenter(element) {
-    let { top, height } = element.getBoundingClientRect();
+    var { top, height } = element.getBoundingClientRect();
     let elementCenter = top + height / 2;
     let center = window.innerHeight / 2;
     window.scrollTo({
@@ -66,19 +66,21 @@ function smoothScrollTop(){
 {{ $showViewsCount := .Params.viewsCount | default (.Site.Params.article.viewsCount) }}
 {{ if $showViewsCount }}
 // Views Count
-fetch("/views?q="+encodeURI(window.location.pathname))
-.then((response) => { response.json() })
-.then((data) => {
-    let node = document.querySelector('footer.site-footer > section.powerby')
-    node.innerText = node.innerText.replace("NaN",Object.values(data).reduce((acr, cur) => {return acr + cur;}))
-    for (let element of document.getElementsByClassName("article-details")) {
-        let pathname = element
-        .querySelector('footer.article-title-wrapper > h2.article-title > a').href
-        .replace(window.location.origin+"/","");
-        let child = element.querySelector('.article-time > div:last-child > time')
-        child.innerText = child.innerText.replace("NaN",data[pathname])
+window.onload = () => {
+    fetch("/views?q="+encodeURI(window.location.pathname))
+    .then((response) => { response.json() })
+    .then((data) => {
+        let node = document.querySelector('footer.site-footer > section.powerby')
+        node.innerText = node.innerText.replace("NaN",Object.values(data).reduce((acr, cur) => {return acr + cur;}))
+        for (let element of document.getElementsByClassName("article-details")) {
+            let pathname = element
+            .querySelector('footer.article-title-wrapper > h2.article-title > a').href
+            .replace(window.location.origin+"/","");
+            let child = element.querySelector('.article-time > div:last-child > time')
+            child.innerText = child.innerText.replace("NaN",data[pathname])
+        }
     }
+    )
 }
-)
 {{ end }}
 </script>
