@@ -6,10 +6,7 @@ export async function onRequestGet(context) {
     var originData = await context.env.BLOG_DB.prepare('SELECT * FROM views LIMIT 1').first();
 
     var ps;
-    if (
-        (typeof originData[pathname] == null) || 
-        (typeof originData[pathname] == undefined)
-    ) {
+    if (typeof originData[pathname] == "number") {
         ps = context.env.BLOG_DB.prepare("UPDATE views SET '?1' = ?2"
             .replace("?1",pathname)
             .replace("?2",parseInt(originData[pathname])+1)
