@@ -19,6 +19,6 @@ export async function onRequestGet(context) {
         originData[pathname] = 1;
     }
 
-    result = await ps.all();
+    let result = await ps.all();
     return Response.json(originData);
 }
