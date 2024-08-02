@@ -18,7 +18,7 @@ src = "avatar.jpg"
 [Footer]
 since = 2024
 customText = """
-Embrace Liberty.<br>
+Embrace Liberty.<br />
 Supports 
 <a href="https://ready.chair6.net/?url=https%3A%2F%2Fobjshadow.pages.dev" target="_blank" rel="noopener">
     <b>IPv6</b>
@@ -35,11 +35,18 @@ Supports
 <a href="https://www.cloudflare.com/dns/dnssec/how-dnssec-works/" target="_blank" rel="noopener">
     <b>DNSSEC</b>
 </a>
+<br />
+<a href="https://icp.gov.moe/?keyword=20242952" target="_blank" rel="noopener">
+    <b>Moe ICP No.20242952</b>
+</a> | <text>
+This Blog have been viewed for <b>NaN</b> times
+</text>
 """
 
 [Article]
 toc = true
 wordCount = true
+viewsCount = true
 readingTime = true
 license.enabled = true
 license.default = "Licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)"

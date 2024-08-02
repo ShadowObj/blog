@@ -18,7 +18,13 @@ src = "avatar.jpg"
 [Footer]
 since = 2024
 customText = """
-与自由拥抱。Embrace Liberty.<br>
+与自由拥抱。Embrace Liberty.<br />
+<a href="https://icp.gov.moe/?keyword=20242952" target="_blank" rel="noopener">
+    <b>萌ICP备20242952号</b>
+</a> | <text>
+本站总访问量 <b>NaN</b> 次
+</text>
+<br />
 支持
 <a href="https://ready.chair6.net/?url=https%3A%2F%2Fobjshadow.pages.dev" target="_blank" rel="noopener">
     <b>IPv6</b>
@@ -40,6 +46,7 @@ customText = """
 [Article]
 toc = true
 wordCount = true
+viewsCount = true
 readingTime = true
 license.enabled = true
 license.default = "Licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)"

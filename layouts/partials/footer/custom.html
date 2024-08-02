@@ -1,5 +1,6 @@
-<!--Highlight-->
 <script>
+'use strict'
+// Highlight
 function getWindowScrollTop() {
     var scroll_top = 0;
     if (document.documentElement && document.documentElement.scrollTop) {
@@ -41,39 +42,18 @@ if (highlightElements != null) {
         for (let element of highlightElements) {
             unhighlight(element);
         }
-        newUrl = window.location.href.replace(/\??&?highlight=what-is-tls-handshake-hl/,"")
+        let newUrl = window.location.href.replace(new RegExp("\\??&?highlight=?1".replace("?1", params.get("highlight"))),"");
         window.history.replaceState('', '', newUrl);
     })
 }
-</script>
-<!--ScrollTop-->
-<script>
-window.onload = () => {
-    let visibleWidth = innerWidth||document.documentElement.clientWidth||document.body.clientWidth;
-    if (visibleWidth > 1024) {
-        document.getElementById('scrollTop').style.display = 'block'
-    } else {
-        //var beforeScroll = 0;
-        //window.onscroll = function () {
-        //    let currentHeight = document.documentElement.scrollTop || document.body.scrollTop;
-        //    let visibleHeight = innerHeight||document.documentElement.clientHeight||document.body.clientHeight;
-        //    var afterScroll = document.documentElement ? document.documentElement.scrollTop : document.body.scrollTop;//兼容
-        //   	if ((currentHeight > (visibleHeight - 50)) & (afterScroll - beforeScroll < 0)) {
-        //        document.getElementById('scrollTop').style.display = 'block'
-        //   	}else{
-        //        document.getElementById('scrollTop').style.display = 'none'
-        //   	}
-        //   	beforeScroll = afterScroll;
-        //}
-    }
-}
 
+// ScrollTop
 function smoothScrollTop(){
-    let timer  = null;
+    let timer = null;
     cancelAnimationFrame(timer);
-    fn = function() {
+    var fn = function() {
         let currentHeight = document.body.scrollTop || document.documentElement.scrollTop;
-        if(currentHeight > 0){
+        if (currentHeight > 0) {
             document.body.scrollTop = document.documentElement.scrollTop = currentHeight - 50;
             timer = requestAnimationFrame(fn);
         } else {
@@ -82,4 +62,27 @@ function smoothScrollTop(){
     }
     timer = requestAnimationFrame(fn);
 }
+
+{{ if .Site.Params.article.viewsCount }}
+// Views Count
+if (
+    (document.getElementsByClassName("main-article").length > 0) || // article
+    (document.getElementsByClassName("right-siderbar").length > 0) // homepage
+) {
+    fetch("/views?q="+encodeURI(window.location.pathname))
+    .then((response) => { response.json() })
+    .then((data) => {
+        let node = document.querySelector('footer.site-footer > section.powerby')
+        node.innerText = node.innerText.replace("NaN",Object.values(data).reduce((acr, cur) => {return acr + cur;}))
+        for (let element of document.getElementsByClassName("article-details")) {
+            let pathname = element
+            .querySelector('footer.article-title-wrapper > h2.article-title > a').href
+            .replace(window.location.origin+"/","");
+            let child = element.querySelector('.article-time > div:last-child > time')
+            child.innerText = child.innerText.replace("NaN",data[pathname])
+        }
+    }
+)
+}
+{{ end }}
 </script>
