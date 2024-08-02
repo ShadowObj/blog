@@ -63,26 +63,22 @@ function smoothScrollTop(){
     timer = requestAnimationFrame(fn);
 }
 
-{{ if .Site.Params.article.viewsCount }}
+{{ $showViewsCount := .Params.viewsCount | default (.Site.Params.article.viewsCount) }}
+{{ if $showViewsCount }}
 // Views Count
-if (
-    (document.getElementsByClassName("main-article").length > 0) || // article
-    (document.getElementsByClassName("right-siderbar").length > 0) // homepage
-) {
-    fetch("/views?q="+encodeURI(window.location.pathname))
-    .then((response) => { response.json() })
-    .then((data) => {
-        let node = document.querySelector('footer.site-footer > section.powerby')
-        node.innerText = node.innerText.replace("NaN",Object.values(data).reduce((acr, cur) => {return acr + cur;}))
-        for (let element of document.getElementsByClassName("article-details")) {
-            let pathname = element
-            .querySelector('footer.article-title-wrapper > h2.article-title > a').href
-            .replace(window.location.origin+"/","");
-            let child = element.querySelector('.article-time > div:last-child > time')
-            child.innerText = child.innerText.replace("NaN",data[pathname])
-        }
+fetch("/views?q="+encodeURI(window.location.pathname))
+.then((response) => { response.json() })
+.then((data) => {
+    let node = document.querySelector('footer.site-footer > section.powerby')
+    node.innerText = node.innerText.replace("NaN",Object.values(data).reduce((acr, cur) => {return acr + cur;}))
+    for (let element of document.getElementsByClassName("article-details")) {
+        let pathname = element
+        .querySelector('footer.article-title-wrapper > h2.article-title > a').href
+        .replace(window.location.origin+"/","");
+        let child = element.querySelector('.article-time > div:last-child > time')
+        child.innerText = child.innerText.replace("NaN",data[pathname])
     }
-)
 }
+)
 {{ end }}
 </script>
