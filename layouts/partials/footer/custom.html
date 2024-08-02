@@ -33,7 +33,7 @@ function unhighlight(element, color = "#8CC7B5") {
 
 const params = new URLSearchParams(window.location.search);
 const highlightElements = document.getElementsByClassName(params.get("highlight"));
-if (highlightElements != null) {
+if (highlightElements.length > 0) {
     for (let element of highlightElements) {
         highlight(element);
     }
