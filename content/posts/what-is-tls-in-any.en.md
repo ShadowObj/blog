@@ -18,7 +18,7 @@ description = "Traffic classification? What kind of unheard-of censorship strate
 
 3. TLS proxies are still **secure**, but as of the publication of this article, the concealment of all open source TLS proxies in use is **questionable** about in the experimental data of the [paper](https://www.usenix.org/conference/usenixsecurity24/presentation/xue-fingerprinting) mentioned below, including some proxy implementations that **use multiplexing**.
 
-Note: Here we need to clarify the difference between "security" and "concealment". In the context of anti-censorship, security generally refers to the **invisibility** and **integrity** of data when it is transmitted in **untrusted channels** under current computing power conditions; while confidentiality generally refers to the **negative similarity** of data with **certain specific data** when it is transmitted in untrusted channels, as well as the **negative similarity** of the client and server with **certain specific implementations**.
+Note: Here we need to clarify the difference between "security" and "concealment". In the context of anti-censorship, security generally refers to the **plaintext invisibility** and **integrity** of data when it is transmitted in **untrusted channels** under current computing power conditions; while confidentiality generally refers to the **negative similarity** of data with **certain specific data** when it is transmitted in untrusted channels, as well as the **negative similarity** of the client and server with **certain specific implementations**.
 
 Let's get into the main text.
 
