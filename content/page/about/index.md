@@ -11,6 +11,7 @@ menu:
         params:
             icon: user
 
+nonRSS: true
 readingTime: false
 comments: true
 ---

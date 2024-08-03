@@ -7,7 +7,7 @@ categories = ["反审查","TLS"]
 +++
 
 ### ℹ️前言
-主要由RPRX和yuhan维护的Xray，又称Project X，是一个开源的具有规避工具，在反审查领域中以其新颖前卫而实用的各种概念性技术 ~~还有神秘失踪又复活的开发者RPRX~~ 而闻名，像是VLESS,XTLS-Vision,XUDP...
+主要由RPRX和yuhan维护的Xray，又称Project X，是一个开源的具有规避工具，在反审查领域中以其新颖前卫而实用的各种概念性技术 ~~还有曾经神秘失踪的开发者RPRX~~ 而闻名，像是VLESS,XTLS-Vision,XUDP...
 
 而自从中国大陆一些地区(已知福建泉州移动是最早的地区)开始实施一种全新的审查策略--**SNI白名单**，基于TLS的各种规避工具在那里一夜之间变得不可用。先前ihciah开发的规避工具shadowtls得到广泛关注，这一项目或许就是RPRX开发**Reality**并将其集成到Xray中的灵感之一。Reality因为可以**突破SNI白名单**，在反审查领域名声大噪。
 
@@ -18,9 +18,10 @@ categories = ["反审查","TLS"]
 ### 👀 "SNI白名单"是什么? SNI和TLS是什么关系?
 你可能知道，现在广泛使用的应用层安全协议，HTTPS的基石——TLS协议在发起连接时有自己的"握手流程"。什么? 你不知道"握手"是啥? 你可以看看我的往期文章 "[流量分类识别加密代理? 初探TLS in Any问题](/posts/what-is-tls-in-any/)" 中的[这一段](/posts/what-is-tls-in-any/?highlight=what-is-tls-handshake-hl)。
 
-在理解**SNI白名单**这种审查策略之前，我们先来看看一个正常TLS1.3连接的握手流程:
-
-Q:为什么选择TLS1.3作例子?<br>
+在理解**SNI白名单**这种审查策略之前，我们先来看看一个正常TLS1.3连接的握手流程:<br />
+(这里引用一张来自Cloudflare Blog的图片，版权归Cloudflare lnc.所有。)
+![](/img/how-tls-13-handshakes-cloudflare.png)
+Q:为什么选择TLS1.3作例子?<br />
 A: 因为TLS1.3很大程度上就是TLS1.2简化后的版本，它修复了前代的诸多安全漏洞、设计得更加简洁好用，并且其部署规模正在不断扩大。
 
 ### 🤔 我们来想想如何改变SNI

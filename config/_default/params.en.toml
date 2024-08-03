@@ -38,7 +38,7 @@ Supports
 <br />
 <a href="https://icp.gov.moe/?keyword=20242952" target="_blank" rel="noopener">
     <b>Moe ICP No.20242952</b>
-</a> | <text>
+</a><text> | 
 This Blog have been viewed for <b>NaN</b> times
 </text>
 """
@@ -87,8 +87,8 @@ type = "tag-cloud"
 [widgets.homepage.params]
 limit = 15
 
-#[[widgets.homepage]]
-#type = "rss"
+[[widgets.homepage]]
+type = "milestone"
 
 [[widgets.page]]
 type = "toc"

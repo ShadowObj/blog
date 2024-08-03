@@ -10,4 +10,5 @@ menu:
         weight: -60
         params: 
             icon: search
+nonRSS: true
 ---

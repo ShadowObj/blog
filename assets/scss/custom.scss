@@ -1,19 +1,16 @@
 // Body Font Color
 :root {
-    --body-background: #EBEBEB;
-    --accent-color: #1B365D;
-    --accent-color-darker: #202A44;
-    --accent-color-text: #FFF;
-    --body-text-color: #202A44;
-  }
-  
-  :root {
-    --card-background: #FFF;
-    --card-background-selected: #EBEBEB;
-    --card-text-color-main: #202A44;
-    --card-text-color-secondary: #53565A;
-    --card-text-color-tertiary: #888B8D;
-  }
+  --body-background: #EBEBEB;
+  --accent-color: #1B365D;
+  --accent-color-darker: #202A44;
+  --accent-color-text: #FFF;
+  --body-text-color: #202A44;
+  --card-background: #FFF;
+  --card-background-selected: #EBEBEB;
+  --card-text-color-main: #202A44;
+  --card-text-color-secondary: #53565A;
+  --card-text-color-tertiary: #888B8D;
+}
 // Links Double Coloum
 @media (min-width: 1024px) {
     .article-list--compact.links {
@@ -45,16 +42,45 @@
   outline: none;
   cursor: pointer;
   border-radius: 30%;
-  padding: 0px 16px 12px 16px;
+  width: 55px;
+  height: 55px;
 	color: #fff;
 	white-space: pre-line;
-	background: #252525;
+  & > svg {
+    left:50%; top:50%; 
+    transform:translate(-50%,-50%);
+    position:absolute;
+  }
 }
 
-#scrollTop:hover {
-	color: #fff;
-	background: #4d83af;
-  transition-duration: 0.4s;
+:root[data-scheme="dark"] {
+  #scrollTop {
+    background: #424242;
+    box-shadow: var(--shadow-l2);
+
+    &:hover {
+      background: #4d83af;
+      transition-duration: 0.4s;
+  }
+  }
+}
+
+:root[data-scheme="light"] {
+  #scrollTop {
+    background: #FFF;
+    box-shadow: var(--shadow-l2);
+    & > svg {
+      color: #4d83af
+    }
+    &:hover {
+	    background: #4d83af;
+      transition-duration: 0.4s;
+    }
+    &:hover > svg {
+	    color: #FFF;
+      transition-duration: 0.4s;
+    }
+  }
 }
 
 @media (min-width: 1024px) {

@@ -21,7 +21,7 @@ customText = """
 与自由拥抱。Embrace Liberty.<br />
 <a href="https://icp.gov.moe/?keyword=20242952" target="_blank" rel="noopener">
     <b>萌ICP备20242952号</b>
-</a> | <text>
+</a><text> | 
 本站总访问量 <b>NaN</b> 次
 </text>
 <br />
@@ -87,8 +87,8 @@ type = "tag-cloud"
 [widgets.homepage.params]
 limit = 15
 
-#[[widgets.homepage]]
-#type = "rss"
+[[widgets.homepage]]
+type = "milestone"
 
 [[widgets.page]]
 type = "toc"
