@@ -86,30 +86,3 @@
 @media (min-width: 1024px) {
   #scrollTop { display: block; }
 }
-//Mobile Phone Reading Optimization
-@media (max-width: 768px) {
-  .container.main-container.on-phone--column {
-    padding-left: 0px;
-    padding-right: 0px;
-  }
-  .sidebar.left-sidebar.sticky {
-    padding-left: 15px;
-  }
-  .site-footer {
-    padding-left: 15px !important;
-  }
-  .giscus {
-    padding-left: 10px;
-    padding-right: 10px;
-  }
-  .article-content {
-    padding-left: 15px;
-    padding-right: 12px;
-    ol {
-      padding-inline-start: 16px;
-    }
-    ul {
-      padding-inline-start: 15px;
-    }
-  }
-}
