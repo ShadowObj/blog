@@ -8,7 +8,7 @@ window.onload = () => {
     .then((response) => response.json())
     .then((data) => {
         let node = document.querySelector('footer.site-footer > section.powerby')
-        node.innerText = node.innerText.replace("NaN",Object.values(data).reduce((acr, cur) => {return acr + cur;}).toString())
+        node.innerHTML = node.innerHTML.replace("NaN",Object.values(data).reduce((acr, cur) => {return acr + cur;}).toString())
         for (let element of document.getElementsByClassName("article-details")) {
             let pathname = element
             .querySelector('div.article-title-wrapper > h2.article-title > a').href
