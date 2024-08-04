@@ -1,23 +1,25 @@
----
-title: About
-description: 为什么创办这个博客?
-date: 2024-07-30T00:00:00+08:00
-aliases:
-  - about-us
-  - about-blog
-menu:
-    main: 
-        weight: -90
-        params:
-            icon: user
++++
+title = "About"
+description = "Why set up this blog?"
+date = "2024-07-30T00:00:00+08:00"
+aliases = [ "about-us", "about-blog" ]
+nonRSS = true
+readingTime = false
+comments = true
+compact4Phone = true
+betterList4Phone = true
 
-nonRSS: true
-readingTime: false
-comments: true
----
+[menu.main]
+weight = -90
 
-<font size=5>Use the most common and easy-to-understand language, <br>
-to write the most hardcore anti-censorship technical content. </font>
+  [menu.main.params]
+  icon = "user"
++++
+<style>@media (max-width:768px){#slogan{display:none}}@media (min-width:768px){#slogan-phone{display:none}}</style>
+<font size=4 id="slogan-phone"><b>With the most common and easy-to-understand expression, <br>
+Write the most hardcore anti-censorship technical content. </b></font>
+<font size=5 id="slogan">With the most common and easy-to-understand expression, <br>
+Write the most hardcore anti-censorship technical content. </font>
 
 
 This is the slogan of this blog, and it is also the goal, purpose, and original intention of the blog. <br>

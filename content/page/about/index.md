@@ -1,21 +1,24 @@
----
-title: 关于 | About
-description: 为什么创办这个博客?
-date: 2024-07-30T00:00:00+08:00
-aliases:
-  - about-us
-  - about-blog
-menu:
-    main: 
-        weight: -90
-        params:
-            icon: user
++++
+title = "关于 | About"
+description = "为什么创办这个博客?"
+date = "2024-07-30T00:00:00+08:00"
+aliases = [ "about-us", "about-blog" ]
+nonRSS = true
+readingTime = false
+wordCount = false
+comments = true
+compact4Phone = true
+betterList4Phone = true
 
-nonRSS: true
-readingTime: false
-comments: true
----
-<font size=5>用最平常易懂的语言，写最硬核的反审查技术内容。</font>
+[menu.main]
+weight = -90
+
+  [menu.main.params]
+  icon = "user"
++++
+<style>@media (max-width:768px){#slogan{display:none}}@media (min-width:768px){#slogan-phone{display:none}}</style>
+<font size=4 id="slogan-phone"><b>用最平常易懂的语言，<br />写最硬核的反审查技术内容。</b></font>
+<font size=5 id="slogan">用最平常易懂的语言，写最硬核的反审查技术内容。</font>
 
 这是本博客的slogan，也是本博客创办的目标、主旨、初心。<br>
 写这些技术内容，是希望读者既理解反审查背后蕴含的自由精神与人类伦理，<br>

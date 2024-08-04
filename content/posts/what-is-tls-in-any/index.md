@@ -1,10 +1,12 @@
 +++
 title = '流量分类识别加密代理? 初探TLS in Any问题'
-date = 2024-07-29T20:00:00+08:00
+description = "流量分类? 这是什么闻所未闻的审查策略? 它离我们还有多远? TLS代理仍安全、隐蔽吗?"
+date = 2024-07-30T20:00:00+08:00
 draft = false
 tags = ["反审查","流量分类","TLS","加密代理"]
 categories = ["反审查","TLS"]
-description = "流量分类? 这是什么闻所未闻的审查策略? 它离我们还有多远? TLS代理仍安全、隐蔽吗?"
+compact4Phone = true
+betterList4Phone = true
 +++
 
 📢首先回答上面提出的问题 ~~请看VCR~~：

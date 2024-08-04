@@ -1,20 +1,21 @@
----
-title: 友链 | Friends
-links:
-  - title: ObjShadow's Blog
-    description: May a Censorship Researcher.
-    website: https://objshadow.pages.dev/
-    image: /img/avatar.jpg
-menu:
-    main: 
-        weight: -50
-        params:
-            icon: link
++++
+title = "友链 | Friends"
+nonRSS = true
+readingTime = false
+comments = true
 
-nonRSS: true
-readingTime: false
-comments: true
----
+[[links]]
+title = "ObjShadow's Blog"
+description = "Maybe a Censorship Researcher."
+website = "https://objshadow.pages.dev/"
+image = "/img/avatar.jpg"
+
+[menu.main]
+weight = -50
+
+  [menu.main.params]
+  icon = "link"
++++
 
 欢迎互换友链!
 
