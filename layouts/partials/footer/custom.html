@@ -4,7 +4,7 @@
 {{ if $showViewsCount }}
 // Views Count
 window.onload = () => {
-    fetch("/views?q="+encodeURI(window.location.pathname))
+    fetch(`/views?q=${encodeURI(window.location.pathname)}`, { method: 'POST' })
     .then((response) => response.json())
     .then((data) => {
         let node = document.querySelector('footer.site-footer > section.powerby')
@@ -17,8 +17,7 @@ window.onload = () => {
             let child = element.querySelector('.article-time > div:last-child > time')
             child.innerText = child.innerText.replace("NaN",data[pathname])
         }
-    }
-    )
+    }).catch((err) => console.log(err));
 }
 {{ end }}
 // Highlight
