@@ -1,4 +1,4 @@
 /rss /index.xml 301
 /feed /index.xml 301
-/en/rss /en/index.xml 301
-/en/feed /en/index.xml 301
+/:lang/rss /:lang/index.xml 301
+/:lang/feed /:lang/index.xml 301
