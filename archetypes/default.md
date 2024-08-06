@@ -5,6 +5,9 @@ date = {{ .Date }}
 draft = true
 tags = []
 categories = []
+#wordCount = true
+#viewsCount = true
+#readingTime = true
 compact4Phone = true
 betterList4Phone = true
 +++
