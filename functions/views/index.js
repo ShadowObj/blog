@@ -17,7 +17,7 @@ export async function onRequestPost(context) {
 
     let total = Object.values(originData).reduce((acr, cur) => {return acr + cur;});
     if ((total%100) == 0) {
-        await context.env.BLOG_DB.prepare(`ALTER TABLE views_total ADD '${total}' INTEGER NOT NULL DEFAULT ${Date.now()}').all();`);
+        await context.env.BLOG_DB.prepare(`ALTER TABLE views_total ADD '${total}' INTEGER NOT NULL DEFAULT ${Date.now()}`).all();
     }
     return Response.json(originData);
 }
