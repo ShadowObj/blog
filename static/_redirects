@@ -1,0 +1,10 @@
+/rss /index.xml 301
+/feed /index.xml 301
+/:lang/rss /:lang/index.xml 301
+/:lang/feed /:lang/index.xml 301
+/home / 301
+/blog / 301
+/about /page/about 301
+/archives /page/archives 301
+/links /page/about 301
+/search /page/search 301
