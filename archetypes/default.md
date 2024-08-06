@@ -6,6 +6,7 @@ draft = true
 tags = []
 categories = []
 #wordCount = true
+#fuzzyWordCount = true
 #viewsCount = true
 #readingTime = true
 compact4Phone = true

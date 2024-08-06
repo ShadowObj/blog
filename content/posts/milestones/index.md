@@ -21,3 +21,6 @@ betterList4Phone = true
   
 - 2024.08.03
   - 本站总访问量突破100次!
+
+- 2024.08.06
+  - [RSS订阅](/index.xml)上线
