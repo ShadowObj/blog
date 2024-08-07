@@ -1,10 +1,12 @@
 +++
 title = 'Traffic classification can detect encrypted proxies? A First Look at "TLS in Any" vulnerability'
+description = "Traffic classification? What kind of unheard-of censorship strategy is this? How far away is it from us? Is TLS proxy still safe and hidden?"
 date = 2024-07-31T16:00:00+08:00
 draft = false
 tags = ["Anti-censorship","Traffic classification","TLS","Encrypted proxy"]
 categories = ["Anti-censorship","TLS"]
-description = "Traffic classification? What kind of unheard-of censorship strategy is this? How far away is it from us? Is TLS proxy still safe and hidden?"
+compact4Phone = true
+betterList4Phone = true
 +++
 
 (All the content below is translated from Chinese by Google Translate ↓)<br>

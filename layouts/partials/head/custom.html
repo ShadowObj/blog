@@ -10,10 +10,30 @@
 // Site name here
 const MainTitle = "ObjShadow's Blog"
 if (document.title != MainTitle) { document.title = [document.title,MainTitle].join(" - ") }
-//Mobile Phone Reading Optimization
-if (window.location.pathname.startsWith("/posts/")) {
-    let styleNode = document.createElement('style')
-    styleNode.innerHTML = '@media (max-width:768px){.container.main-container.on-phone--column{padding-left:0px;padding-right:0px}.sidebar.left-sidebar.sticky{padding-left:15px}.site-footer{padding-left:15px !important}.giscus{padding-left:10px;padding-right:10px}.article-content{padding-left:18px;padding-right:12px;ol{padding-inline-start:15px}ul{padding-inline-start:15px}}}'
-    document.head.appendChild(styleNode)  
-}
+{{ $showViewsCount := .Params.viewsCount | default (.Site.Params.article.viewsCount) }}
+{{ if $showViewsCount }}
+// Views Count
+addEventListener("DOMContentLoaded", () => {
+    fetch(`/views?q=${encodeURI(window.location.pathname)}`, { method: 'POST' })
+    .then((response) => response.json())
+    .then((data) => {
+        let node = document.querySelector('footer.site-footer > section.powerby')
+        node.innerHTML = node.innerHTML.replace("NaN",Object.values(data).reduce((acr, cur) => {return acr + cur;}).toString())
+        for (let element of document.getElementsByClassName("article-details")) {
+            let pathname = element
+            .querySelector('div.article-title-wrapper > h2.article-title > a').href
+            .replace(window.location.origin,"");
+            let child = element.querySelector('.article-time > div:last-child > time');
+            child.innerText = child.innerText.replace("NaN",data[pathname]);
+        }
+    }).catch((err) => console.log(err));
+});
+{{ end }}
 </script>
+{{ if .Params.compact4Phone }}
+<!--Mobile Phone Reading Optimization-->
+<style>@media (max-width:768px){.container.main-container.on-phone--column{padding-left:0px;padding-right:0px}.sidebar.left-sidebar.sticky{padding-left:15px}.site-footer{padding-left:15px !important}.giscus{padding-left:10px;padding-right:10px}.article-content{padding-left:18px;padding-right:12px;ol{padding-inline-start:15px}ul{padding-inline-start:15px}}}</style>
+{{ else }}{{ if .Params.betterList4Phone }}
+<!--Mobile Phone List Optimization-->
+<style>@media (max-width:768px){.article-content{ol{padding-inline-start:15px}ul{padding-inline-start:15px}}}</style>
+{{ end }}{{ end }}

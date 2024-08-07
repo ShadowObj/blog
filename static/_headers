@@ -1,0 +1,11 @@
+/:lang/rss
+  Link: </index.xml>; rel="canonical"
+
+/feed
+Link: </index.xml>; rel="canonical"
+
+/:lang/rss
+  Link: </:lang/index.xml>; rel="canonical"
+
+/:lang/feed
+Link: </:lang/index.xml>; rel="canonical"

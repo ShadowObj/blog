@@ -1,29 +1,27 @@
 [[social]]
+identifier = "rss"
+name = "RSS"
+url = "/en/index.xml"
+params.icon = "rss"
+weight = -100
+
+[[social]]
 identifier = "github"
 name = "Github"
 url = "https://github.com/ShadowObj/blog"
 params.icon = "brand-github"
+weight = -90
 
 [[social]]
 identifier = "twitter"
 name = "Twitter"
 url = "https://twitter.com/objectshadow"
 params.icon = "brand-twitter"
+weight = -80
 
 [[social]]
 identifier = "telegram"
 name = "Telegram"
 url = "https://t.me/objshadow"
 params.icon = "brand-telegram"
-
-[[social]]
-identifier = "signal"
-name = "Signal"
-url = "https://signal.me/#eu/1-a3Slz1elCbLBF_RkBBZbhlwoA47hFcTChiP7lq_2yrjuoClBJFF6ZF_ij4ORo_"
-params.icon = "brand-signal"
-
-[[social]]
-identifier = "pgpkey"
-name = "PGP Key"
-url = "https://keys.openpgp.org/vks/v1/by-fingerprint/FDEAA5F05C3B8D3A9A96DC7DE4465C42D44B171A"
-params.icon = "brand-key"
+weight = -70
