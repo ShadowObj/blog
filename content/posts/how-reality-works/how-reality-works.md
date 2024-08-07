@@ -37,24 +37,26 @@ TLS自第一个版本设计之初就是"**混合加密系统**"。这意味着TL
 
 其次，服务器使用 TLS Client Hello 中允许的密钥交换算法来生成一个密钥对，发送 TLS Server Hello: TLS1.3的 Server Hello消息不同于TLS1.2，它只包含了服务器的所有**不敏感的**握手参数，比如key_share *(刚刚服务器生成的密钥对中的公钥)*。
 
-客户端在接收到了 TLS Server Hello 后，将其中的key_share *(刚刚服务器生成的密钥对中的公钥)*提取出来，与最初**客户端**生成的密钥对中的私钥一同输入Diffle-Hellman密钥交换函数中。
-*(Diffle-Hellman密钥交换算法简称DH算法，DHE算法是通过轮换密钥实现前向安全性的DH变种，ECDHE算法是基于椭圆曲线的DHE变种。截至文章发布，最新版本的[crypto/tls](https://pkg.go.dev/crypto/tls)在处理公钥交换时仅支持ECDHE密钥交换算法。)*
+客户端在接收到了 TLS Server Hello 后，将其中的key_share *(刚刚服务器生成的密钥对中的公钥)* 提取出来，与最初**客户端**生成的密钥对中的私钥一同输入Diffle-Hellman密钥交换函数中。
+
+*(Diffle-Hellman密钥交换算法简称DH算法，DHE算法是通过轮换密钥实现前向安全性的DH变种，ECDHE算法是基于椭圆曲线的DHE变种。截至文章发布，最新版本的[crypto/tls](https://pkg.go.dev/crypto/tls)在处理TLS1.3公钥交换时仅支持ECDHE密钥交换算法。)*
 
 DH及其衍生算法有一个共同的性质: 将两对适用算法要求的密钥对的公钥或私钥交换，再将交换后的两对密钥对分别输入算法，一定能得到**完全相同**的值。即: 生成适用于算法要求的密钥对A (含公钥pub_A和私钥sec_A) 和密钥对B (含公钥pub_B和私钥sec_B)，将 (pub_A, sec_B) 输入算法，得到的值一定与将 (pub_B, sec_A) 输入算法的得到的值**完全相同**。
 
 在这里，客户端使用 来自服务器的公钥 和 自己的私钥 输入DH算法得到的值来生成密钥，生成的密钥一定与服务器使用 来自客户端的公钥 和 自己的私钥 计算得到的密钥相同。这里生成的密钥被称作 `preMasterKey`，仅用于加解密接下来的**握手**消息。
 
-接下来，服务器使用 `preMasterKey` 加密**尚未发送的敏感的**握手参数，包括用于验证服务器身份的数字证书 *(因为数字证书包含了对应的域名/IP信息)*，将其封装为 TLS Application Data 消息，并附加在 Change Cipher Spec 后再发送给客户端。客户端在收到 Change Cipher Spec 后，使用 `preMasterKey` 解密附加在其后的 TLS Application Data，通过其中的数字证书验证服务器身份 *(即证明服务器持有特定域名/IP)*，提取握手参数，构造 TLS Finished 消息并使用 `preMasterKey` 加密后发往服务器，以表示TLS握手成功完成。同时，客户端将此前在 TLS Server Hello 和 Change Cipher Spec后的附加消息中提取的完整握手参数输入DH算法计算 `MasterKey`，用于加解密接下来的**所有**消息 *(即接下来的TLS Application Data 包)*。服务器在收到 TLS Finished 消息之后也以同样逻辑计算 `MasterKey`。
+接下来，服务器使用 `preMasterKey` 加密**尚未发送的敏感的**握手参数，包括用于验证服务器身份的数字证书 *(因为数字证书包含了对应的域名/IP信息)*，将其封装为 TLS Application Data 消息 *(也称Encrypted Extensions, 但是这个名称只在解密后可见)*，并附加在 Change Cipher Spec 后再发送给客户端。客户端在收到 Change Cipher Spec 后，使用 `preMasterKey` 解密附加在其后的 TLS Application Data，通过其中的数字证书验证服务器身份 *(即证明服务器持有特定域名/IP)*，提取握手参数，构造 TLS Finished 消息并使用 `preMasterKey` 加密后发往服务器，以表示TLS握手成功完成。同时，客户端将此前在 TLS Server Hello 和 Change Cipher Spec后的附加消息中提取的完整握手参数输入DH算法计算 `MasterKey`，用于加解密接下来的**所有**消息 *(即接下来的TLS Application Data 包)*。服务器在收到 TLS Finished 消息之后也以同样逻辑计算 `MasterKey`。
 
-(在实际的TLS库实现中，客户端常常会将第一个包含应用数据的 TLS Application Data 在服务器应答 TLS Finished 前发送以减少延迟。上面的示意图中最后的"GET /index.html HTTP/1.1"即是指这种情况。)
+(在实际的TLS库实现中，客户端常常会将第一个包含应用数据的 TLS Application Data 在服务器使用TCP ACK数据包应答 TLS Finished 前发送以减少延迟。上面的示意图中最后的"GET /index.html HTTP/1.1"即是指这种情况。)
 
 其中，TLS握手开始时，客户端在 TLS Client Hello 消息中使用[SNI 扩展 (**S**erver **N**ame **I**ndicator)](https://datatracker.ietf.org/doc/html/rfc6066#section-3)来向服务器指示它想要访问的网站。这对于现代互联网来说至关重要，因为现在许多源服务器位于单个TLS服务器后面是很常见的，比如内容分发网络(CDN)。服务器使用 SNI 来确定谁将对连接进行身份验证：没有它，就无法知道要向客户端提供哪个网站的 TLS 证书。
 
 审查者实施基于SNI的审查策略的关键在于，SNI对网络中的任何路由(流量传输时经过的端点)都是**可见明文**的，因此将泄露客户端想要连接的原始服务器。同时审查者通过控制所有的流量出口路由，并**限制允许通过的 TLS Client Hello 的SNI扩展的值**，以此来阻止不受审查者信任的TLS流量通过。我们称这种审查策略为"**SNI白名单**"。
 
-Q: 为什么上面选择TLS1.3作例子而不是TLS1.2? 在这里为什么不启用TLS1.3的ECH特性?
+Questions: 为什么上面选择TLS1.3作例子而不是TLS1.2? 在这里为什么不启用TLS1.3的ECH特性?
 
-A: 1. TLS1.3很大程度上就是TLS1.2简化后的版本，它修复了前代协议设计中的诸多安全漏洞、设计得更加简洁好用，并且自第一个正式版本在2018年发布以来，其部署规模正在不断扩大。其次，[XTLS](https://github.com/XTLS)实现下的REALITY服务器不支持REALITY客户端使用除TLS1.3以外的TLS版本连接以传输规避流量。
+Answers: 
+1. TLS1.3很大程度上就是TLS1.2简化后的版本，它修复了前代协议设计中的诸多安全漏洞、设计得更加简洁好用，并且自第一个正式版本在2018年发布以来，其部署规模正在不断扩大。其次，[XTLS](https://github.com/XTLS)实现下的REALITY服务器不支持REALITY客户端使用除TLS1.3以外的TLS版本连接以传输规避流量。
 
 2. 截至文章发布，[XTLS](https://github.com/XTLS)实现下的REALITY默认并不启用TLS1.3的ECH特性。~~额，其实配置文件里根本没有相关选项~~。而且REALITY设计的核心就是向审查者(中间人)"表演"使用**被允许的SNI的扩展的值**的有效TLS握手，并通过由该握手打开的TLS通道传输规避流量。
 
@@ -66,7 +68,7 @@ A: 1. TLS1.3很大程度上就是TLS1.2简化后的版本，它修复了前代�
 
    而 TLS Client Hello 的SNI扩展的值，**必须**与来自服务器的TLS Server Hello中的有效数字证书的扩展信息中的**域名**相符合。*(不一定完全相同，用于TLS服务器身份验证的数字证书中有一类"泛域名证书"，这类证书能够验证某域名下的所有子域名的身份而无需为子域名逐个签发证书。)* 
 
-   同理，审查者可以记录经过的TLS流量中 TLS Client Hello 的SNI扩展的值，使用该值构造 TLS Client Hello，并将其发往对应服务器，检查返回的 TLS Server Hello 中数字证书的有效性，以及证书扩展信息中的域名是否与原SNI值相符合，若任何一项不符合，即可认为该流量为规避流量。
+   同理，审查者可以记录经过的TLS流量中 TLS Client Hello 的SNI扩展的值，使用该值构造 TLS Client Hello，并将其发往对应服务器，检查返回的 TLS Server Hello 中数字证书的有效性，以及证书扩展信息中的域名是否与原SNI值相符合，若任何一项不符合，即可认为原流量为规避流量。
 
 2. 从1.中我们了解到，如果要修改 TLS Client Hello 的SNI，或许需要连带修改数字证书。
 
@@ -143,10 +145,11 @@ utlsConfig := &utls.Config{
 uConn.UConn = utls.UClient(c, utlsConfig, *fingerprint)
 ```
 
-UConn的第一个字段为匿名字段<sup>7</sup>，类型为来自[utls](https://github.com/refraction-networking/utls)<sup>8</sup>包的UConn实例的指针。这段代码就 Servername(SNI)、TLS Client Hello指纹识别对抗、**用于验证服务器证书有效性和服务器身份的func `VerifyPeerCertificate`** 等参数，对接下来用于发起和处理TLS握手的uConn进行了配置和初始化。
+UConn的第一个字段为匿名字段<sup>7</sup>，类型为来自[utls](https://github.com/refraction-networking/utls)<sup>8</sup>包的UConn实例的指针。这段代码就 Servername(SNI)、TLS Client Hello指纹识别对抗、用于验证服务器证书有效性和服务器身份的func `VerifyPeerCertificate` 等参数，对接下来用于发起和处理TLS握手的uConn进行了配置和初始化。
+
 *(<sup>7</sup>匿名字段，即默认其名称为对应类型名称的字段; <sup>8</sup> utls, go标准库"crypto/tls"的变种, 为反审查用途提供TLS Client Hello指纹识别对抗、对于TLS握手的完全访问，Fake Session Ticket等功能)*
 
-接下来到了关键的地方: REALITY客户端利用 TLS Client Hello 中的 **Session ID 字段空间**为客户端作隐蔽标记，以供服务器区分审查者与合法REALITY客户端。Session ID字段原本用于TLS1.3的0-RTT会话恢复特性，然而由于该特性会使第一个数据包失去抗重放特性，因此很少被启用。不启用0-RTT会话恢复特性时，每一个TLS1.3连接使用的Session ID都应当是**随机生成**的。
+**接下来到了关键的地方**: REALITY客户端利用 TLS Client Hello 中的 **Session ID 字段空间**为客户端作隐蔽标记，以供服务器区分审查者与合法REALITY客户端。Session ID字段原本用于TLS1.3的0-RTT会话恢复特性，然而由于该特性会使第一个数据包失去抗重放特性，因此很少被启用。不启用0-RTT会话恢复特性时，每一个TLS1.3连接使用的Session ID都应当是**随机生成**的。
 
 *(Xray-core中还专门为接下来这一段客户端代码划定了块级作用域。)*
 
@@ -227,9 +230,12 @@ REALITY服务器处理TLS握手的关键是文件 `tls.go` 中的func Server。�
 
 那么REALITY服务器如何告知合法REALITY客户端可以进行传输? 服务器如何处理非法客户端(审查者)发起的握手? 
 为方便叙述，这里先下结论: 
+
 1. REALITY服务器将ClientHello转发到持有有效证书的TLS服务器dest(伪装服务器), 对来自dest的ServerHello和Change Cipher Spec及其附加的加密信息作最小修改，再转发给REALITY客户端。这种做法能够完全以正常TLS服务器的方式完成TLS握手，避免产生服务端TLS指纹。
+
 2. REALITY服务器在修改Change Cipher Spec后附加的加密信息时, 使用 `preMasterKey` 对其中的数字证书进行签名，并使用该签名信息替换了原有信息，以便REALITY客户端通过使用 `preMasterKey` 计算的签名比对，以此告知客户端可以进行传输。
-3. REALITY服务器对来自合法REALITY客户端以外的流量全部转发到dest。这种做法的好处同1.。
+
+3. REALITY服务器对来自合法REALITY客户端以外的流量全部转发到dest。这种做法的好处同1.
 
 ```Go
 // REALITY/blob/main/tls.go#L113
@@ -361,6 +367,7 @@ go func() {
 ```
 
 直到这里，服务器已经完成了区分客户端的任务。但是TLS握手可还没完成呢?
+
 在下面这部分，REALITY服务器通过将ClientHello转发到dest，修改返回的ServerHello，将其发回合法REALITY客户端完成TLS握手，同时告知合法REALITY客户端可以传输规避流量。
 
 ```Go
@@ -581,10 +588,11 @@ return nil, errors.New("REALITY: processed invalid connection")
 
 ### 🚀结语
 在这篇文章里，我们共同了解了未启用ECH的TLS1.3协议的正常握手过程。以此为基础，我们通过深入REALITY客户端和服务端的源代码进行解析，洞悉了REALITY协议规避基于SNI的审查策略的具体实现。
+
 这篇文章自从我7月30日建立博客并发布文章后就一直在马不停蹄地编写，今天发布正好一个星期。我希望能够在不失严谨性的同时，尽力以最易懂的方式为读者提供对于REALITY协议的全面认识，愿正在阅读的你能够从中有所收获。
 
 最后，感谢[XTLS/Xray-core](https://github.com/XTLS/Xray-core/)的创建者[RPRX](https://github.com/RPRX)，以及[ProjectX (XTLS)](https://github.com/XTLS)下的所有项目的贡献者。
-由于项目较多，这里仅列出Xray-core的贡献者:
+由于ProjectX下项目较多，这里仅列出Xray-core的贡献者:
 
 <a href="https://github.com/XTLS/Xray-core/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=XTLS/Xray-core" />
