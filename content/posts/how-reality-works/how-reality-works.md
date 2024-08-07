@@ -30,7 +30,8 @@ TLS自第一个版本设计之初就是"**混合加密系统**"。这意味着TL
 在理解**SNI白名单**这种审查策略之前，我们先来看看一个未使用ECH的常见TLS1.3连接的握手流程:
 
 (这里引用一张来自[Cloudflare Blog](https://blog.cloudflare.com/encrypted-client-hello/)的图片，版权归[Cloudflare lnc.](https://www.cloudflare.com/)所有。)
-![](./how-tls-13-handshakes-cloudflare.png)
+
+![](img/how-tls-13-handshakes-cloudflare.png)
 
 首先是客户端发起TLS连接。在正确完成[TCP握手](https://zh.wikipedia.org/wiki/传输控制协议#建立通路)后，客户端生成一对密钥对，通过打开的TCP连接向服务器发送 TLS Client Hello 消息: 客户端的所有握手参数，包括各个扩展字段 *(extensions)* 以及key_share *(刚刚客户端生成的密钥对中的公钥)*。这些参数**无论敏感与否**，都在 TLS Client Hello 中发送。
 
