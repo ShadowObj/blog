@@ -18,7 +18,7 @@ betterList4Phone = true
 
 先前ihciah开发的规避工具ShadowTLS得到广泛关注，我想这一项目或许是RPRX开发REALITY并将其集成到Xray-core中的灵感之一。ShadowTLS引起关注时，尚处于v1版本，代码库不完善，审查抗性弱；后来RPRX开发的REALITY由于同样具有**规避SNI白名单审查策略**的能力，以及其与成熟的规避工具[Xray-core](https://github.com/XTLS/Xray-core/)的高度集成，~~或许也有RPRX回归给用户们带来的惊喜~~，在中文反审查领域引起大量关注。
 
-那么REALITY是如何规避这一审查策略的? 从技术角度如何理解其细节? 这两个问题将是本文接下来探讨的重点。同时，本文也将为读者梳理其他被广泛使用(过)的、基于TLS的规避工具的发展历程。
+那么REALITY是如何规避这一审查策略的? 从技术角度如何理解其细节? 这两个问题将是本文接下来探讨的重点，通过解读REALITY的源代码为读者梳理REALITY的具体实现。
 
 (小插曲: ShadowTLS有v1,v2,v3三个不相兼容的版本，其中v2修复了v1存在的主动探测漏洞，见论文 [Chasing Shadows: A security analysis of the ShadowTLS proxy](https://www.petsymposium.org/foci/2023/foci-2023-0002.pdf)；而v3的设计旨在对流行的TLS库实现之一 `Rustls` 作最小的必要修改，使得服务端有了正常响应TLS Alert(应对MITM流量篡改)的能力，相较v2更加隐蔽；当然这都是后话了，未来可能会出一期文章讲ShadowTLS，此处不再赘述)
 
