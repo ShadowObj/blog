@@ -10,6 +10,25 @@
 // Site name here
 const MainTitle = "ObjShadow's Blog"
 if (document.title != MainTitle) { document.title = [document.title,MainTitle].join(" - ") }
+{{ $showViewsCount := .Params.viewsCount | default (.Site.Params.article.viewsCount) }}
+{{ if $showViewsCount }}
+// Views Count
+addEventListener("DOMContentLoaded", () => {
+    fetch(`/views?q=${encodeURI(window.location.pathname)}`, { method: 'POST' })
+    .then((response) => response.json())
+    .then((data) => {
+        let node = document.querySelector('footer.site-footer > section.powerby')
+        node.innerHTML = node.innerHTML.replace("NaN",Object.values(data).reduce((acr, cur) => {return acr + cur;}).toString())
+        for (let element of document.getElementsByClassName("article-details")) {
+            let pathname = element
+            .querySelector('div.article-title-wrapper > h2.article-title > a').href
+            .replace(window.location.origin,"");
+            let child = element.querySelector('.article-time > div:last-child > time');
+            child.innerText = child.innerText.replace("NaN",data[pathname]);
+        }
+    }).catch((err) => console.log(err));
+});
+{{ end }}
 </script>
 {{ if .Params.compact4Phone }}
 <!--Mobile Phone Reading Optimization-->
