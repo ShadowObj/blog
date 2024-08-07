@@ -1,7 +1,7 @@
 +++
-title = 'Xray的REALITY如何突破白名单? 兼谈基于TLS的规避工具发展历程'
-description = ''
-date = 2024-07-31T00:00:00+08:00
+title = 'XTLS的REALITY如何突破白名单? REALITY源码剖析'
+description = '超越常规TLS的安全性? 无需买域名、配置TLS? "黑科技"REALITY如何实现这些?'
+date = 2024-08-07T18:00:00+08:00
 draft = false
 tags = ["反审查","SNI白名单","TLS","加密代理"]
 categories = ["反审查","TLS"]
@@ -37,7 +37,7 @@ TLS自第一个版本设计之初就是"**混合加密系统**"。这意味着TL
 其次，服务器使用 TLS Client Hello 中允许的密钥交换算法来生成一个密钥对，发送 TLS Server Hello: TLS1.3的 Server Hello消息不同于TLS1.2，它只包含了服务器的所有**不敏感的**握手参数，比如key_share *(刚刚服务器生成的密钥对中的公钥)*。
 
 客户端在接收到了 TLS Server Hello 后，将其中的key_share *(刚刚服务器生成的密钥对中的公钥)*提取出来，与最初**客户端**生成的密钥对中的私钥一同输入Diffle-Hellman密钥交换函数中。
-*(Diffle-Hellman密钥交换算法简称DH算法，DHE算法是通过轮换密钥实现前向安全性的DH变种，ECDHE算法是基于椭圆曲线的DHE变种。截至文章发布，最新版本的TLS1.3在处理公钥交换时仅支持ECDHE密钥交换算法。)*
+*(Diffle-Hellman密钥交换算法简称DH算法，DHE算法是通过轮换密钥实现前向安全性的DH变种，ECDHE算法是基于椭圆曲线的DHE变种。截至文章发布，最新版本的[crypto/tls](https://pkg.go.dev/crypto/tls)在处理公钥交换时仅支持ECDHE密钥交换算法。)*
 
 DH及其衍生算法有一个共同的性质: 将两对适用算法要求的密钥对的公钥或私钥交换，再将交换后的两对密钥对分别输入算法，一定能得到**完全相同**的值。即: 生成适用于算法要求的密钥对A (含公钥pub_A和私钥sec_A) 和密钥对B (含公钥pub_B和私钥sec_B)，将 (pub_A, sec_B) 输入算法，得到的值一定与将 (pub_B, sec_A) 输入算法的得到的值**完全相同**。
 
@@ -53,9 +53,9 @@ DH及其衍生算法有一个共同的性质: 将两对适用算法要求的密�
 
 Q: 为什么上面选择TLS1.3作例子而不是TLS1.3? 在这里为什么不启用TLS1.3的ECH特性?
 
-A: 1. TLS1.3很大程度上就是TLS1.2简化后的版本，它修复了前代协议设计中的诸多安全漏洞、设计得更加简洁好用，并且自第一个正式版本在2018年发布以来，其部署规模正在不断扩大。其次，[XTLS](https://github.com/XTLS)实现下的REALITY服务端不支持合法客户端使用除TLS1.3以外的TLS版本连接。
+A: 1. TLS1.3很大程度上就是TLS1.2简化后的版本，它修复了前代协议设计中的诸多安全漏洞、设计得更加简洁好用，并且自第一个正式版本在2018年发布以来，其部署规模正在不断扩大。其次，[XTLS](https://github.com/XTLS)实现下的REALITY服务器不支持REALITY客户端使用除TLS1.3以外的TLS版本连接以传输规避流量。
 
-2. 截至文章发布，[XTLS](https://github.com/XTLS)实现下的REALITY默认并不启用TLS1.3的ECH特性。~~额，其实配置文件里根本没有相关选项~~。而且REALITY设计的核心就是向审查者(中间人)"表演"使用**被允许的SNI的扩展的值**的合法TLS握手，并通过由该握手打开的TLS通道传输规避流量。
+2. 截至文章发布，[XTLS](https://github.com/XTLS)实现下的REALITY默认并不启用TLS1.3的ECH特性。~~额，其实配置文件里根本没有相关选项~~。而且REALITY设计的核心就是向审查者(中间人)"表演"使用**被允许的SNI的扩展的值**的有效TLS握手，并通过由该握手打开的TLS通道传输规避流量。
 
 ### 🤔 我们来想想如何改变SNI
 
@@ -80,6 +80,8 @@ A: 1. TLS1.3很大程度上就是TLS1.2简化后的版本，它修复了前代�
 
 这里出现的所有服务端源代码，以Github代码库 [XTLS/REALITY](https://github.com/XTLS/REALITY) 中 `main` 分支的 `079d0bd` commit版本为准；
 这里出现的所有客户端源代码，以Github代码库 [XTLS/Xray-core](https://github.com/XTLS/Xray-core/) 中 `main` 分支的 `4c9e4b9` commit版本为准。
+
+#### 💻客户端
 
 由于Xray-core的设计是由客户端发起代理连接，所以这里先从客户端的`reality`包<sup>1</sup>开始：
 *(<sup>1</sup>包, package, 组织程序功能的一种单位，Go中同一目录 (不含子目录)下只能存在一个包)*
@@ -143,12 +145,12 @@ uConn.UConn = utls.UClient(c, utlsConfig, *fingerprint)
 UConn的第一个字段为匿名字段<sup>7</sup>，类型为来自[utls](https://github.com/refraction-networking/utls)<sup>8</sup>包的UConn实例的指针。这段代码就 Servername(SNI)、TLS Client Hello指纹识别对抗、**用于验证服务器证书有效性和服务器身份的func `VerifyPeerCertificate`** 等参数，对接下来用于发起和处理TLS握手的uConn进行了配置和初始化。
 *(<sup>7</sup>匿名字段，即默认其名称为对应类型名称的字段; <sup>8</sup> utls, go标准库"crypto/tls"的变种, 为反审查用途提供TLS Client Hello指纹识别对抗、对于TLS握手的完全访问，Fake Session Ticket等功能)*
 
-接下来到了关键的地方: REALITY客户端利用 TLS Client Hello 中的 **Session ID 字段空间**为客户端作隐蔽标记，以供服务器区分审查者与合法客户端。Session ID字段原本用于TLS1.3的0-RTT会话恢复特性，然而由于该特性会使第一个数据包失去抗重放特性，因此很少被启用。不启用0-RTT会话恢复特性时，每一个TLS1.3连接使用的Session ID都应当是**随机生成**的。
+接下来到了关键的地方: REALITY客户端利用 TLS Client Hello 中的 **Session ID 字段空间**为客户端作隐蔽标记，以供服务器区分审查者与合法REALITY客户端。Session ID字段原本用于TLS1.3的0-RTT会话恢复特性，然而由于该特性会使第一个数据包失去抗重放特性，因此很少被启用。不启用0-RTT会话恢复特性时，每一个TLS1.3连接使用的Session ID都应当是**随机生成**的。
 
 *(Xray-core中还专门为接下来这一段客户端代码划定了块级作用域。)*
 
 ```Go
-// Xray-core/transport/internet/reality/reality.go#L126
+// Xray-core/transport/internet/reality/reality.go#L126-L135
 // 生成默认ClientHello并提供给uConn
 // 在这一步也生成了客户端的TLS密钥对
 uConn.BuildHandshakeState()
@@ -174,26 +176,38 @@ copy(hello.SessionId[8:], config.ShortId)
 publicKey, err := ecdh.X25519().NewPublicKey(config.PublicKey)
 
 // Xray-core/transport/internet/reality/reality.go#L143
-// 使用BuildHandshakeState()生成的客户端TLS密钥对中的公钥，
-// 与REALITY公钥输入ECDH算法计算共享密钥。然后再使用该密钥
-// 输入HKDF(基于HMAC的密钥导出函数)计算preMasterKey用于加解密握手。
+// 使用BuildHandshakeState()生成的客户端TLS密钥对中的
+// x25519私钥和REALITY公钥输入ECDH算法计算共享密钥。
+// 将该密钥输入HKDF(基于HMAC的密钥导出函数)计算preMasterKey。
 uConn.AuthKey, _ = uConn.HandshakeState.State13.EcdheKey.ECDH(publicKey)
 // Xray-core/transport/internet/reality/reality.go#L147-L149
 if _, err := hkdf.New(sha256.New, uConn.AuthKey, hello.Random[:20], []byte("REALITY")).Read(uConn.AuthKey); err != nil {
 			return nil, err
 }
 
-// Xray-core/transport/internet/reality/reality.go#L160
-// 使用AEAD算法加密SessionId。该算法保证了密文数据的安全性、
-// 完整性以及抗重放性，同时为附加数据提供了完整性保证。
-// 这里使用preMasterKey作密钥，使用ClientHello作附加数据。
-aead.Seal(hello.SessionId[:0], hello.Random[20:], hello.SessionId[:16], hello.Raw)
+// Xray-core/transport/internet/reality/reality.go#L150-L156
+// 选择AEAD算法: AES-GCM或Chacha20-Poly1305。
+// AEAD算法保证密文数据的安全性、完整性以及抗重放，
+// 同时为附加数据提供完整性保证。
+var aead cipher.AEAD
+if aesgcmPreferred(hello.CipherSuites) {
+	block, _ := aes.NewCipher(uConn.AuthKey)
+			aead, _ = cipher.NewGCM(block)
+} else {
+	aead, _ = chacha20poly1305.New(uConn.AuthKey)
+}
 
-// 将处理完成的SessionId数据填充到ClientHello第40-72字节
+// Xray-core/transport/internet/reality/reality.go#L160-L161
+// 使用AEAD算法加密SessionId。
+// 这里使用preMasterKey作密钥，ClientHello作附加数据。
+// 注: hello.SessionId[:0]指复用其内存空间。
+aead.Seal(hello.SessionId[:0], hello.Random[20:], hello.SessionId[:16], hello.Raw)
+// 将最终的SessionId复制到ClientHello第40-72字节
+// copy()用于复制数据。用法:copy(目的地, 源)
 copy(hello.Raw[39:], hello.SessionId)
 ```
 
-自此，REALITY客户端完成了对自身的隐蔽标记。接下来客户端向REALITY服务器发起TLS连接:
+至此，REALITY客户端完成了对自身的隐蔽标记。接下来客户端向REALITY服务器发起TLS连接:
 
 ```Go
 if err := uConn.HandshakeContext(ctx); err != nil {
@@ -201,11 +215,20 @@ if err := uConn.HandshakeContext(ctx); err != nil {
 }
 ```
 
-来到REALITY服务器的[源代码](https://github.com/XTLS/REALITY/)，它实际上是[go/tls](https://pkg.go.dev/crypto/tls)包(go 1.20)服务器部分的变种。由于REALITY服务器以最小修改原则对[go/tls](https://pkg.go.dev/crypto/tls)包作修改，因此目录中存在较多与REALITY协议不直接相关的文件，在此不列出目录树。
 
-REALITY服务器处理TLS握手的关键是 `tls.go` 中的func Server。其实在仔细阅读过Xray-core中的客户端源代码过后，我们已经能对服务器区分合法客户端的关键逻辑有一个大概认识了。那么服务器如何处理非法客户端(审查者)发起的握手呢?
+#### 🐧服务器
 
-这是我们接下来探究的一个重点。鉴于读者在经过前面探究客户端源代码逻辑的过程后，已对区分合法客户端的关键逻辑有大概认识，接下来的源代码注释将比较简洁，望读者见谅。
+~~👆用这个emoji不是我偏爱Linux服务器, 主要是Windows Server的性能和运维体验太拉胯了~~
+
+来到REALITY服务器的[源代码](https://github.com/XTLS/REALITY/)，它实际上是Go 1.20标准库中[crypto/tls](https://pkg.go.dev/crypto/tls)包服务器部分的变种。由于REALITY服务器以最小修改原则对[crypto/tls](https://pkg.go.dev/crypto/tls)包作修改，因此目录中存在较多与REALITY协议不直接相关的文件，在此不列出目录树。
+
+REALITY服务器处理TLS握手的关键是文件 `tls.go` 中的func Server。其实在仔细阅读过Xray-core中的客户端源代码过后，读者应该已对服务器区分合法REALITY客户端的关键逻辑有大概认识了。鉴于如此，接下来的源代码注释将比较简洁，望读者见谅。
+
+那么REALITY服务器如何告知合法REALITY客户端可以进行传输? 服务器如何处理非法客户端(审查者)发起的握手? 
+为方便叙述，这里先下结论: 
+1. REALITY服务器将ClientHello转发到持有有效证书的TLS服务器dest(伪装服务器), 对来自dest的ServerHello和Change Cipher Spec及其附加的加密信息作最小修改，再转发给REALITY客户端。这种做法能够完全以正常TLS服务器的方式完成TLS握手，避免产生服务端TLS指纹。
+2. REALITY服务器在修改Change Cipher Spec后附加的加密信息时, 使用 `preMasterKey` 对其中的数字证书进行签名，并使用该签名信息替换了原有信息，以便REALITY客户端通过使用 `preMasterKey` 计算的签名比对，以此告知客户端可以进行传输。
+3. REALITY服务器对来自合法REALITY客户端以外的流量全部转发到dest。这种做法的好处同1.。
 
 ```Go
 // REALITY/blob/main/tls.go#L113
@@ -213,10 +236,13 @@ REALITY服务器处理TLS握手的关键是 `tls.go` 中的func Server。其实�
 func Server(ctx context.Context, conn net.Conn, config *Config) (*Conn, error)
 
 // REALITY/blob/main/tls.go#L119
-// 向REALITY配置中的dest(俗称伪装服务器)打开TCP连接
+// 向REALITY配置中的dest(服务器)打开TCP连接
 target, err := config.DialContext(ctx, config.Type, config.Dest)
 
-// REALITY/blob/main/tls.go#L141-L151
+// REALITY/blob/main/tls.go#L139-L156
+// 初始化互斥锁(独占某个任务)
+mutex := new(sync.Mutex)
+
 // 初始化handshake_server_tls13.go中定义的
 // serverHandshakeStateTLS13实例以存储握手信息
 hs := serverHandshakeStateTLS13{
@@ -231,9 +257,339 @@ hs := serverHandshakeStateTLS13{
 		ctx: context.Background(),
 	}
 
+// 标识客户端是否未完成握手就发送无关数据
+copying := false
 
+// 等待组，使main协程能等待子协程运行结束
+// 协程: Go语言中轻量化的线程
+waitGroup := new(sync.WaitGroup)
+waitGroup.Add(2) // 添加两个子协程
+
+// REALITY/blob/main/tls.go#L158-L223
+// 运行用于区分客户端的协程
+go func() {
+	for {
+		mutex.Lock() // 加锁，独占当前任务
+		// 读取ClientHello, context.Background()生成空ctx占位
+		hs.clientHello, err = hs.c.readClientHello(context.Background())
+		// 判断1.客户端是否未完成握手就发送数据;2.读取报错;
+		// 3.版本小于TLS1.3;4.ClientHello中的SNI不在配置中
+		// 若任一条件符合结束循环(break不再进入下一次循环)
+		// (Go使用无条件for表示无限2循环)
+		if copying || err != nil || hs.c.vers != VersionTLS13 || !config.ServerNames[hs.clientHello.serverName] {
+			break
+		}
+		// for逐个循环获取客户端x25519公钥
+		// TLS1.3 ClientHello包含尽可能多的公钥
+		// 以避免服务器不支持特定AEAD算法增加延迟
+		for i, keyShare := range hs.clientHello.keyShares {
+			// 判断密钥类型是否为x25519且长度等于32字节
+			// 任一条件不符合则countinue进入下一次循环
+			if keyShare.group != X25519 || len(keyShare.data) != 32 {
+				continue
+			}
+			// 将REALITY私钥和客户端公钥输入ECDH算法计算共享密钥。
+			if hs.c.AuthKey, err = curve25519.X25519(config.PrivateKey, keyShare.data); err != nil {
+				break
+			}
+			// 将该密钥输入HKDF(基于HMAC的密钥导出函数)计算preMasterKey。
+			if _, err = hkdf.New(sha256.New, hs.c.AuthKey, hs.clientHello.random[:20], []byte("REALITY")).Read(hs.c.AuthKey); err != nil {
+				break
+			}
+			// 选择AEAD算法。
+			var aead cipher.AEAD
+			if aesgcmPreferred(hs.clientHello.cipherSuites) {
+				block, _ := aes.NewCipher(hs.c.AuthKey)
+				aead, _ = cipher.NewGCM(block)
+			} else {
+				aead, _ = chacha20poly1305.New(hs.c.AuthKey)
+			}
+			if config.Show {
+				fmt.Printf("REALITY remoteAddr: %v\ths.c.AuthKey[:16]: %v\tAEAD: %T\n", remoteAddr, hs.c.AuthKey[:16], aead) //调试信息
+			}
+			// 初始化两个32字节长的切片
+			// 分别用于存放密文和明文。
+			ciphertext := make([]byte, 32)
+			plainText := make([]byte, 32)
+			copy(ciphertext, hs.clientHello.sessionId)
+			copy(hs.clientHello.sessionId, plainText)
+			// 使用AEAD算法解密SessionId。
+			if _, err = aead.Open(plainText[:0], hs.clientHello.random[20:], ciphertext, hs.clientHello.raw); err != nil {
+				break
+			}
+			// 解析SessionId包含的Xray-core版本,
+			// Unix时间戳, ShortId
+			copy(hs.clientHello.sessionId, ciphertext)
+			copy(hs.c.ClientVer[:], plainText)
+			hs.c.ClientTime = time.Unix(int64(binary.BigEndian.Uint32(plainText[4:])), 0)
+			copy(hs.c.ClientShortId[:], plainText[8:])
+			if config.Show {
+				fmt.Printf("REALITY remoteAddr: %v\ths.c.ClientVer: %v\n", remoteAddr, hs.c.ClientVer)
+				fmt.Printf("REALITY remoteAddr: %v\ths.c.ClientTime: %v\n", remoteAddr, hs.c.ClientTime)
+				fmt.Printf("REALITY remoteAddr: %v\ths.c.ClientShortId: %v\n", remoteAddr, hs.c.ClientShortId) //调试信息
+			}
+			// 判断Xray-core版本,时间延迟,ShortId是否允许
+			if (config.MinClientVer == nil || Value(hs.c.ClientVer[:]...) >= Value(config.MinClientVer...)) &&
+				(config.MaxClientVer == nil || Value(hs.c.ClientVer[:]...) <= Value(config.MaxClientVer...)) &&
+				(config.MaxTimeDiff == 0 || time.Since(hs.c.ClientTime).Abs() <= config.MaxTimeDiff) &&
+				(config.ShortIds[hs.c.ClientShortId]) {
+				hs.c.conn = conn
+			}
+			// 标识客户端使用的公钥类型，供接下来使用
+			hs.clientHello.keyShares[0].group = CurveID(i)
+			break
+		}
+		if config.Show {
+			fmt.Printf("REALITY remoteAddr: %v\ths.c.conn == conn: %v\n", remoteAddr, hs.c.conn == conn) //调试信息
+		}
+		break
+	}
+	// 解锁，取消独占
+	mutex.Unlock()
+	// 判断客户端是否未完成握手就发送无关数据
+	if hs.c.conn != conn {
+		if config.Show && hs.clientHello != nil {
+			fmt.Printf("REALITY remoteAddr: %v\tforwarded SNI: %v\n", remoteAddr, hs.clientHello.serverName) //调试信息
+		}
+		// 将连接转发给配置中的dest(即伪装服务器)
+		io.Copy(target, underlying)
+	}
+	// 通知等待组该协程运行完成
+	waitGroup.Done()
+}()
 ```
-### 基于TLS规避审查这条路上，发生过什么
+
+直到这里，服务器已经完成了区分客户端的任务。但是TLS握手可还没完成呢?
+在下面这部分，REALITY服务器通过将ClientHello转发到dest，修改返回的ServerHello，将其发回合法REALITY客户端完成TLS握手，同时告知合法REALITY客户端可以传输规避流量。
+
+```Go
+// REALITY/blob/main/tls.go#L225-L349
+// 运行处理握手的协程
+go func() {
+	// 初始化两个size = 8192长的切片
+	// s2cSaved用于存放
+	// buf是REALITY服务器到dest的缓冲区
+	s2cSaved := make([]byte, 0, size)
+	buf := make([]byte, size)
+	handshakeLen := 0
+f:
+	for {
+		// 临时让出CPU时间片，优化程序性能
+		runtime.Gosched()
+		// 将接收的来自dest的数据读取到buf(会清空buf)
+		n, err := target.Read(buf)
+		// 判断是否已收到来自dest的数据
+		if n == 0 {
+			if err != nil {
+				conn.Close()
+				waitGroup.Done()
+				return
+			}
+			continue
+		}
+		// 加锁，独占当前任务
+		mutex.Lock()
+		// 将buf数据附加的s2cSaved已有数据后
+		s2cSaved = append(s2cSaved, buf[:n]...)
+		// 判断客户端是否未完成握手就发送无关数据
+		if hs.c.conn != conn {
+			// 标识客户端未完成握手就发送无关数据
+			copying = true
+			break
+		}
+		// 判断s2cSaved长度是否过大
+		if len(s2cSaved) > size {
+			break
+		}
+		// 遍历type判断dest返回的包的类型
+		// REALITY/blob/main/tls.go#L91-L99
+		// types = [7]string{
+		// "Server Hello",
+		// "Change Cipher Spec",
+		// "Encrypted Extensions",
+		// "Certificate",
+		// "Certificate Verify",
+		// "Finished",
+		// "New Session Ticket",
+		// }
+		for i, t := range types {
+			// 判断是否已发送过了ServerHello
+			// 符合则进入下一次循环
+			if hs.c.out.handshakeLen[i] != 0 {
+				continue
+			}
+			// 判断本次循环到的类型是否为
+			// "New Session Ticket"且s2cSaved长度为0
+			if i == 6 && len(s2cSaved) == 0 {
+				break
+			}
+			// handshakeLen记录来自dest的握手包长度
+			// 这里判断其长度为0且来自dest的握手包长度大于5
+			// REALITY/blob/main/common.go#L63
+			// recordHeaderLen = 5
+			if handshakeLen == 0 && len(s2cSaved) > recordHeaderLen {
+				// [1:3]指向TLS握手包第2-3字节的版本信息
+				// 出于兼容性原因，TLS1.3的ClientHello的第2-3字节
+				// 的值与TLS1.2相同，1.3的版本标记存在于扩展当中
+				// 这里判断来自dest的数据包是否为ServerHello
+				// 或ChangeCipherSpec或ApplicationData,
+				// 这三类数据包是握手中应该出现的
+				if Value(s2cSaved[1:3]...) != VersionTLS12 ||
+					(i == 0 && (recordType(s2cSaved[0]) != recordTypeHandshake || s2cSaved[5] != typeServerHello)) ||
+					(i == 1 && (recordType(s2cSaved[0]) != recordTypeChangeCipherSpec || s2cSaved[5] != 1)) ||
+					(i > 1 && recordType(s2cSaved[0]) != recordTypeApplicationData) {
+					break f
+				}
+				// [3:5]指向TLS握手包第4-5字节的握手包长度信息
+				handshakeLen = recordHeaderLen + Value(s2cSaved[3:5]...)
+			}
+			if config.Show {
+				fmt.Printf("REALITY remoteAddr: %v\tlen(s2cSaved): %v\t%v: %v\n", remoteAddr, len(s2cSaved), t, handshakeLen) //调试信息
+			}
+			// 判断握手包是否过长
+			if handshakeLen > size {
+				break f
+			}
+			// 判断握手包类型是否为Change Cipher Spec
+			if i == 1 && handshakeLen > 0 && handshakeLen != 6 {
+				break f
+			}
+			// 判断握手包类型是否为Encrypted Extensions
+			// 即附加在Change Cipher Spec之后的加密部分
+			if i == 2 && handshakeLen > 512 {
+				hs.c.out.handshakeLen[i] = handshakeLen
+				hs.c.out.handshakeBuf = buf[:0]
+				break
+			}
+			// 判断握手包类型是否为New Session Ticket
+			if i == 6 && handshakeLen > 0 {
+				hs.c.out.handshakeLen[i] = handshakeLen
+				break
+			}
+			// 判断握手包长度是否为0或大于s2cSaved长度
+			if handshakeLen == 0 || len(s2cSaved) < handshakeLen {
+				mutex.Unlock()
+				continue f
+			}
+			// 判断握手包类型是否为Server Hello
+			if i == 0 {
+				// 构造新Server Hello
+				hs.hello = new(serverHelloMsg)
+				// unmarshal用于将来自dest的ServerHello解析并填充到新构造的握手包
+				// 这里检查了unmarshal是否报错以及解析并填充后的握手包是否合法
+				if !hs.hello.unmarshal(s2cSaved[recordHeaderLen:handshakeLen]) ||
+					hs.hello.vers != VersionTLS12 || hs.hello.supportedVersion != VersionTLS13 ||
+					cipherSuiteTLS13ByID(hs.hello.cipherSuite) == nil ||
+					hs.hello.serverShare.group != X25519 || len(hs.hello.serverShare.data) != 32 {
+					break f
+				}
+			}
+			// 修改对应类型握手包的已发送长度
+			// 及重置s2cSaved和handshakeLen
+			hs.c.out.handshakeLen[i] = handshakeLen
+			s2cSaved = s2cSaved[handshakeLen:]
+			handshakeLen = 0
+		} // 遍历结束
+		// 用于计量
+		start := time.Now()
+		// 与REALITY客户端进行握手
+		// 即发送修改后的Server Hello和
+		// Change Cipher Spec及Encrypted Extensions
+		err = hs.handshake()
+		if config.Show {
+			fmt.Printf("REALITY remoteAddr: %v\ths.handshake() err: %v\n", remoteAddr, err) //调试信息
+		}
+		if err != nil {
+			break
+		}
+		// 运行一个协程
+		go func() {
+			if handshakeLen-len(s2cSaved) > 0 {
+				io.ReadFull(target, buf[:handshakeLen-len(s2cSaved)])
+			}
+			if n, err := target.Read(buf); !hs.c.isHandshakeComplete.Load() {
+				if err != nil {
+					conn.Close()
+				}
+				if config.Show {
+					fmt.Printf("REALITY remoteAddr: %v\ttime.Since(start): %v\tn: %v\terr: %v\n", remoteAddr, time.Since(start), n, err)
+				}
+			}
+		}()
+		// 等待客户端返回TLS Finished信息
+		err = hs.readClientFinished()
+		if config.Show {
+			fmt.Printf("REALITY remoteAddr: %v\ths.readClientFinished() err: %v\n", remoteAddr, err)
+		}
+		if err != nil {
+			break
+		}
+		hs.c.isHandshakeComplete.Store(true)
+		break
+	}
+	mutex.Unlock()
+	// 判断REALITY服务器是否未发送ServerHello.
+	// 这种情况通常在dest返回无效ServerHello或
+	// 在dest返回ServerHello前运行至此会触发
+	if hs.c.out.handshakeLen[0] == 0 {
+		// 判断dest是否没有正确处理ClientHello时
+		if hs.c.conn == conn {
+			waitGroup.Add(1)
+			go func() {
+				// 将流量转发给dest
+				io.Copy(target, underlying)
+				waitGroup.Done()
+			}()
+		}
+		// 将客户端连接内容写入s2cSaved
+		conn.Write(s2cSaved)
+		// 将流量转发给dest
+		io.Copy(underlying, target)
+		// 当io.Copy()返回时意味着dest已关闭连接
+		// 此时也应关闭到客户端的转发通道
+		underlying.CloseWrite()
+	}
+	// 通知等待组该协程运行完成
+	waitGroup.Done()
+}()
+```
+
+至此，REALITY服务器完成了与客户端的握手。下面是一小段最终的处理代码：
+
+```Go
+// 阻塞直到等待组中所有协程运行完成
+waitGroup.Wait()
+// 关闭与dest的连接
+target.Close()
+if config.Show {
+	fmt.Printf("REALITY remoteAddr: %v\ths.c.handshakeStatus: %v\n", remoteAddr, hs.c.isHandshakeComplete.Load()) //调试信息
+}
+// 判断与REALITY客户端握手是否结束
+if hs.c.isHandshakeComplete.Load() {
+	// 将连接返回给调用方
+	return hs.c, nil
+}
+// 若与REALITY客户端的握手未正常结束
+// 则关闭与客户端的连接
+conn.Close()
+// 将错误返回给调用方
+return nil, errors.New("REALITY: processed invalid connection")
+```
+
+在REALITY服务器返回连接后，调用方(通常是上层的代理协议，如VLESS)即可通过reality包提供的与[crypto/tls](https://pkg.go.dev/crypto/tls)相同的公开API传输规避流量。接下来的流量传输与[crypto/tls](https://pkg.go.dev/crypto/tls)的行为完全一致。
+
+### 🚀结语
+在这篇文章里，我们共同了解了未启用ECH的TLS1.3协议的正常握手过程。以此为基础，我们通过深入REALITY客户端和服务端的源代码进行解析，洞悉了REALITY协议规避基于SNI的审查策略的具体实现。
+这篇文章自从我7月30日建立博客并发布文章后就一直在马不停蹄地编写，今天发布正好一个星期。我希望能够在不失严谨性的同时，尽力以最易懂的方式为读者提供对于REALITY协议的全面认识，愿正在阅读的你能够从中有所收获。
+
+最后，感谢[XTLS/Xray-core](https://github.com/XTLS/Xray-core/)的创建者[RPRX](https://github.com/RPRX)，以及[ProjectX (XTLS)](https://github.com/XTLS)下的所有项目的贡献者。
+由于项目较多，这里仅列出Xray-core的贡献者:
+
+<a href="https://github.com/XTLS/Xray-core/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=XTLS/Xray-core" />
+</a>
+
+(使用 [contrib.rocks](https://contrib.rocks) 制作. 中国大陆访问可能较慢.)
 
 *(推荐相关阅读 : )*
 1. [A Detailed Look at RFC 8446 (a.k.a. TLS 1.3) - Cloudflare Blog](https://blog.cloudflare.com/rfc-8446-aka-tls-1-3/)
