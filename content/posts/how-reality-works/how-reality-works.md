@@ -5,6 +5,12 @@ date = 2024-08-07T18:00:00+08:00
 draft = false
 tags = ["反审查","SNI白名单","TLS","加密代理"]
 categories = ["反审查","TLS"]
+#wordCount = true
+#fuzzyWordCount = true
+#viewsCount = true
+#readingTime = true
+wordNumber = 7600
+readingNumber = 15
 compact4Phone = true
 betterList4Phone = true
 +++
