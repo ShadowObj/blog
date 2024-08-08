@@ -5,12 +5,13 @@ date = "2024-08-08 15:00:00+08:00"
 draft = false
 tags = ["Anti-censorship","SNI whitelist","TLS","Encrypted proxy"]
 categories = ["Anti-censorship","TLS"]
+nonRSS = false
 #wordCount = true
 #fuzzyWordCount = true
 #viewsCount = true
 #readingTime = true
-wordNumber = 7600
-readingNumber = 15
+wordNumber = 5800
+readingNumber = 27
 compact4Phone = true
 betterList4Phone = true
 +++
