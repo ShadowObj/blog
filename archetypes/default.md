@@ -5,6 +5,7 @@ date = {{ .Date }}
 draft = true
 tags = []
 categories = []
+#lastmod = ""
 #wordCount = true
 #fuzzyWordCount = true
 #viewsCount = true

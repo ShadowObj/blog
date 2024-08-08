@@ -1,16 +1,22 @@
 +++
 title = 'Traffic classification can detect encrypted proxies? A First Look at "TLS in Any" vulnerability'
 description = "Traffic classification? What kind of unheard-of censorship strategy is this? How far away is it from us? Is TLS proxy still safe and hidden?"
-date = 2024-07-31T16:00:00+08:00
+date = "2024-07-31 16:00:00+08:00"
 draft = false
 tags = ["Anti-censorship","Traffic classification","TLS","Encrypted proxy"]
 categories = ["Anti-censorship","TLS"]
+#wordCount = true
+#fuzzyWordCount = true
+#viewsCount = true
+#readingTime = true
+#wordNumber = 7600
+#readingNumber = 15
 compact4Phone = true
 betterList4Phone = true
 +++
 
 (All the content below is translated from Chinese by Google Translate ↓)<br>
-(Please feel free to make your own comments at the translation below.)
+(Please feel free to make your own comments at the translation.)
 
 📢First, answer the questions raised above:
 

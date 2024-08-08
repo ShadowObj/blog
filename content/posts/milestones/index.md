@@ -1,7 +1,7 @@
 +++
 title = "大事记 | Milestones"
 description = "我们的故事还在继续..."
-date = "2024-07-30T00:00:00+08:00"
+date = "2024-07-30 00:00:00+08:00"
 
 nonRSS = true
 readingTime = false

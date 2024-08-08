@@ -1,7 +1,7 @@
 +++
 title = "Milestones"
 description = "Our story is still going on..."
-date = "2024-07-30T00:00:00+08:00"
+date = "2024-07-30 00:00:00+08:00"
 
 nonRSS = true
 readingTime = false
@@ -21,3 +21,9 @@ betterList4Phone = true
   
 - 2024.08.03
   - Views count broke through 100!
+
+- 2024.08.06
+  - [RSS Subscription](/index.xml) Supported
+
+- 2024.08.07
+  - Views count broke through 500!
