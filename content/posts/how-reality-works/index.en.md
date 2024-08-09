@@ -159,7 +159,7 @@ The first field of UConn is an anonymous field <sup>7</sup>, of type pointer to 
 
 *(<sup>7</sup>Anonymous fields, i.e. fields with the same name as the corresponding type by default; <sup>8</sup> utls, a variant of the go standard library "crypto/tls", provides TLS Client Hello fingerprinting, full access to TLS handshakes, Fake Session Tickets, etc. for anti-censorship purposes)*
 
-**Then we come to the key point**: REALITY clients use the **Session ID field space** in TLS Client Hello to covertly mark clients so that servers can distinguish censors from legitimate REALITY clients. The Session ID field was originally used for the 0-RTT session resumption feature of TLS1.3, but it is rarely enabled because it makes the first packet lose its anti-replay feature. When the 0-RTT session resumption feature is not enabled, the Session ID used for each TLS1.3 connection should be **randomly generated**.
+**Then we come to the key point**: REALITY clients use the **Session ID field space** in TLS Client Hello to covertly mark the client so that the server can distinguish between censors and legitimate REALITY clients. The Session ID field was originally used for the 0-RTT session resumption mechanism of TLS1.2. Although TLS1.3 switched to the session resumption mechanism based on PSK (Pre-shared Key), in order to maintain compatibility with TLS1.2 as much as possible, the Session ID field was retained while TLS1.3 was deprecated. Therefore, the Session ID used for each TLS1.3 connection should be **randomly generated**.
 
 *(Xray-core also defines a block-level scope for the following client code.)*
 
