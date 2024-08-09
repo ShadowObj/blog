@@ -10,8 +10,8 @@ nonRSS = false
 #fuzzyWordCount = true
 #viewsCount = true
 #readingTime = true
-wordNumber = 5800
-readingNumber = 27
+wordNumber = 6300
+readingNumber = 30
 compact4Phone = true
 betterList4Phone = true
 +++
@@ -241,7 +241,7 @@ For the convenience of description, here is a conclusion:
 
 1. The REALITY server forwards the ClientHello to the TLS server dest (mask server) with a valid certificate, makes minimal modifications to the ServerHello and Change Cipher Spec from dest and its attached encrypted information, and then forwards it to the REALITY client. This approach can complete the TLS handshake in the normal TLS server way, avoiding the generation of server-side TLS fingerprints.
 
-2. When the REALITY server modifies the encrypted information attached to the Change Cipher Spec, it uses `preMasterKey` to sign the digital certificate in it, and replaces the original information with the signature information, so that the REALITY client can use the signature calculated by `preMasterKey` to compare, thereby informing the client that it can transmit.
+2. When the REALITY server modifies the encryption information attached after Change Cipher Spec, it replaces all digital certificates with **"temporary certificates"** and modifies the **signature** value of the "temporary certificate" so that the REALITY client can compare the signature calculated by using `preMasterKey` to inform the client that the transmission can be carried out.
 
 3. The REALITY server forwards all traffic except that from the legitimate REALITY client to dest. The benefits of this approach are the same as 1.
 
@@ -294,9 +294,10 @@ go func() {
 		if copying || err != nil || hs.c.vers != VersionTLS13 || !config.ServerNames[hs.clientHello.serverName] {
 			break
 		}
-		// for loops to obtain the client's x25519 public key
-		// TLS1.3 ClientHello contains as many public keys as possible
-		// To avoid the server not supporting a specific AEAD algorithm and increasing latency
+		// for loop to get the client x25519 public key
+		// TLS1.3 ClientHello contains as many public keys and digital certificates as possible
+		// for different algorithms to avoid
+		// asking for supported algorithms adds 1 round trip delay in TLS1.2
 		for i, keyShare := range hs.clientHello.keyShares {
 			// Determine whether the key type is x25519 and the length is equal to 32 bytes
 			// This is the length and type of the public key used by the REALITY client
@@ -377,7 +378,7 @@ go func() {
 
 At this time, the server has completed the task of distinguishing clients. But the TLS handshake is not yet completed?
 
-In the following part, the REALITY server forwards the ClientHello to dest, modifies the returned ServerHello, and sends it back to the legitimate REALITY client to complete the TLS handshake, while informing the legitimate REALITY client that it can transmit evasion traffic.
+In the following part, the REALITY server forwards the ClientHello to dest, modifies the ServerHello returned by dest, replaces all digital certificates with **"temporary certificates"**, modifies the **signature** value of the "temporary certificate", and then sends the modified ServerHello back to the legitimate REALITY client, thereby completing the TLS handshake and informing the client that it can transmit evasion traffic. Since the "temporary certificate" is not signed by the client's trusted CA, the REALITY client confirms the server's identity by verifying the signature value of the digital certificate.
 
 ```Go
 // REALITY/blob/main/tls.go#L225-L349
@@ -575,7 +576,67 @@ f:
 }()
 ```
 
-至此，REALITY服务器完成了与客户端的握手。下面是一小段最终的处理代码：
+Next, the server randomly generates a **"temporary certificate"** in ed25519 format (actually it is done when the `reality` package is imported), and replaces the **signature part** of the digital certificate with the value obtained by inputting the **public key** of the "temporary trusted certificate" into the HMAC algorithm using `preMasterKey` as the key.
+
+```Go
+// REALITY/blob/main/handshake_server_tls13.go#L55-L59
+// func init is executed when the package it is in is imported
+func init() {
+    // Defines the x509 certificate template
+	certificate := x509.Certificate{SerialNumber: &big.Int{}}
+    // Generate a 64-byte ed25519 private key
+	// _ means ignore and discard the value
+	_, ed25519Priv, _ = ed25519.GenerateKey(rand.Reader)
+    // Generate a temporary x509 certificate using the previous template
+	// I don't know why the REALITY server intercepted
+	// Bytes 33-64 of the private key ed25519Priv
+	// Public key for the temporary certificate
+	signedCert, _ = x509.CreateCertificate(rand.Reader, &certificate, &certificate, ed25519.PublicKey(ed25519Priv[32:]), ed25519Priv)
+}
+
+// REALITY/blob/main/handshake_server_tls13.go#L74-L85
+// (Again) calculate preMasterKey
+// The key value calculated this time
+// is assigned to hs.sharedKey
+{
+	hs.suite = cipherSuiteTLS13ByID(hs.hello.cipherSuite)
+	c.cipherSuite = hs.suite.id
+	hs.transcript = hs.suite.hash.New()
+	
+	key, _ := generateECDHEKey(c.config.rand(), X25519)
+	copy(hs.hello.serverShare.data, key.PublicKey().Bytes())
+	peerKey, _ := key.Curve().NewPublicKey(hs.clientHello.keyShares[hs.clientHello.keyShares[0].group].data)
+	hs.sharedKey, _ = key.ECDH(peerKey)
+
+	c.serverName = hs.clientHello.serverName
+}
+
+// REALITY/blob/main/handshake_server_tls13.go#L94-L106
+// Modify the value of the temporary certificate signature
+{
+	// Store the temporary certificate in the certificate array
+	signedCert := append([]byte{}, signedCert...)
+
+	// Initialize the hmac calculation object h
+	// Use preMasterKey as the key
+	h := hmac.New(sha512.New, c.AuthKey)
+	// Write bytes 33-64 of the ed25519 private key to the buffer h
+	h.Write(ed25519Priv[32:])
+	// Calculate the hmac value of the buffer data and write it
+	// starting from byte 65 of the temporary certificate
+	h.Sum(signedCert[:len(signedCert)-64])
+
+	// Constructs a complete certificate object
+	hs.cert = &Certificate{
+		Certificate: [][]byte{signedCert},
+		PrivateKey:  ed25519Priv,
+	}
+	// Identifies the signature algorithm as ed25519
+	hs.sigAlg = Ed25519
+}
+```
+
+At this point, the REALITY server has completed the handshake with the client. The following is a short snippet of the final processing code:
 
 ```Go
 // Block until all coroutines in the waiting group have completed running
@@ -598,6 +659,40 @@ return nil, errors.New("REALITY: processed invalid connection")
 ```
 
 After the REALITY server returns the connection, the caller (usually an upper-level proxy protocol such as VLESS) can transmit evasion traffic through the same public API provided by the reality package as [crypto/tls](https://pkg.go.dev/crypto/tls). The subsequent traffic transmission is exactly the same as the behavior of [crypto/tls](https://pkg.go.dev/crypto/tls).
+
+#### 🔐Verify the server identity
+
+Normally, after the REALITY client verifies the server identity, it sends TLS Finished, thus ending the TLS handshake with the REALITY server and starting to circumvent the transmission of traffic. Here is a brief explanation of the key logic of the client verifying the signature value of the server certificate.
+
+```Go
+// Xray-core/transport/internet/reality/reality.go#L82-L104
+func (c *UConn) VerifyPeerCertificate(rawCerts [][]byte, verifiedChains [][]*x509.Certificate) error {
+	// Since the utls package does not provide low-level access and modification to certificates
+	// Here, the reflect package in Go is used to obtain the memory address of the certificate array
+	// And the original data is converted to a Go array by operating pointers and type assertions
+	p, _ := reflect.TypeOf(c.Conn).Elem().FieldByName("peerCertificates")
+	certs := *(*([]*x509.Certificate))(unsafe.Pointer(uintptr(unsafe.Pointer(c.Conn)) + p.Offset))
+	// Convert the public key in the first certificate in the certificate array to
+	// ed25519.PublicKey type
+	// Confirm the public key type by checking whether an error is reported
+	if pub, ok := certs[0].PublicKey.(ed25519.PublicKey); ok {
+		// Initialize hmac calculation object h
+		// Use preMasterKey as key
+		h := hmac.New(sha512.New, c.AuthKey)
+		// Write the certificate public key to h's buffer
+		h.Write(pub)
+		// h.Sum calculates and returns the hmac value of the buffer data
+		// Determine whether the hmac value is
+		// completely consistent with the certificate signature
+		if bytes.Equal(h.Sum(nil), certs[0].Signature) {
+			// Indicates that the REALITY server authentication has passed
+			c.Verified = true
+			return nil
+		}
+	}
+	... // The original verification logic of the crypto/tls package is omitted here
+}
+```
 
 ### 🚀Conclusion
 In this article, we have learned about the normal handshake process of the TLS1.3 protocol without ECH enabled. Based on this, we have analyzed the source code of the REALITY client and server in depth, and have gained insight into the specific implementation of the REALITY protocol to circumvent the SNI-based censorship strategy.

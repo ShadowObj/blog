@@ -5,16 +5,17 @@ date = "2024-08-07 18:00:00+08:00"
 draft = false
 tags = ["反审查","SNI白名单","TLS","加密代理"]
 categories = ["反审查","TLS"]
-lastmod = "2024-08-08 15:00:00+08:00"
+lastmod = "2024-08-09 15:00:00+08:00"
 nonRSS = false
 #wordCount = true
 #fuzzyWordCount = true
 #viewsCount = true
 #readingTime = true
-wordNumber = 7600
+wordNumber = 8000
 readingNumber = 15
 compact4Phone = true
 betterList4Phone = true
+
 +++
 
 ### ℹ️前言
@@ -241,7 +242,7 @@ REALITY服务器处理TLS握手的关键是文件 `tls.go` 中的func Server。�
 
 1. REALITY服务器将ClientHello转发到持有有效证书的TLS服务器dest(伪装服务器), 对来自dest的ServerHello和Change Cipher Spec及其附加的加密信息作最小修改，再转发给REALITY客户端。这种做法能够完全以正常TLS服务器的方式完成TLS握手，避免产生服务端TLS指纹。
 
-2. REALITY服务器在修改Change Cipher Spec后附加的加密信息时, 使用 `preMasterKey` 对其中的数字证书进行签名，并使用该签名信息替换了原有信息，以便REALITY客户端通过使用 `preMasterKey` 计算的签名比对，以此告知客户端可以进行传输。
+2. REALITY服务器在修改Change Cipher Spec后附加的加密信息时, 将其中的所有数字证书替换为**"临时证书"** , 并修改"临时证书"的**签名**的值，以便REALITY客户端通过使用 `preMasterKey` 计算签名作比对，以此告知客户端可以进行传输。
 
 3. REALITY服务器对来自合法REALITY客户端以外的流量全部转发到dest。这种做法的好处同1.
 
@@ -295,8 +296,9 @@ go func() {
 			break
 		}
 		// for逐个循环获取客户端x25519公钥
-		// TLS1.3 ClientHello包含尽可能多的公钥
-		// 以避免服务器不支持特定AEAD算法增加延迟
+		// TLS1.3 ClientHello包含尽可能多的
+        // 适用于不同算法的公钥和数字证书，以避免
+		// TLS1.2中询问受支持算法增加1次往返延迟
 		for i, keyShare := range hs.clientHello.keyShares {
 			// 判断密钥类型是否为x25519且长度等于32字节
 			// 这是REALITY客户端使用的公钥长度和类型
@@ -377,7 +379,7 @@ go func() {
 
 直到这里，服务器已经完成了区分客户端的任务。但是TLS握手可还没完成呢?
 
-在下面这部分，REALITY服务器通过将ClientHello转发到dest，修改返回的ServerHello，将其发回合法REALITY客户端完成TLS握手，同时告知合法REALITY客户端可以传输规避流量。
+在下面这部分，REALITY服务器通过将ClientHello转发到dest，修改dest返回的ServerHello，将其中的所有数字证书替换为**"临时证书"** , 并修改"临时证书"的**签名**的值，再将修改后的ServerHello发回合法REALITY客户端，以此完成TLS握手并告知客户端可以传输规避流量。由于"临时证书"并没有由客户端的可信CA进行签名，REALITY客户端通过验证数字证书的签名的值来确认服务器身份。
 
 ```Go
 // REALITY/blob/main/tls.go#L225-L349
@@ -574,9 +576,70 @@ f:
 }()
 ```
 
+接下来服务器随机生成一份 ed25519格式 的**"临时证书"** (实际上在 `reality` 包被导入时就完成了)，并将数字证书的**签名部分**替换为 使用 `preMasterKey` 为密钥，将"临时可信证书"的**公钥**将输入HMAC算法 得到的值。
+
+```Go
+// REALITY/blob/main/handshake_server_tls13.go#L55-L59
+// func init在所处的包被导入时执行
+func init() {
+    // 定义x509证书模板
+	certificate := x509.Certificate{SerialNumber: &big.Int{}}
+    // 生成64字节长的ed25519私钥
+    // _ 表示忽略并丢弃值
+	_, ed25519Priv, _ = ed25519.GenerateKey(rand.Reader)
+    // 以前面的模板生成x509临时证书
+    // 不知道为什么REALITY服务器截取
+	// 私钥ed25519Priv的第33-64字节
+	// 作临时证书的公钥
+	signedCert, _ = x509.CreateCertificate(rand.Reader, &certificate, &certificate, ed25519.PublicKey(ed25519Priv[32:]), ed25519Priv)
+}
+
+// REALITY/blob/main/handshake_server_tls13.go#L74-L85
+// (再次)计算preMasterKey
+// 这次计算得到的密钥值
+// 赋值给了hs.sharedKey
+{
+	hs.suite = cipherSuiteTLS13ByID(hs.hello.cipherSuite)
+	c.cipherSuite = hs.suite.id
+	hs.transcript = hs.suite.hash.New()
+	
+	key, _ := generateECDHEKey(c.config.rand(), X25519)
+	copy(hs.hello.serverShare.data, key.PublicKey().Bytes())
+	peerKey, _ := key.Curve().NewPublicKey(hs.clientHello.keyShares[hs.clientHello.keyShares[0].group].data)
+	hs.sharedKey, _ = key.ECDH(peerKey)
+
+	c.serverName = hs.clientHello.serverName
+}
+
+// REALITY/blob/main/handshake_server_tls13.go#L94-L106
+// 修改临时证书的签名的值
+{
+	// 将临时证书存入证书数组
+	signedCert := append([]byte{}, signedCert...)
+
+	// 初始化hmac计算对象h
+	// 使用preMasterKey作密钥
+	h := hmac.New(sha512.New, c.AuthKey)
+	// 将ed25519私钥第33-64字节写入h的缓冲区
+	h.Write(ed25519Priv[32:])
+	// 计算缓冲区数据的hmac值并将其
+	// 从临时证书的第65字节开始写入
+	h.Sum(signedCert[:len(signedCert)-64])
+
+	// 构造完整的证书对象
+	hs.cert = &Certificate{
+		Certificate: [][]byte{signedCert},
+		PrivateKey:  ed25519Priv,
+	}
+	// 标识签名算法为ed25519
+	hs.sigAlg = Ed25519
+}
+```
+
 至此，REALITY服务器完成了与客户端的握手。下面是一小段最终的处理代码：
 
 ```Go
+// REALITY/blob/main/tls.go#L351-L360
 // 阻塞直到等待组中所有协程运行完成
 waitGroup.Wait()
 // 关闭与dest的连接
@@ -597,6 +660,39 @@ return nil, errors.New("REALITY: processed invalid connection")
 ```
 
 在REALITY服务器返回连接后，调用方(通常是上层的代理协议，如VLESS)即可通过reality包提供的与[crypto/tls](https://pkg.go.dev/crypto/tls)相同的公开API传输规避流量。接下来的流量传输与[crypto/tls](https://pkg.go.dev/crypto/tls)的行为完全一致。
+
+#### 🔐验证服务端身份
+
+通常情况下，REALITY客户端在验证服务器身份后，再发送 TLS Finished，从而结束与REALITY服务器的TLS握手，并开始规避流量的传输。这里把客户端验证服务器证书的签名的值的关键逻辑作一些简短解释。
+
+```Go
+// Xray-core/transport/internet/reality/reality.go#L82-L104
+func (c *UConn) VerifyPeerCertificate(rawCerts [][]byte, verifiedChains [][]*x509.Certificate) error {
+	// 由于utls包不提供对证书的底层访问和修改
+	// 这里利用Go中的reflect包获取证书数组的内存地址
+	// 并通过操作指针和类型断言将原数据转换为Go数组
+	p, _ := reflect.TypeOf(c.Conn).Elem().FieldByName("peerCertificates")
+	certs := *(*([]*x509.Certificate))(unsafe.Pointer(uintptr(unsafe.Pointer(c.Conn)) + p.Offset))
+	// 将证书数组中的第一份证书中的公钥转换为
+	// ed25519.PublicKey类型
+	// 通过检查是否报错来确认公钥类型
+	if pub, ok := certs[0].PublicKey.(ed25519.PublicKey); ok {
+		// 初始化hmac计算对象h
+		// 使用preMasterKey作密钥
+		h := hmac.New(sha512.New, c.AuthKey)
+		// 将证书公钥写入h的缓冲区
+		h.Write(pub)
+		// h.Sum计算并返回缓冲区数据的hmac值
+		// 判断hmac值是否与证书签名完全一致
+		if bytes.Equal(h.Sum(nil), certs[0].Signature) {
+			// 标识REALITY服务器身份验证通过
+			c.Verified = true
+			return nil
+		}
+	}
+	... // crypto/tls包原有的验证逻辑，此处略去
+}
+```
 
 ### 🚀结语
 在这篇文章里，我们共同了解了未启用ECH的TLS1.3协议的正常握手过程。以此为基础，我们通过深入REALITY客户端和服务端的源代码进行解析，洞悉了REALITY协议规避基于SNI的审查策略的具体实现。
