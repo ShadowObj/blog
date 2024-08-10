@@ -159,6 +159,7 @@ UConn的第一个字段为匿名字段<sup>7</sup>，类型为来自[utls](https
 *(<sup>7</sup>匿名字段，即默认其名称为对应类型名称的字段; <sup>8</sup> utls, go标准库"crypto/tls"的变种, 为反审查用途提供TLS Client Hello指纹识别对抗、对于TLS握手的完全访问，Fake Session Ticket等功能)*
 
 **接下来到了关键的地方**: REALITY客户端利用 TLS Client Hello 中的 **Session ID 字段空间**为客户端作隐蔽标记，以供服务器区分审查者与合法REALITY客户端。Session ID字段原本用于TLS1.2的0-RTT会话恢复机制，然而TLS1.3虽然切换到了基于PSK (Pre-shared Key)的会话恢复机制，但是为尽量保持对TLS1.2的兼容性，Session ID字段在TLS1.3被弃用的同时被保留了下来。因此每一个TLS1.3连接使用的Session ID都应当是**随机生成**的。
+(这里非常感谢一位读者(要求不具名), 指正了先前编写时将 TLS1.2基于SessionID和Session Ticket的会话恢复机制 与 TLS1.3基于PSK的会话恢复机制 混淆的错误，望见谅。)
 
 *(Xray-core中还专门为接下来这一段客户端代码划定了块级作用域。)*
 
