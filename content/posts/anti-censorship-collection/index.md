@@ -1,7 +1,8 @@
 +++
 title = '风雨同舟: 反审查技术交流社群与媒体收集 (持续更新)'
-description = "欢迎在本文评论区提出推荐! 2024-08-10已更新"
-date = 2024-08-10T13:31:41+08:00
+description = "欢迎在本文评论区提出推荐! 2024-08-11已更新"
+date = "2024-08-10 13:00:00+08:00"
+lastmod = "2024-08-11 16:00:00+08:00"
 draft = false
 tags = ["反审查", "学术", "网站"]
 categories = ["反审查", "收集"]
@@ -23,14 +24,14 @@ betterList4Phone = true
 
 欢迎任何人在评论区推荐相关网站/工具! 推荐时请附上 网站链接、推荐理由。<br />**不接收政治立场非中立或宣传虚假信息的反审查互联网媒体，望见谅。**
 
-*(最后更新于: 2024-08-10)*
+*(最后更新于: 2024-08-11)*
 
-- 🔗技术交流社群
+### 🔗技术交流社群
   - net4people/bbs https://github.com/net4people/bbs/issues/
 
     以代码库托管平台Github的issues功能建立起的多语言反审查交流社区。
   
-- 🪜规避工具
+### 🪜规避工具
 
   ​	(此处列出的所有规避工具均开源或有至少一个可用的开源实现。)
 
@@ -64,7 +65,7 @@ betterList4Phone = true
 
     由 [SagerNet](https://github.com/SagerNet) 创建的通用代理平台。包含许多规避工具的Go实现。同时为Android和所有Apple平台开发了免费开源的图形客户端。
 
-- 🔍审计平台
+### 🔍审计平台
 
   - Censored Planet https://censoredplanet.org/
 
@@ -84,7 +85,7 @@ betterList4Phone = true
 
     中文名为"公民实验室"，是一个学术研究实验室，总部设在加拿大多伦多大学蒙克学院。专注于研究有高级别政策和法律参与的，对于公民社会、人权和全球安全的数字威胁。调查研究跨度大、范围广，包括政治学，法学，计算机科学和地缘政治。详细介绍见 https://citizenlab.ca/about/.
 
-- 📖学术会议
+### 📖学术会议
   - USENIX Security https://www.usenix.org/conference/usenixsecurity24/
   
     (👆链接指向2024年度的The **33rd USENIX Security Symposium**，第三十三届USENIX安全会议，截至最后一次更新尚未正式开始)
@@ -99,7 +100,7 @@ betterList4Phone = true
 
     中文名为"隐私增强技术研讨会"，每年举行。PETS汇集了来自世界各地的隐私专家，介绍和讨论隐私技术研究的最新进展和新观点。该会议附属一个名为PoPETs的学术性的开放获取期刊，用于及时发表关于隐私的研究论文，同时保留非常成功的PETS社区活动。
   
-- 📰中文互联网媒体
+### 📰中文互联网媒体
 
   - 中国数字时代 https://chinadigitaltimes.net/chinese/
 
