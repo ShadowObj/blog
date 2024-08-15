@@ -4,3 +4,10 @@ goldmark.renderer.unsafe = true
 startLevel = 2
 endLevel = 4
 ordered = true
+
+[highlight]
+style = "monokai"
+lineNumbersInTable = false
+hl_Lines = ""
+lineNoStart = 1
+lineNos = true
