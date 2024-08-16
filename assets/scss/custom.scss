@@ -94,3 +94,9 @@
     max-height:50em;
   }
 }
+
+@include respondmax(md) {
+  pre code {
+    font-size: 12px;
+  }
+}
