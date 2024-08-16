@@ -1,4 +1,4 @@
-export async function onRequestGet(context) {
+export async function onRequestPost(context) {
     const pathname = decodeURI(new URL(context.request.url).searchParams.get("q"))
     if (!(pathname.startsWith("/")) || pathname.includes("'")) {
         return new Response("403 Forbidden", {"status":403})
