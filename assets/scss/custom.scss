@@ -87,16 +87,17 @@
   #scrollTop { display: block; }
 }
 // pre code style
+
+pre code {
+  //white-space: pre-wrap;
+  //word-wrap: break-word;
+  font-size: 12px;
+}
+
 @include respond(md) {
   pre code {
     font-size:16px;
     display:block;
     max-height:50em;
-  }
-}
-
-@include respondmax(md) {
-  pre code {
-    font-size: 12px;
   }
 }

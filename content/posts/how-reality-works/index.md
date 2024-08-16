@@ -135,21 +135,21 @@ func UClient的关键功能之一在于初始化了本包定义的 struct `UConn
 // Xray-core/transport/internet/reality/reality.go#L64-L69
 // UConn的字段定义
 type UConn struct {
-	*utls.UConn
-	ServerName string
-	AuthKey    []byte
-	Verified   bool
+  *utls.UConn
+  ServerName string
+  AuthKey    []byte
+  Verified   bool
 }
 
 // Xray-core/transport/internet/reality/reality.go#L108-L115
 // uConn赋值为UConn实例, utlsConfig赋值为utls.Config实例(utls包配置)
 uConn := &UConn{}
 utlsConfig := &utls.Config{
-	VerifyPeerCertificate:  uConn.VerifyPeerCertificate,
-	ServerName:             config.ServerName,
-	InsecureSkipVerify:     true,
-	SessionTicketsDisabled: true,
-	KeyLogWriter:           KeyLogWriterFromConfig(config),
+  VerifyPeerCertificate:  uConn.VerifyPeerCertificate,
+  ServerName:             config.ServerName,
+  InsecureSkipVerify:     true,
+  SessionTicketsDisabled: true,
+  KeyLogWriter:           KeyLogWriterFromConfig(config),
 }
 
 // Xray-core/transport/internet/reality/reality.go#L124
@@ -199,7 +199,7 @@ publicKey, err := ecdh.X25519().NewPublicKey(config.PublicKey)
 uConn.AuthKey, _ = uConn.HandshakeState.State13.EcdheKey.ECDH(publicKey)
 // Xray-core/transport/internet/reality/reality.go#L147-L149
 if _, err := hkdf.New(sha256.New, uConn.AuthKey, hello.Random[:20], []byte("REALITY")).Read(uConn.AuthKey); err != nil {
-			return nil, err
+  return nil, err
 }
 
 // Xray-core/transport/internet/reality/reality.go#L150-L156
@@ -208,10 +208,10 @@ if _, err := hkdf.New(sha256.New, uConn.AuthKey, hello.Random[:20], []byte("REAL
 // 同时为附加数据提供完整性保证。
 var aead cipher.AEAD
 if aesgcmPreferred(hello.CipherSuites) {
-	block, _ := aes.NewCipher(uConn.AuthKey)
-			aead, _ = cipher.NewGCM(block)
+  block, _ := aes.NewCipher(uConn.AuthKey)
+  aead, _ = cipher.NewGCM(block)
 } else {
-	aead, _ = chacha20poly1305.New(uConn.AuthKey)
+  aead, _ = chacha20poly1305.New(uConn.AuthKey)
 }
 
 // Xray-core/transport/internet/reality/reality.go#L160-L161
@@ -228,7 +228,7 @@ copy(hello.Raw[39:], hello.SessionId)
 
 ```Go
 if err := uConn.HandshakeContext(ctx); err != nil {
-	return nil, err
+  return nil, err
 }
 ```
 
@@ -266,16 +266,16 @@ mutex := new(sync.Mutex)
 // 初始化handshake_server_tls13.go中定义的
 // serverHandshakeStateTLS13实例以存储握手信息
 hs := serverHandshakeStateTLS13{
-		c: &Conn{
-			conn: &MirrorConn{
-				Mutex:  mutex,
-				Conn:   conn,
-				Target: target,
-			},
-			config: config,
-		},
-		ctx: context.Background(),
-	}
+  c: &Conn{
+    conn: &MirrorConn{
+      Mutex:  mutex,
+      Conn:   conn,
+      Target: target,
+	},
+	config: config,
+  },
+  ctx: context.Background(),
+}
 
 // 标识客户端是否未完成握手就发送无关数据
 copying := false
@@ -288,96 +288,96 @@ waitGroup.Add(2) // 添加两个子协程
 // REALITY/blob/main/tls.go#L158-L223
 // 运行用于区分客户端的协程
 go func() {
-	for {
-		mutex.Lock() // 加锁，独占当前任务
-		// 读取ClientHello, context.Background()生成空ctx占位
-		hs.clientHello, err = hs.c.readClientHello(context.Background())
-		// 判断1.客户端是否未完成握手就发送数据;2.读取报错;
-		// 3.版本小于TLS1.3;4.ClientHello中的SNI不在配置中
-		// 若任一条件符合结束循环(break不再进入下一次循环)
-		// (Go使用无条件for表示无限循环)
-		if copying || err != nil || hs.c.vers != VersionTLS13 || !config.ServerNames[hs.clientHello.serverName] {
-			break
-		}
-		// for逐个循环获取客户端x25519公钥
-		// TLS1.3 ClientHello包含尽可能多的
+  for {
+    mutex.Lock() // 加锁，独占当前任务
+    // 读取ClientHello, context.Background()生成空ctx占位
+    hs.clientHello, err = hs.c.readClientHello(context.Background())
+    // 判断1.客户端是否未完成握手就发送数据;2.读取报错;
+    // 3.版本小于TLS1.3;4.ClientHello中的SNI不在配置中
+    // 若任一条件符合结束循环(break不再进入下一次循环)
+    // (Go使用无条件for表示无限循环)
+    if copying || err != nil || hs.c.vers != VersionTLS13 || !config.ServerNames[hs.clientHello.serverName] {
+      break
+    }
+    // for逐个循环获取客户端x25519公钥
+    // TLS1.3 ClientHello包含尽可能多的
         // 适用于不同算法的公钥和数字证书，以避免
-		// TLS1.2中询问受支持算法增加1次往返延迟
-		for i, keyShare := range hs.clientHello.keyShares {
-			// 判断密钥类型是否为x25519且长度等于32字节
-			// 这是REALITY客户端使用的公钥长度和类型
-			// 任一条件不符合则countinue进入下一次循环
-			if keyShare.group != X25519 || len(keyShare.data) != 32 {
-				continue
-			}
-			// 将REALITY私钥和客户端公钥输入ECDH算法计算共享密钥。
-			if hs.c.AuthKey, err = curve25519.X25519(config.PrivateKey, keyShare.data); err != nil {
-				break
-			}
-			// 将该密钥输入HKDF(基于HMAC的密钥导出函数)计算preMasterKey。
-			if _, err = hkdf.New(sha256.New, hs.c.AuthKey, hs.clientHello.random[:20], []byte("REALITY")).Read(hs.c.AuthKey); err != nil {
-				break
-			}
-			// 选择AEAD算法。
-			var aead cipher.AEAD
-			if aesgcmPreferred(hs.clientHello.cipherSuites) {
-				block, _ := aes.NewCipher(hs.c.AuthKey)
-				aead, _ = cipher.NewGCM(block)
-			} else {
-				aead, _ = chacha20poly1305.New(hs.c.AuthKey)
-			}
-			if config.Show {
-				fmt.Printf("REALITY remoteAddr: %v\ths.c.AuthKey[:16]: %v\tAEAD: %T\n", remoteAddr, hs.c.AuthKey[:16], aead) //调试信息
-			}
-			// 初始化两个32字节长的切片
-			// 分别用于存放密文和明文。
-			ciphertext := make([]byte, 32)
-			plainText := make([]byte, 32)
-			copy(ciphertext, hs.clientHello.sessionId)
-			copy(hs.clientHello.sessionId, plainText)
-			// 使用AEAD算法解密SessionId。
-			if _, err = aead.Open(plainText[:0], hs.clientHello.random[20:], ciphertext, hs.clientHello.raw); err != nil {
-				break
-			}
-			// 解析SessionId包含的Xray-core版本,
-			// Unix时间戳, ShortId
-			copy(hs.clientHello.sessionId, ciphertext)
-			copy(hs.c.ClientVer[:], plainText)
-			hs.c.ClientTime = time.Unix(int64(binary.BigEndian.Uint32(plainText[4:])), 0)
-			copy(hs.c.ClientShortId[:], plainText[8:])
-			if config.Show {
-				fmt.Printf("REALITY remoteAddr: %v\ths.c.ClientVer: %v\n", remoteAddr, hs.c.ClientVer)
-				fmt.Printf("REALITY remoteAddr: %v\ths.c.ClientTime: %v\n", remoteAddr, hs.c.ClientTime)
-				fmt.Printf("REALITY remoteAddr: %v\ths.c.ClientShortId: %v\n", remoteAddr, hs.c.ClientShortId) //调试信息
-			}
-			// 判断Xray-core版本,时间延迟,ShortId是否允许
-			if (config.MinClientVer == nil || Value(hs.c.ClientVer[:]...) >= Value(config.MinClientVer...)) &&
-				(config.MaxClientVer == nil || Value(hs.c.ClientVer[:]...) <= Value(config.MaxClientVer...)) &&
-				(config.MaxTimeDiff == 0 || time.Since(hs.c.ClientTime).Abs() <= config.MaxTimeDiff) &&
-				(config.ShortIds[hs.c.ClientShortId]) {
-				hs.c.conn = conn
-			}
-			// 标识客户端使用的公钥类型，供接下来使用
-			hs.clientHello.keyShares[0].group = CurveID(i)
-			break
-		}
-		if config.Show {
-			fmt.Printf("REALITY remoteAddr: %v\ths.c.conn == conn: %v\n", remoteAddr, hs.c.conn == conn) //调试信息
-		}
-		break
-	}
-	// 解锁，取消独占
-	mutex.Unlock()
-	// 判断客户端是否未完成握手就发送无关数据
-	if hs.c.conn != conn {
-		if config.Show && hs.clientHello != nil {
-			fmt.Printf("REALITY remoteAddr: %v\tforwarded SNI: %v\n", remoteAddr, hs.clientHello.serverName) //调试信息
-		}
-		// 将连接转发给配置中的dest(即伪装服务器)
-		io.Copy(target, underlying)
-	}
-	// 通知等待组该协程运行完成
-	waitGroup.Done()
+    // TLS1.2中询问受支持算法增加1次往返延迟
+    for i, keyShare := range hs.clientHello.keyShares {
+      // 判断密钥类型是否为x25519且长度等于32字节
+      // 这是REALITY客户端使用的公钥长度和类型
+      // 任一条件不符合则countinue进入下一次循环
+      if keyShare.group != X25519 || len(keyShare.data) != 32 {
+        continue
+      }
+      // 将REALITY私钥和客户端公钥输入ECDH算法计算共享密钥。
+      if hs.c.AuthKey, err = curve25519.X25519(config.PrivateKey, keyShare.data); err != nil {
+        break
+      }
+      // 将该密钥输入HKDF(基于HMAC的密钥导出函数)计算preMasterKey。
+      if _, err = hkdf.New(sha256.New, hs.c.AuthKey, hs.clientHello.random[:20], []byte("REALITY")).Read(hs.c.AuthKey); err != nil {
+        break
+      }
+      // 选择AEAD算法。
+      var aead cipher.AEAD
+      if aesgcmPreferred(hs.clientHello.cipherSuites) {
+        block, _ := aes.NewCipher(hs.c.AuthKey)
+        aead, _ = cipher.NewGCM(block)
+      } else {
+        aead, _ = chacha20poly1305.New(hs.c.AuthKey)
+      }
+      if config.Show {
+        fmt.Printf("REALITY remoteAddr: %v\ths.c.AuthKey[:16]: %v\tAEAD: %T\n", remoteAddr, hs.c.AuthKey[:16], aead) //调试信息
+      }
+      // 初始化两个32字节长的切片
+      // 分别用于存放密文和明文。
+      ciphertext := make([]byte, 32)
+      plainText := make([]byte, 32)
+      copy(ciphertext, hs.clientHello.sessionId)
+      copy(hs.clientHello.sessionId, plainText)
+      // 使用AEAD算法解密SessionId。
+      if _, err = aead.Open(plainText[:0], hs.clientHello.random[20:], ciphertext, hs.clientHello.raw); err != nil {
+        break
+      }
+      // 解析SessionId包含的Xray-core版本,
+      // Unix时间戳, ShortId
+      copy(hs.clientHello.sessionId, ciphertext)
+      copy(hs.c.ClientVer[:], plainText)
+      hs.c.ClientTime = time.Unix(int64(binary.BigEndian.Uint32(plainText[4:])), 0)
+      copy(hs.c.ClientShortId[:], plainText[8:])
+      if config.Show {
+        fmt.Printf("REALITY remoteAddr: %v\ths.c.ClientVer: %v\n", remoteAddr, hs.c.ClientVer)
+        fmt.Printf("REALITY remoteAddr: %v\ths.c.ClientTime: %v\n", remoteAddr, hs.c.ClientTime)
+        fmt.Printf("REALITY remoteAddr: %v\ths.c.ClientShortId: %v\n", remoteAddr, hs.c.ClientShortId) //调试信息
+      }
+      // 判断Xray-core版本,时间延迟,ShortId是否允许
+      if (config.MinClientVer == nil || Value(hs.c.ClientVer[:]...) >= Value(config.MinClientVer...)) &&
+        (config.MaxClientVer == nil || Value(hs.c.ClientVer[:]...) <= Value(config.MaxClientVer...)) &&
+        (config.MaxTimeDiff == 0 || time.Since(hs.c.ClientTime).Abs() <= config.MaxTimeDiff) &&
+        (config.ShortIds[hs.c.ClientShortId]) {
+        hs.c.conn = conn
+      }
+      // 标识客户端使用的公钥类型，供接下来使用
+      hs.clientHello.keyShares[0].group = CurveID(i)
+      break
+    }
+    if config.Show {
+      fmt.Printf("REALITY remoteAddr: %v\ths.c.conn == conn: %v\n", remoteAddr, hs.c.conn == conn) //调试信息
+    }
+    break
+  }
+  // 解锁，取消独占
+  mutex.Unlock()
+  // 判断客户端是否未完成握手就发送无关数据
+  if hs.c.conn != conn {
+    if config.Show && hs.clientHello != nil {
+      fmt.Printf("REALITY remoteAddr: %v\tforwarded SNI: %v\n", remoteAddr, hs.clientHello.serverName) //调试信息
+    }
+    // 将连接转发给配置中的dest(即伪装服务器)
+    io.Copy(target, underlying)
+  }
+  // 通知等待组该协程运行完成
+  waitGroup.Done()
 }()
 ```
 
@@ -389,194 +389,194 @@ go func() {
 // REALITY/blob/main/tls.go#L225-L349
 // 运行进行REALITY服务器握手及与dest通讯的协程
 go func() {
-	// 初始化两个size = 8192长的切片
-	// s2cSaved用于存放来自dest的所有已接收数据
-	// buf是REALITY服务器到dest的缓冲区
-	s2cSaved := make([]byte, 0, size)
-	buf := make([]byte, size)
-	handshakeLen := 0
+  // 初始化两个size = 8192长的切片
+  // s2cSaved用于存放来自dest的所有已接收数据
+  // buf是REALITY服务器到dest的缓冲区
+  s2cSaved := make([]byte, 0, size)
+  buf := make([]byte, size)
+  handshakeLen := 0
 f:
-	for {
-		// 临时让出CPU时间片，优化程序性能
-		runtime.Gosched()
-		// 将接收的来自dest的数据读取到buf(会清空buf)
-		n, err := target.Read(buf)
-		// 判断是否已收到来自dest的数据
-		if n == 0 {
-			if err != nil {
-				conn.Close()
-				waitGroup.Done()
-				return
-			}
-			continue
-		}
-		// 加锁，独占当前任务
-		mutex.Lock()
-		// 将buf数据附加的s2cSaved已有数据后
-		s2cSaved = append(s2cSaved, buf[:n]...)
-		// 判断客户端是否未完成握手就发送无关数据
-		if hs.c.conn != conn {
-			// 标识客户端未完成握手就发送无关数据
-			copying = true
-			break
-		}
-		// 判断s2cSaved长度是否过大
-		if len(s2cSaved) > size {
-			break
-		}
-		// 遍历type判断dest返回的包的类型
-		// REALITY/blob/main/tls.go#L91-L99
-		// types = [7]string{
-		// "Server Hello",
-		// "Change Cipher Spec",
-		// "Encrypted Extensions",
-		// "Certificate",
-		// "Certificate Verify",
-		// "Finished",
-		// "New Session Ticket",
-		// }
-		for i, t := range types {
-			// 判断是否已发送过了ServerHello
-			// 符合则进入下一次循环
-			if hs.c.out.handshakeLen[i] != 0 {
-				continue
-			}
-			// 判断本次循环到的类型是否为
-			// "New Session Ticket"且s2cSaved长度为0
-			if i == 6 && len(s2cSaved) == 0 {
-				break
-			}
-			// handshakeLen记录来自dest的握手包长度
-			// 这里判断其长度为0且来自dest的握手包长度大于5
-			// REALITY/blob/main/common.go#L63
-			// recordHeaderLen = 5
-			if handshakeLen == 0 && len(s2cSaved) > recordHeaderLen {
-				// [1:3]指向TLS握手包第2-3字节的版本信息
-				// 出于兼容性原因，TLS1.3的ClientHello的第2-3字节
-				// 的值与TLS1.2相同，1.3的版本标记存在于扩展当中
-				// 这里判断来自dest的数据包是否为ServerHello
-				// 或ChangeCipherSpec或ApplicationData,
-				// 这三类数据包是握手中应该出现的
-				if Value(s2cSaved[1:3]...) != VersionTLS12 ||
-					(i == 0 && (recordType(s2cSaved[0]) != recordTypeHandshake || s2cSaved[5] != typeServerHello)) ||
-					(i == 1 && (recordType(s2cSaved[0]) != recordTypeChangeCipherSpec || s2cSaved[5] != 1)) ||
-					(i > 1 && recordType(s2cSaved[0]) != recordTypeApplicationData) {
-					break f
-				}
-				// [3:5]指向TLS握手包第4-5字节的握手包长度信息
-				handshakeLen = recordHeaderLen + Value(s2cSaved[3:5]...)
-			}
-			if config.Show {
-				fmt.Printf("REALITY remoteAddr: %v\tlen(s2cSaved): %v\t%v: %v\n", remoteAddr, len(s2cSaved), t, handshakeLen) //调试信息
-			}
-			// 判断握手包是否过长
-			if handshakeLen > size {
-				break f
-			}
-			// 判断握手包类型是否为Change Cipher Spec
-			if i == 1 && handshakeLen > 0 && handshakeLen != 6 {
-				break f
-			}
-			// 判断握手包类型是否为Encrypted Extensions
-			// 即附加在Change Cipher Spec之后的加密部分
-			if i == 2 && handshakeLen > 512 {
-				hs.c.out.handshakeLen[i] = handshakeLen
-				hs.c.out.handshakeBuf = buf[:0]
-				break
-			}
-			// 判断握手包类型是否为New Session Ticket
-			if i == 6 && handshakeLen > 0 {
-				hs.c.out.handshakeLen[i] = handshakeLen
-				break
-			}
-			// 判断握手包长度是否为0或大于s2cSaved长度
-			if handshakeLen == 0 || len(s2cSaved) < handshakeLen {
-				mutex.Unlock()
-				continue f
-			}
-			// 判断握手包类型是否为Server Hello
-			if i == 0 {
-				// 构造新Server Hello
-				hs.hello = new(serverHelloMsg)
-				// unmarshal用于将来自dest的ServerHello解析并填充到新构造的握手包
-				// 这里检查了unmarshal是否报错以及解析并填充后的握手包是否合法
-				if !hs.hello.unmarshal(s2cSaved[recordHeaderLen:handshakeLen]) ||
-					hs.hello.vers != VersionTLS12 || hs.hello.supportedVersion != VersionTLS13 ||
-					cipherSuiteTLS13ByID(hs.hello.cipherSuite) == nil ||
-					hs.hello.serverShare.group != X25519 || len(hs.hello.serverShare.data) != 32 {
-					break f
-				}
-			}
-			// 修改对应类型握手包的已发送长度
-			// 及重置s2cSaved和handshakeLen
-			hs.c.out.handshakeLen[i] = handshakeLen
-			s2cSaved = s2cSaved[handshakeLen:]
-			handshakeLen = 0
-		} // 遍历结束
-		//标记运行开始时间
-		start := time.Now()
-		// 与REALITY客户端进行握手
-		// 即发送修改后的Server Hello和
-		// Change Cipher Spec及Encrypted Extensions
-		err = hs.handshake()
-		if config.Show {
-			fmt.Printf("REALITY remoteAddr: %v\ths.handshake() err: %v\n", remoteAddr, err) //调试信息
-		}
-		if err != nil {
-			break
-		}
-		// 运行协程处理与dest的连接,此时REALITY握手已结束
-		// 与dest的连接已经不需要了.
-		// 使用协程的目的是避免阻塞与客户端的通信
-		go func() {
-			if handshakeLen-len(s2cSaved) > 0 {
-				io.ReadFull(target, buf[:handshakeLen-len(s2cSaved)])
-			}
-			if n, err := target.Read(buf); !hs.c.isHandshakeComplete.Load() {
-				if err != nil {
-					conn.Close()
-				}
-				if config.Show {
-					fmt.Printf("REALITY remoteAddr: %v\ttime.Since(start): %v\tn: %v\terr: %v\n", remoteAddr, time.Since(start), n, err)
-				}
-			}
-		}()
-		// 等待客户端返回TLS Finished信息
-		err = hs.readClientFinished()
-		if config.Show {
-			fmt.Printf("REALITY remoteAddr: %v\ths.readClientFinished() err: %v\n", remoteAddr, err)
-		}
-		if err != nil {
-			break
-		}
-		hs.c.isHandshakeComplete.Store(true)
-		break
-	}
-	// 解锁，取消独占
-	mutex.Unlock()
-	// 判断REALITY服务器是否未发送ServerHello.
-	// 这种情况通常在dest返回无效ServerHello或
-	// 在dest返回ServerHello前运行至此会触发
-	if hs.c.out.handshakeLen[0] == 0 {
-		// 判断dest是否没有正确处理ClientHello
-		if hs.c.conn == conn {
-			waitGroup.Add(1)
-			go func() {
-				// 将流量转发给dest
-				io.Copy(target, underlying)
-				waitGroup.Done()
-			}()
-		}
-		// 将客户端连接内容写入s2cSaved
-		conn.Write(s2cSaved)
-		// 将流量转发给dest
-		io.Copy(underlying, target)
-		// 当io.Copy()返回时意味着dest已关闭连接
-		// 此时也应关闭到客户端的转发通道
-		underlying.CloseWrite()
-	}
-	// 通知等待组该协程运行完成
-	waitGroup.Done()
+  for {
+    // 临时让出CPU时间片，优化程序性能
+    runtime.Gosched()
+    // 将接收的来自dest的数据读取到buf(会清空buf)
+    n, err := target.Read(buf)
+    // 判断是否已收到来自dest的数据
+    if n == 0 {
+      if err != nil {
+        conn.Close()
+        waitGroup.Done()
+        return
+      }
+      continue
+    }
+    // 加锁，独占当前任务
+    mutex.Lock()
+    // 将buf数据附加的s2cSaved已有数据后
+    s2cSaved = append(s2cSaved, buf[:n]...)
+    // 判断客户端是否未完成握手就发送无关数据
+    if hs.c.conn != conn {
+      // 标识客户端未完成握手就发送无关数据
+      copying = true
+      break
+    }
+    // 判断s2cSaved长度是否过大
+    if len(s2cSaved) > size {
+      break
+    }
+    // 遍历type判断dest返回的包的类型
+    // REALITY/blob/main/tls.go#L91-L99
+    // types = [7]string{
+    // "Server Hello",
+    // "Change Cipher Spec",
+    // "Encrypted Extensions",
+    // "Certificate",
+    // "Certificate Verify",
+    // "Finished",
+    // "New Session Ticket",
+    // }
+    for i, t := range types {
+      // 判断是否已发送过了ServerHello
+      // 符合则进入下一次循环
+      if hs.c.out.handshakeLen[i] != 0 {
+        continue
+      }
+      // 判断本次循环到的类型是否为
+      // "New Session Ticket"且s2cSaved长度为0
+      if i == 6 && len(s2cSaved) == 0 {
+        break
+      }
+      // handshakeLen记录来自dest的握手包长度
+      // 这里判断其长度为0且来自dest的握手包长度大于5
+      // REALITY/blob/main/common.go#L63
+      // recordHeaderLen = 5
+      if handshakeLen == 0 && len(s2cSaved) > recordHeaderLen {
+        // [1:3]指向TLS握手包第2-3字节的版本信息
+        // 出于兼容性原因，TLS1.3的ClientHello的第2-3字节
+        // 的值与TLS1.2相同，1.3的版本标记存在于扩展当中
+        // 这里判断来自dest的数据包是否为ServerHello
+        // 或ChangeCipherSpec或ApplicationData,
+        // 这三类数据包是握手中应该出现的
+        if Value(s2cSaved[1:3]...) != VersionTLS12 ||
+          (i == 0 && (recordType(s2cSaved[0]) != recordTypeHandshake || s2cSaved[5] != typeServerHello)) ||
+          (i == 1 && (recordType(s2cSaved[0]) != recordTypeChangeCipherSpec || s2cSaved[5] != 1)) ||
+          (i > 1 && recordType(s2cSaved[0]) != recordTypeApplicationData) {
+          break f
+        }
+        // [3:5]指向TLS握手包第4-5字节的握手包长度信息
+        handshakeLen = recordHeaderLen + Value(s2cSaved[3:5]...)
+      }
+      if config.Show {
+        fmt.Printf("REALITY remoteAddr: %v\tlen(s2cSaved): %v\t%v: %v\n", remoteAddr, len(s2cSaved), t, handshakeLen) //调试信息
+      }
+      // 判断握手包是否过长
+      if handshakeLen > size {
+        break f
+      }
+      // 判断握手包类型是否为Change Cipher Spec
+      if i == 1 && handshakeLen > 0 && handshakeLen != 6 {
+        break f
+      }
+      // 判断握手包类型是否为Encrypted Extensions
+      // 即附加在Change Cipher Spec之后的加密部分
+      if i == 2 && handshakeLen > 512 {
+        hs.c.out.handshakeLen[i] = handshakeLen
+        hs.c.out.handshakeBuf = buf[:0]
+        break
+      }
+      // 判断握手包类型是否为New Session Ticket
+      if i == 6 && handshakeLen > 0 {
+        hs.c.out.handshakeLen[i] = handshakeLen
+        break
+      }
+      // 判断握手包长度是否为0或大于s2cSaved长度
+      if handshakeLen == 0 || len(s2cSaved) < handshakeLen {
+        mutex.Unlock()
+        continue f
+      }
+      // 判断握手包类型是否为Server Hello
+      if i == 0 {
+        // 构造新Server Hello
+        hs.hello = new(serverHelloMsg)
+        // unmarshal用于将来自dest的ServerHello解析并填充到新构造的握手包
+        // 这里检查了unmarshal是否报错以及解析并填充后的握手包是否合法
+        if !hs.hello.unmarshal(s2cSaved[recordHeaderLen:handshakeLen]) ||
+          hs.hello.vers != VersionTLS12 || hs.hello.supportedVersion != VersionTLS13 ||
+          cipherSuiteTLS13ByID(hs.hello.cipherSuite) == nil ||
+          hs.hello.serverShare.group != X25519 || len(hs.hello.serverShare.data) != 32 {
+          break f
+        }
+      }
+      // 修改对应类型握手包的已发送长度
+      // 及重置s2cSaved和handshakeLen
+      hs.c.out.handshakeLen[i] = handshakeLen
+      s2cSaved = s2cSaved[handshakeLen:]
+      handshakeLen = 0
+    } // 遍历结束
+    //标记运行开始时间
+    start := time.Now()
+    // 与REALITY客户端进行握手
+    // 即发送修改后的Server Hello和
+    // Change Cipher Spec及Encrypted Extensions
+    err = hs.handshake()
+    if config.Show {
+      fmt.Printf("REALITY remoteAddr: %v\ths.handshake() err: %v\n", remoteAddr, err) //调试信息
+    }
+    if err != nil {
+      break
+    }
+    // 运行协程处理与dest的连接,此时REALITY握手已结束
+    // 与dest的连接已经不需要了.
+    // 使用协程的目的是避免阻塞与客户端的通信
+    go func() {
+      if handshakeLen-len(s2cSaved) > 0 {
+        io.ReadFull(target, buf[:handshakeLen-len(s2cSaved)])
+      }
+      if n, err := target.Read(buf); !hs.c.isHandshakeComplete.Load() {
+        if err != nil {
+          conn.Close()
+        }
+        if config.Show {
+          fmt.Printf("REALITY remoteAddr: %v\ttime.Since(start): %v\tn: %v\terr: %v\n", remoteAddr, time.Since(start), n, err)
+        }
+      }
+    }()
+    // 等待客户端返回TLS Finished信息
+    err = hs.readClientFinished()
+    if config.Show {
+      fmt.Printf("REALITY remoteAddr: %v\ths.readClientFinished() err: %v\n", remoteAddr, err)
+    }
+    if err != nil {
+      break
+    }
+    hs.c.isHandshakeComplete.Store(true)
+    break
+  }
+  // 解锁，取消独占
+  mutex.Unlock()
+  // 判断REALITY服务器是否未发送ServerHello.
+  // 这种情况通常在dest返回无效ServerHello或
+  // 在dest返回ServerHello前运行至此会触发
+  if hs.c.out.handshakeLen[0] == 0 {
+    // 判断dest是否没有正确处理ClientHello
+    if hs.c.conn == conn {
+      waitGroup.Add(1)
+      go func() {
+        // 将流量转发给dest
+        io.Copy(target, underlying)
+        waitGroup.Done()
+      }()
+    }
+    // 将客户端连接内容写入s2cSaved
+    conn.Write(s2cSaved)
+    // 将流量转发给dest
+    io.Copy(underlying, target)
+    // 当io.Copy()返回时意味着dest已关闭连接
+    // 此时也应关闭到客户端的转发通道
+    underlying.CloseWrite()
+  }
+  // 通知等待组该协程运行完成
+  waitGroup.Done()
 }()
 ```
 
@@ -587,15 +587,15 @@ f:
 // func init在所处的包被导入时执行
 func init() {
     // 定义x509证书模板
-	certificate := x509.Certificate{SerialNumber: &big.Int{}}
+  certificate := x509.Certificate{SerialNumber: &big.Int{}}
     // 生成64字节长的ed25519私钥
     // _ 表示忽略并丢弃值
-	_, ed25519Priv, _ = ed25519.GenerateKey(rand.Reader)
+  _, ed25519Priv, _ = ed25519.GenerateKey(rand.Reader)
     // 以前面的模板生成x509临时证书
     // 不知道为什么REALITY服务器截取
-	// 私钥ed25519Priv的第33-64字节
-	// 作临时证书的公钥
-	signedCert, _ = x509.CreateCertificate(rand.Reader, &certificate, &certificate, ed25519.PublicKey(ed25519Priv[32:]), ed25519Priv)
+  // 私钥ed25519Priv的第33-64字节
+  // 作临时证书的公钥
+  signedCert, _ = x509.CreateCertificate(rand.Reader, &certificate, &certificate, ed25519.PublicKey(ed25519Priv[32:]), ed25519Priv)
 }
 
 // REALITY/blob/main/handshake_server_tls13.go#L74-L85
@@ -603,40 +603,40 @@ func init() {
 // 这次计算得到的密钥值
 // 赋值给了hs.sharedKey
 {
-	hs.suite = cipherSuiteTLS13ByID(hs.hello.cipherSuite)
-	c.cipherSuite = hs.suite.id
-	hs.transcript = hs.suite.hash.New()
-	
-	key, _ := generateECDHEKey(c.config.rand(), X25519)
-	copy(hs.hello.serverShare.data, key.PublicKey().Bytes())
-	peerKey, _ := key.Curve().NewPublicKey(hs.clientHello.keyShares[hs.clientHello.keyShares[0].group].data)
-	hs.sharedKey, _ = key.ECDH(peerKey)
+  hs.suite = cipherSuiteTLS13ByID(hs.hello.cipherSuite)
+  c.cipherSuite = hs.suite.id
+  hs.transcript = hs.suite.hash.New()
+  
+  key, _ := generateECDHEKey(c.config.rand(), X25519)
+  copy(hs.hello.serverShare.data, key.PublicKey().Bytes())
+  peerKey, _ := key.Curve().NewPublicKey(hs.clientHello.keyShares[hs.clientHello.keyShares[0].group].data)
+  hs.sharedKey, _ = key.ECDH(peerKey)
 
-	c.serverName = hs.clientHello.serverName
+  c.serverName = hs.clientHello.serverName
 }
 
 // REALITY/blob/main/handshake_server_tls13.go#L94-L106
 // 修改临时证书的签名的值
 {
-	// 将临时证书存入证书数组
-	signedCert := append([]byte{}, signedCert...)
+  // 将临时证书存入证书数组
+  signedCert := append([]byte{}, signedCert...)
 
-	// 初始化hmac计算对象h
-	// 使用preMasterKey作密钥
-	h := hmac.New(sha512.New, c.AuthKey)
-	// 将ed25519私钥第33-64字节写入h的缓冲区
-	h.Write(ed25519Priv[32:])
-	// 计算缓冲区数据的hmac值并将其
-	// 从临时证书的第65字节开始写入
-	h.Sum(signedCert[:len(signedCert)-64])
+  // 初始化hmac计算对象h
+  // 使用preMasterKey作密钥
+  h := hmac.New(sha512.New, c.AuthKey)
+  // 将ed25519私钥第33-64字节写入h的缓冲区
+  h.Write(ed25519Priv[32:])
+  // 计算缓冲区数据的hmac值并将其
+  // 从临时证书的第65字节开始写入
+  h.Sum(signedCert[:len(signedCert)-64])
 
-	// 构造完整的证书对象
-	hs.cert = &Certificate{
-		Certificate: [][]byte{signedCert},
-		PrivateKey:  ed25519Priv,
-	}
-	// 标识签名算法为ed25519
-	hs.sigAlg = Ed25519
+  // 构造完整的证书对象
+  hs.cert = &Certificate{
+    Certificate: [][]byte{signedCert},
+    PrivateKey:  ed25519Priv,
+  }
+  // 标识签名算法为ed25519
+  hs.sigAlg = Ed25519
 }
 ```
 
@@ -649,12 +649,12 @@ waitGroup.Wait()
 // 关闭与dest的连接
 target.Close()
 if config.Show {
-	fmt.Printf("REALITY remoteAddr: %v\ths.c.handshakeStatus: %v\n", remoteAddr, hs.c.isHandshakeComplete.Load()) //调试信息
+  fmt.Printf("REALITY remoteAddr: %v\ths.c.handshakeStatus: %v\n", remoteAddr, hs.c.isHandshakeComplete.Load()) //调试信息
 }
 // 判断与REALITY客户端握手是否结束
 if hs.c.isHandshakeComplete.Load() {
-	// 将连接返回给调用方
-	return hs.c, nil
+  // 将连接返回给调用方
+  return hs.c, nil
 }
 // 若与REALITY客户端的握手未正常结束
 // 则关闭与客户端的连接
@@ -672,29 +672,29 @@ return nil, errors.New("REALITY: processed invalid connection")
 ```Go
 // Xray-core/transport/internet/reality/reality.go#L82-L104
 func (c *UConn) VerifyPeerCertificate(rawCerts [][]byte, verifiedChains [][]*x509.Certificate) error {
-	// 由于utls包不提供对证书的底层访问和修改
-	// 这里利用Go中的reflect包获取证书数组的内存地址
-	// 并通过操作指针和类型断言将原数据转换为Go数组
-	p, _ := reflect.TypeOf(c.Conn).Elem().FieldByName("peerCertificates")
-	certs := *(*([]*x509.Certificate))(unsafe.Pointer(uintptr(unsafe.Pointer(c.Conn)) + p.Offset))
-	// 将证书数组中的第一份证书中的公钥转换为
-	// ed25519.PublicKey类型
-	// 通过检查是否报错来确认公钥类型
-	if pub, ok := certs[0].PublicKey.(ed25519.PublicKey); ok {
-		// 初始化hmac计算对象h
-		// 使用preMasterKey作密钥
-		h := hmac.New(sha512.New, c.AuthKey)
-		// 将证书公钥写入h的缓冲区
-		h.Write(pub)
-		// h.Sum计算并返回缓冲区数据的hmac值
-		// 判断hmac值是否与证书签名完全一致
-		if bytes.Equal(h.Sum(nil), certs[0].Signature) {
-			// 标识REALITY服务器身份验证通过
-			c.Verified = true
-			return nil
-		}
-	}
-	... // crypto/tls包原有的验证逻辑，此处略去
+  // 由于utls包不提供对证书的底层访问和修改
+  // 这里利用Go中的reflect包获取证书数组的内存地址
+  // 并通过操作指针和类型断言将原数据转换为Go数组
+  p, _ := reflect.TypeOf(c.Conn).Elem().FieldByName("peerCertificates")
+  certs := *(*([]*x509.Certificate))(unsafe.Pointer(uintptr(unsafe.Pointer(c.Conn)) + p.Offset))
+  // 将证书数组中的第一份证书中的公钥转换为
+  // ed25519.PublicKey类型
+  // 通过检查是否报错来确认公钥类型
+  if pub, ok := certs[0].PublicKey.(ed25519.PublicKey); ok {
+    // 初始化hmac计算对象h
+    // 使用preMasterKey作密钥
+    h := hmac.New(sha512.New, c.AuthKey)
+    // 将证书公钥写入h的缓冲区
+    h.Write(pub)
+    // h.Sum计算并返回缓冲区数据的hmac值
+    // 判断hmac值是否与证书签名完全一致
+    if bytes.Equal(h.Sum(nil), certs[0].Signature) {
+      // 标识REALITY服务器身份验证通过
+      c.Verified = true
+      return nil
+    }
+  }
+  ... // crypto/tls包原有的验证逻辑，此处略去
 }
 ```
 
