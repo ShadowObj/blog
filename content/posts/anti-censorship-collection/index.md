@@ -1,8 +1,8 @@
 +++
 title = '风雨同舟: 反审查技术交流社群与媒体收集 (持续更新)'
-description = "欢迎在本文评论区提出推荐! 2024-08-15已更新"
+description = "欢迎在本文评论区提出推荐! 2024-08-16已更新"
 date = "2024-08-10 13:00:00+08:00"
-lastmod = "2024-08-15 14:00:00+08:00"
+lastmod = "2024-08-16 14:00:00+08:00"
 draft = false
 tags = ["反审查", "学术", "网站"]
 categories = ["反审查", "收集"]
@@ -24,7 +24,7 @@ betterList4Phone = true
 
 欢迎任何人在评论区推荐相关网站/工具! 推荐时请附上 网站链接、推荐理由。<br />**不接收政治立场非中立或宣传虚假信息的反审查互联网媒体，望见谅。**
 
-*(最后更新于: 2024-08-15)*
+*(最后更新于: 2024-08-16)*
 
 ### 🔗技术交流社群
   - net4people/bbs https://github.com/net4people/bbs/issues/
@@ -64,10 +64,18 @@ betterList4Phone = true
   - Hysteria https://github.com/apernet/hysteria/
 
     由 [Aperture Internet Laboratory](https://github.com/apernet/) 创建的规避工具，基于自定义的QUIC协议。共有v1和v2两个不相兼容的版本。在中文反审查技术领域以 Brutal 拥塞控制机制而闻名。
+
+    ⚠️注意: 很不幸，在2024年7月15日至18日中共举行[第二十届三中全会](https://zh.wikipedia.org/wiki/中国共产党第二十届中央委员会第三次全体会议)期间，中国大陆出现了基于UDP的规避工具遭到大规模封锁的用户自发报告([链接](https://linux.do/t/topic/136940/3)来自LinuxDo论坛)。QUIC正是一种基于UDP的网络层协议。
     
-  - sing-box https://github.com/SagerNet/sing-box
+  - sing-box https://github.com/SagerNet/sing-box/
 
     由 [SagerNet](https://github.com/SagerNet) 创建的通用代理平台。包含许多规避工具的Go实现。同时为Android和所有Apple平台开发了免费开源的图形客户端。
+
+  - Sheas Cealer https://github.com/SpaceTimee/Sheas-Cealer/
+
+    由 [Space Time](https://github.com/SpaceTimee/) 创建的轻量无服务器规避工具。通过告知浏览器修改发往指定域的 TLS ClientHello 中的SNI字段的值，可以规避基于SNI的审查策略。原理类似于 [“域前置”](https://zh.wikipedia.org/wiki/%E5%9F%9F%E5%89%8D%E7%BD%AE)。该工具同时维护了一份完善的 域名-合法SNI-可用IP 映射列表。
+    
+    ⚠️注意: Sheas Cealer 属于实验性工具，可能破坏 TLS 的认证机制，隐蔽性与可靠性**存疑**。“域前置”这一规避技术存在显著局限性，需要网站服务器支持通过HTTP请求头的Host字段重定向流量，且**无法规避**基于IP的审查策略。
 
 ### 🔍审计平台
 
