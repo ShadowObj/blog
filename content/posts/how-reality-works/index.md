@@ -24,7 +24,7 @@ betterList4Phone = true
 
 自从中国大陆的一些地区开始大范围部署一种全新的审查策略--**SNI白名单**，在REALITY和ShadowTLS出现以前的所有基于TLS的规避工具，不论是直接连接或是通过中转或CDN连接，一夜之间全都在这些地区变得不可用。
 
-*(已知中国大陆福建省泉州市中国移动是大陆最早部署这一审查策略的运营商)*
+*(据称中国大陆福建省泉州市中国移动是大陆最早部署这一审查策略的运营商)*
 
 先前ihciah开发的规避工具ShadowTLS得到广泛关注，然而此时ShadowTLS尚处于v1版本，代码库不完善，审查抗性弱；后来RPRX开发的REALITY由于同样具有**规避SNI白名单审查策略**的能力，以及其与成熟的规避工具[Xray-core](https://github.com/XTLS/Xray-core/)的高度集成，~~或许也有RPRX回归给用户们带来的惊喜~~，在中文反审查领域引起大量关注。
 
@@ -43,7 +43,7 @@ TLS自第一个版本设计之初就是"**混合加密系统**"。这意味着TL
 
 ![](img/how-tls-13-handshakes-cloudflare.png)
 
-首先是客户端发起TLS连接。在正确完成[TCP握手](https://zh.wikipedia.org/wiki/传输控制协议#建立通路)后，客户端生成一对密钥对，通过打开的TCP连接向服务器发送 TLS Client Hello 消息: 客户端的所有握手参数，包括各个扩展字段 *(extensions)* 以及key_share *(刚刚客户端生成的密钥对中的公钥)*。这些参数**无论敏感与否**，都在 TLS Client Hello 中发送。
+首先是客户端发起TLS连接。在正确完成[TCP握手](https://zh.wikipedia.org/wiki/传输控制协议#建立通路)后，客户端生成一对密钥对，通过打开的TCP连接向服务器发送 TLS Client Hello 消息: 客户端的所有握手参数，包括各个扩展字段 *(extensions)* 以及key_share *(刚刚客户端生成的密钥对中的公钥)*。这些参数**无论敏感与否**，都**必须**在 TLS Client Hello 中一起发送。
 
 其次，服务器使用 TLS Client Hello 中允许的密钥交换算法来生成一个密钥对，发送 TLS Server Hello: TLS1.3的 Server Hello消息不同于TLS1.2，它只包含了服务器的所有**不敏感的**握手参数，比如key_share *(刚刚服务器生成的密钥对中的公钥)*。
 
@@ -57,7 +57,7 @@ DH及其衍生算法有一个共同的性质: 将两对适用算法要求的密�
 
 接下来，服务器使用 `preMasterKey` 加密**尚未发送的敏感的**握手参数，包括用于验证服务器身份的数字证书 *(因为数字证书包含了对应的域名/IP信息)*，将其封装为 TLS Application Data 消息 *(也称Encrypted Extensions, 但是这个名称只在解密后可见)*，并附加在 Change Cipher Spec 后再发送给客户端。客户端在收到 Change Cipher Spec 后，使用 `preMasterKey` 解密附加在其后的 TLS Application Data，通过其中的数字证书验证服务器身份 *(即证明服务器持有特定域名/IP)*，提取握手参数，构造 TLS Finished 消息并使用 `preMasterKey` 加密后发往服务器，以表示TLS握手成功完成。同时，客户端将此前在 TLS Server Hello 和 Change Cipher Spec后的附加消息中提取的完整握手参数输入DH算法计算 `MasterKey`，用于加解密接下来的**所有**消息 *(即接下来的TLS Application Data 包)*。服务器在收到 TLS Finished 消息之后也以同样逻辑计算 `MasterKey`。
 
-(在实际的TLS库实现中，客户端常常会将第一个包含应用数据的 TLS Application Data 在服务器使用TCP ACK数据包应答 TLS Finished 前发送以减少延迟。上面的示意图中最后的"GET /index.html HTTP/1.1"即是指这种情况。)
+(在广泛使用的TLS库实现中，客户端在每个连接中会将首个包含应用数据的 TLS Application Data 伴随 TLS Finished 消息一起发送。该行为被称作TLS False Start。上面的示意图中末尾的"GET /index.html HTTP/1.1"即是指该行为。)
 
 其中，TLS握手开始时，客户端在 TLS Client Hello 消息中使用[SNI 扩展 (**S**erver **N**ame **I**ndicator)](https://datatracker.ietf.org/doc/html/rfc6066#section-3)来向服务器指示它想要访问的网站。这对于现代互联网来说至关重要，因为现在许多源服务器位于单个TLS服务器后面是很常见的，比如内容分发网络(CDN)。服务器使用 SNI 来确定谁将对连接进行身份验证：没有它，就无法知道要向客户端提供哪个网站的 TLS 证书。
 
@@ -70,13 +70,13 @@ Questions:
 Answers: 
 1. TLS1.3很大程度上就是TLS1.2简化后的版本，它修复了前代协议设计中的诸多安全漏洞、设计得更加简洁好用，并且自第一个正式版本在2018年发布以来，其部署规模正在不断扩大。其次，[XTLS](https://github.com/XTLS)实现下的REALITY服务器不支持REALITY客户端使用除TLS1.3以外的TLS版本连接以传输规避流量。
 
-2. 截至文章发布，[XTLS](https://github.com/XTLS)实现下的REALITY默认并不启用TLS1.3的ECH特性。~~额，其实配置文件里根本没有相关选项~~。而且REALITY设计的核心就是向审查者(中间人)"表演"使用**被允许的SNI的扩展的值**的有效TLS握手，并通过由该握手打开的TLS通道传输规避流量。
+2. 截至文章发布，[XTLS](https://github.com/XTLS)实现下的REALITY默认并不启用TLS1.3的ECH特性。~~额，其实配置文件里根本没有相关选项~~。并且REALITY设计的核心就在于向审查者(中间人)"表演"一个使用**被允许的SNI值**的有效TLS握手流程，因此不应该加密SNI。
 
 ### 🤔 我们来想想如何改变SNI
 
 1. 在规避工具的客户端向服务端发起TLS握手时，直接修改 TLS Client Hello 的SNI扩展的值。
 
-   这种方法来得简单粗暴，但是很显然，它不具有良好的审查抗性并且会破坏TLS的认证机制。TLS握手时用于验证服务端身份的数字证书需要由受客户端信任的上级CA *(证书权威机构)*使用私钥进行签名，包括**证书附属信息以及其中的域名信息**，因此在没有由上级CA对修改后的证书进行签名的情况下，不可能修改来自其他网站的有效的证书同时保持其有效性。实际上，这种情况下**即使是该证书的所有者**也无法修改他所持有的有效数字证书同时保持其有效性。
+   这种方法来得简单粗暴，但是很显然，它不具有良好的审查抗性并且会破坏TLS的认证机制。TLS握手时用于验证服务端身份的数字证书需要由受客户端信任的上级CA *(证书权威机构)* 使用私钥进行签名，包括**证书附属信息以及其中的域名信息**，因此在没有由上级CA对修改后的证书进行签名的情况下，不可能修改来自其他网站的有效的证书，同时保持其有效性。实际上，这种情况下**即使是该证书的所有者**也无法篡改他所持有的有效数字证书，同时保持其有效性。
 
    而 TLS Client Hello 的SNI扩展的值，**必须**与来自服务器的TLS Server Hello中的有效数字证书的扩展信息中的**域名**相符合。*(不一定完全相同，用于TLS服务器身份验证的数字证书中有一类"泛域名证书"，这类证书能够验证某域名下的所有子域名的身份而无需为子域名逐个签发证书。)* 
 
@@ -86,7 +86,7 @@ Answers:
 
    当然，这只是开个玩笑，数字签名的数学属性决定了当前算力条件下它不可能被篡改同时保持其有效性。
 
-   诶，等等...我们在上一节中是不是提到了什么? 再看看那幅示意图...TLS1.3握手中的服务器的数字证书是在加密后被发送的，对吧? 因此，在1.中审查者**无法被动观察和收集到**到用户发起的TLS1.3握手中的数字证书，审查者**必须**使用原SNI的值构造 TLS Client Hello 以获得先前的数字证书，从而实现审查目的。虽然数字证书不能被篡改，但是如果我们能够**区分**规避客户端和审查者，是否可以向他们分别提供**不同的**数字证书呢?
+   诶，等等...我们在上一节中是不是提到了什么? 再看看那幅示意图...TLS1.3握手中的服务器的数字证书是在加密后被发送的，对吧? 因此，在1.中审查者**无法被动观察和收集到**到用户发起的TLS1.3握手中的数字证书，审查者**必须**使用原SNI值构造 TLS Client Hello 以获得服务端的数字证书，对比原SNI值与数字证书中的域名，以审查目的。虽然数字证书不能被篡改，但是如果我们能够**区分**规避客户端和审查者，是否可以向他们分别提供**不同的**数字证书呢?
 
 ###  🔍 试试潜入REALITY的代码海洋?
 在上一节中我们提出了"通过区分TLS客户端类型从而提供不同数字证书"的规避策略，这便是REALITY的设计关键之一。但是如何区分呢? 如何协商用于加密握手的密钥 `preMasterKey` 呢? 这一节我们试试深入REALITY的源代码，结合第一节的知识，抽丝剥茧地解析REALITY实现这一规避策略的技术细节。
@@ -161,7 +161,7 @@ UConn的第一个字段为匿名字段<sup>7</sup>，类型为来自[utls](https
 
 *(<sup>7</sup>匿名字段，即默认其名称为对应类型名称的字段; <sup>8</sup> utls, go标准库"crypto/tls"的变种, 为反审查用途提供TLS Client Hello指纹识别对抗、对于TLS握手的完全访问，Fake Session Ticket等功能)*
 
-**接下来到了关键的地方**: REALITY客户端利用 TLS Client Hello 中的 **Session ID 字段空间**为客户端作隐蔽标记，以供服务器区分审查者与合法REALITY客户端。Session ID字段原本用于TLS1.2的0-RTT会话恢复机制，然而TLS1.3虽然切换到了基于PSK (Pre-shared Key)的会话恢复机制，但是为尽量保持对TLS1.2的兼容性，Session ID字段在TLS1.3被弃用的同时被保留了下来。因此每一个TLS1.3连接使用的Session ID都应当是**随机生成**的。
+**接下来到了关键的地方**: REALITY客户端利用 TLS Client Hello 中的 **Session ID 字段空间**为客户端作隐蔽标记，以供服务器区分审查者与合法REALITY客户端。Session ID字段原本用于TLS1.2的0-RTT会话恢复机制，然而TLS1.3虽然切换到了基于PSK (Pre-shared Key)的会话恢复机制，但是为尽量保持对TLS1.2的兼容性，Session ID字段在TLS1.3中被保留了下来，作为一个无兼容性以外功能的字段。因此每一个TLS1.3连接使用的Session ID都应当是**随机生成**的。
 (这里非常感谢一位读者(要求不具名), 指正了先前编写时将 TLS1.2基于SessionID和Session Ticket的会话恢复机制 与 TLS1.3基于PSK的会话恢复机制 混淆的错误，望见谅。)
 
 *(Xray-core中还专门为接下来这一段客户端代码划定了块级作用域。)*
@@ -237,7 +237,7 @@ if err := uConn.HandshakeContext(ctx); err != nil {
 
 ~~👆用这个emoji不是我偏爱Linux服务器, 主要是Windows Server的性能和运维体验太拉胯了~~
 
-来到REALITY服务器的[源代码](https://github.com/XTLS/REALITY/)，它实际上是Go 1.20标准库中[crypto/tls](https://pkg.go.dev/crypto/tls)包服务器部分的变种。由于REALITY服务器以最小修改原则对[crypto/tls](https://pkg.go.dev/crypto/tls)包作修改，因此目录中存在较多与REALITY协议不直接相关的文件，在此不列出目录树。
+来到REALITY服务器的[源代码](https://github.com/XTLS/REALITY/)，它实际上是Go 1.20标准库中[crypto/tls](https://pkg.go.dev/crypto/tls)包的服务器实现的变种。由于REALITY服务器以最小修改原则对[crypto/tls](https://pkg.go.dev/crypto/tls)包作修改，因此目录中存在较多与REALITY协议不直接相关的文件，在此不列出目录树。
 
 REALITY服务器处理TLS握手的关键是文件 `tls.go` 中的func Server。其实在仔细阅读过Xray-core中的客户端源代码过后，读者应该已对服务器区分合法REALITY客户端的关键逻辑有大概认识了。鉴于如此，接下来的源代码注释将比较简洁，望读者见谅。
 
@@ -246,7 +246,7 @@ REALITY服务器处理TLS握手的关键是文件 `tls.go` 中的func Server。�
 
 1. REALITY服务器将ClientHello转发到持有有效证书的TLS服务器dest(伪装服务器), 对来自dest的ServerHello和Change Cipher Spec及其附加的加密信息作最小修改，再转发给REALITY客户端。这种做法能够完全以正常TLS服务器的方式完成TLS握手，避免产生服务端TLS指纹。
 
-2. REALITY服务器在修改Change Cipher Spec后附加的加密信息时, 将其中的所有数字证书替换为**"临时证书"** , 并修改"临时证书"的**签名**的值，以便REALITY客户端通过使用 `preMasterKey` 计算签名作比对，以此告知客户端可以进行传输。
+2. REALITY服务器在修改Change Cipher Spec后附加的加密信息时, 将其中的所有数字证书替换为 **"临时证书"** , 并修改"临时证书"的**签名**的值，以便REALITY客户端通过使用 `preMasterKey` 计算签名作比对，以此告知客户端可以进行传输。
 
 3. REALITY服务器对来自合法REALITY客户端以外的流量全部转发到dest。这种做法的好处同1.
 
@@ -383,7 +383,7 @@ go func() {
 
 直到这里，服务器已经完成了区分客户端的任务。但是TLS握手可还没完成呢?
 
-在下面这部分，REALITY服务器通过将ClientHello转发到dest，修改dest返回的ServerHello，将其中的所有数字证书替换为**"临时证书"** , 并修改"临时证书"的**签名**的值，再将修改后的ServerHello发回合法REALITY客户端，以此完成TLS握手并告知客户端可以传输规避流量。由于"临时证书"并没有由客户端的可信CA进行签名，REALITY客户端通过验证数字证书的签名的值来确认服务器身份。
+在下面这部分，REALITY服务器通过将ClientHello转发到dest，修改dest返回的ServerHello，将其中的所有数字证书替换为 **"临时证书"** , 并修改"临时证书"的**签名**的值，再将修改后的ServerHello发回合法REALITY客户端，以此完成TLS握手并告知客户端可以传输规避流量。由于"临时证书"并没有由客户端的可信CA进行签名，REALITY客户端通过验证数字证书的签名的值来确认服务器身份。
 
 ```Go
 // REALITY/blob/main/tls.go#L225-L349
