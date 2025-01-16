@@ -1,7 +1,7 @@
 +++
 [menu.main]
 name = "主页 | Home"
-description = "欢迎访问ObjShadow的反审查研究个人博客! REALITY如何运作, TLS in TLS如何识别...抽丝剥茧地为你解析!"
+description = "欢迎访问ObjShadow's Blog'! REALITY运作, TLS in TLS...为你抽丝剥茧."
 weight = -100
 keywords = ["反审查","xray","v2ray","reality","vless","vmess","shadowsocks","TLS","翻墙","技术","博客","梯子","代理","机场"]
 

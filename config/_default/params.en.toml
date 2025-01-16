@@ -3,7 +3,7 @@ mainSections = ["posts"]
 rssFullContent = true
 
 [Sidebar]
-subtitle = "Maybe a Censorship Researcher."
+subtitle = "纵使千山多万壑, \n犹有青鸾踏云间。"
 emoji = "👀"
 
 [colorScheme]
