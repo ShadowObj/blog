@@ -11,8 +11,7 @@ categories = ["Anti-censorship","TLS"]
 #readingTime = true
 #wordNumber = 7600
 #readingNumber = 15
-compact4Phone = true
-betterList4Phone = true
+narrowScreenOpt = true
 +++
 
 (All the content below is translated from Chinese by Google Translate ↓)<br>

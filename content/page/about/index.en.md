@@ -6,8 +6,7 @@ aliases = [ "about-us", "about-blog" ]
 nonRSS = true
 readingTime = false
 comments = true
-compact4Phone = true
-betterList4Phone = true
+narrowScreenOpt = true
 
 [menu.main]
 weight = -90

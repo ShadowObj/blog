@@ -1,7 +1,7 @@
 <a class="link" href="{{ .Destination | safeURL }}" {{ with .Title}} title="{{ . }}"
     {{ end }}{{ if strings.HasPrefix .Destination "http" }} target="_blank" rel="noopener"
     {{ end }}>{{ .Text | safeHTML }}
-    {{- if and ( strings.HasPrefix .Destination "http" ) ( not ( strings.Contains .Destination "creativecommons.org/licenses/by-nc-sa/4.0/" ) ) -}}
+{{- if and ( strings.HasPrefix .Destination "http" ) ( not ( strings.Contains .Destination "creativecommons.org/licenses/by-nc-sa/4.0/" ) ) -}}
 <span style="white-space: nowrap;"><svg width=".7em"
     height=".7em" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
     <path d="m13 3l3.293 3.293l-7 7l1.414 1.414l7-7L21 11V3z" fill="currentColor" />

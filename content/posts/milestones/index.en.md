@@ -2,12 +2,11 @@
 title = "Milestones"
 description = "Our story is still going on..."
 date = "2024-07-30 00:00:00+08:00"
-
 nonRSS = true
 readingTime = false
 wordCount = false
 comments = true
-betterList4Phone = true
+narrowScreenOpt = true
 +++
 - 2024.07.30 Start on this Journey!
 

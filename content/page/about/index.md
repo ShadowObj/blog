@@ -7,8 +7,7 @@ nonRSS = true
 readingTime = false
 wordCount = false
 comments = true
-compact4Phone = true
-betterList4Phone = true
+narrowScreenOpt = true
 
 [menu.main]
 weight = -90

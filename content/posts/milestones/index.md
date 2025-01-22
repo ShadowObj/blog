@@ -2,14 +2,12 @@
 title = "大事记 | Milestones"
 description = "我们的故事还在继续..."
 date = "2024-07-30 00:00:00+08:00"
-
-
 keywords = ["反审查","翻墙","梯子","代理","机场","v2ray","xray","xtls","防火墙","GFW"]
 nonRSS = true
 readingTime = false
 wordCount = false
 comments = true
-betterList4Phone = true
+narrowScreenOpt = true
 +++
 - 2024.07.30 启程!梦开始的地方
 

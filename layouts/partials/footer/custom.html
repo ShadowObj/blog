@@ -1,6 +1,6 @@
 <script>
 'use strict'
-// Highlight
+// Text Highlight
 function getWindowScrollTop() {
     var scroll_top = 0;
     if (document.documentElement && document.documentElement.scrollTop) {
@@ -36,15 +36,13 @@ const highlightElements = document.getElementsByClassName(params.get("highlight"
 if (highlightElements.length > 0) {
     for (let element of highlightElements) {
         highlight(element);
+        element.addEventListener("click", function() {
+            for (let element of highlightElements) { unhighlight(element); }
+        });
     }
     scrollToViewCenter(highlightElements.item(0));
-    document.body.addEventListener("click", function() {
-        for (let element of highlightElements) {
-            unhighlight(element);
-        }
-        let newUrl = window.location.href.replace(new RegExp("\\??&?highlight=?1".replace("?1", params.get("highlight"))),"");
-        window.history.replaceState('', '', newUrl);
-    })
+    let newUrl = window.location.href.replace(new RegExp("\\??&?highlight=?1".replace("?1", params.get("highlight"))),"");
+    window.history.replaceState('', '', newUrl);
 }
 
 // ScrollTop

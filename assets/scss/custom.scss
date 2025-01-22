@@ -60,7 +60,7 @@
 
     &:hover {
       background: #4d83af;
-      transition-duration: 0.4s;
+      transition-duration: 0.35s;
   }
   }
 }
@@ -74,11 +74,11 @@
     }
     &:hover {
 	    background: #4d83af;
-      transition-duration: 0.4s;
+      transition-duration: 0.35s;
     }
     &:hover > svg {
 	    color: #FFF;
-      transition-duration: 0.4s;
+      transition-duration: 0.35s;
     }
   }
 }

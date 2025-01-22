@@ -6,7 +6,7 @@ comments = true
 
 [[links]]
 title = "ObjShadow's Blog"
-description = "Maybe a Censorship Researcher."
+description = "纵使千山多万壑, \n犹有青鸾踏云间。"
 website = "https://objshadow.pages.dev/"
 image = "/img/avatar.jpg"
 

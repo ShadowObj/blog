@@ -14,17 +14,13 @@ nonRSS = false
 #readingTime = true
 wordNumber = 8000
 readingNumber = 15
-compact4Phone = true
-betterList4Phone = true
-
+narrowScreenOpt = true
 +++
 
 ### ℹ️前言
 [XTLS/Xray-core](https://github.com/XTLS/Xray-core/)，又称Project X，是一个开源的审查规避工具，在中文反审查领域中以其新颖前卫而实用的各种概念性技术 ~~还有曾经神秘失踪让人以为跑路了的项目创建者&维护者RPRX~~ 而闻名，这些技术有VLESS,XTLS-Vision,XUDP...总有一个你听说过或者用过的。
 
-自从中国大陆的一些地区开始大范围部署一种全新的审查策略--**SNI白名单**，在REALITY和ShadowTLS出现以前的所有基于TLS的规避工具，不论是直接连接或是通过中转或CDN连接，一夜之间全都在这些地区变得不可用。
-
-*(据称中国大陆福建省泉州市中国移动是大陆最早部署这一审查策略的运营商)*
+自从中国大陆的一些地区开始大范围部署一种全新的审查策略:**SNI白名单**，在REALITY和ShadowTLS出现以前的所有基于TLS的规避工具，不论是直接连接或是通过中转或CDN连接，一夜之间全都在这些地区变得不可用。*(据称 中国福建省泉州市 中国移动 China Mobile 是最早部署这一审查策略的ISP)*
 
 先前ihciah开发的规避工具ShadowTLS得到广泛关注，然而此时ShadowTLS尚处于v1版本，代码库不完善，审查抗性弱；后来RPRX开发的REALITY由于同样具有**规避SNI白名单审查策略**的能力，以及其与成熟的规避工具[Xray-core](https://github.com/XTLS/Xray-core/)的高度集成，~~或许也有RPRX回归给用户们带来的惊喜~~，在中文反审查领域引起大量关注。
 
