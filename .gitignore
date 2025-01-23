@@ -5,3 +5,4 @@ jsconfig.json
 wrangler.toml
 bun.lockb
 .wrangler
+.vscode
