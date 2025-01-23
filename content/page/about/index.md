@@ -15,21 +15,17 @@ weight = -90
   [menu.main.params]
   icon = "user"
 +++
-<style>@media (max-width:768px){#slogan{display:none}}@media (min-width:768px){#slogan-phone{display:none}}</style>
-<font size=5 id="slogan"><b>纵使千山多万壑, 犹有青鸾踏云间。</b></font>
+本博客旨在解析可行的审查规避工具, <br>
+同时向读者普及相关的技术原理, <br>
+并跟进[FOCI](https://foci.community/), [USENIX Security](https://www.usenix.org/conference/usenixsecurity24)等学术研究会议进展, <br>
+尽力为读者提供简明、前沿的反审查技术内容。
 
-本博客的主题是解析已有应用的审查规避工具, <br>
-同时向读者普及一些相关的基础技术原理, <br>
-并且跟进[FOCI](https://foci.community/), [USENIX Security](https://www.usenix.org/conference/usenixsecurity24)等学术研究性质的会议, <br>
-尽力为读者提供易懂、实用、前沿的反审查技术内容。
-
-希望读者能理解反审查蕴含的自由精神与人类伦理, <br>
-也能够洞察其中的技术原理, 了解前沿相关研究, <br>
+希望读者既理解反审查蕴含的普世价值, <br>
+也能够洞察其中的技术原理, 了解相关前沿研究, <br>
 能捍卫自己在数字空间的自由、安全、与尊严。<br>
 
 最后, <br>
-祝愿正在阅读本About的读者, <br>
-终有一日, <br>
+祝愿你, 终有一日, <br>
 见证这个世界再无审查与极权, <br>
 见证这个博客再无存在的需要, <br>
 在自由的光辉中, 永远铭记那些<br>

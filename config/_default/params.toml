@@ -1,9 +1,10 @@
-description = "纵使千山多万壑, \n犹有青鸾踏云间。"
+description = "纵使千山多万壑, 犹有青鸾踏云间。"
 mainSections = ["posts"]
 rssFullContent = true
+narrowScreenOpt = true
 
 [Sidebar]
-subtitle = "纵使千山多万壑, \n犹有青鸾踏云间。"
+subtitle = '<text style="line-height: 1.4; ">纵使千山多万壑，<br/>犹有青鸾踏云间。</text>'
 emoji = "🕊️"
 
 [colorScheme]
@@ -18,7 +19,7 @@ src = "avatar.jpg"
 [Footer]
 since = 2024
 customText = """
-与自由拥抱。Embrace Liberty.<br />
+非同凡想。Think Different.<br />
 <a href="https://icp.gov.moe/?keyword=20242952" target="_blank" rel="noopener">
     <b>萌ICP备20242952号</b>
 </a><text> | 

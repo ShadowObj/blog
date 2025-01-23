@@ -1,9 +1,9 @@
-description = "May a Censorship Researcher."
+description = "Every cloud has a silver lining."
 mainSections = ["posts"]
 rssFullContent = true
 
 [Sidebar]
-subtitle = "纵使千山多万壑, \n犹有青鸾踏云间。"
+subtitle = "Every cloud has a silver lining."
 emoji = "👀"
 
 [colorScheme]
@@ -18,7 +18,7 @@ src = "avatar.jpg"
 [Footer]
 since = 2024
 customText = """
-Embrace Liberty.<br />
+Think Different.<br />
 Supports 
 <a href="https://ready.chair6.net/?url=https%3A%2F%2Fobjshadow.pages.dev" target="_blank" rel="noopener">
     <b>IPv6</b>
