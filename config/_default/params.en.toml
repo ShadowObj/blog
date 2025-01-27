@@ -1,9 +1,9 @@
-description = "Every cloud has a silver lining."
+description = "The darkest hour is nearest the dawn."
 mainSections = ["posts"]
 rssFullContent = true
 
 [Sidebar]
-subtitle = "Every cloud has a silver lining."
+subtitle = "The darkest hour is nearest the dawn."
 emoji = "👀"
 
 [colorScheme]
