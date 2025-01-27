@@ -1,3 +1,4 @@
+<div id="popup-container"></div>
 <script>
 'use strict'
 // Text Highlight
@@ -11,6 +12,10 @@ function getWindowScrollTop() {
     return scroll_top;
 }
 
+/**
+ * Scroll specific HTMLElement to the center
+ * @param {HTMLElement} element
+ */
 function scrollToViewCenter(element) {
     var { top, height } = element.getBoundingClientRect();
     let elementCenter = top + height / 2;
@@ -45,19 +50,57 @@ if (highlightElements.length > 0) {
     window.history.replaceState('', '', newUrl);
 }
 
-// ScrollTop
-function smoothScrollTop(){
-    let timer = null;
-    cancelAnimationFrame(timer);
-    var fn = function() {
-        let currentHeight = document.body.scrollTop || document.documentElement.scrollTop;
-        if (currentHeight > 0) {
-            document.body.scrollTop = document.documentElement.scrollTop = currentHeight - 50;
-            timer = requestAnimationFrame(fn);
-        } else {
-            cancelAnimationFrame(timer);
-        }
-    }
-    timer = requestAnimationFrame(fn);
+// popup
+const popupContainer = document.getElementById('popup-container');
+function showPopup(content) {
+    const popup = document.createElement('div');
+    const closeBtn = document.createElement('button');
+    const barContainer = document.createElement('div');
+    const progressBar = document.createElement('div');
+    barContainer.classList.add('bar-container');
+    progressBar.classList.add('progress-bar');
+    barContainer.appendChild(progressBar);
+    closeBtn.innerHTML = '{{ $icon := resources.Get "icons/cross.svg" }}{{ $icon.Content | safeHTML }}';
+    closeBtn.classList.add('closeBtn');
+    closeBtn.type = "button";
+    closeBtn.title = "close";
+    closeBtn.addEventListener("click", () => {
+        popup.classList.add('slide-out');
+        popup.addEventListener('animationend', () => { popup.remove(); });
+    });
+    popup.classList.add('popup');
+    popup.appendChild(barContainer);
+    popup.appendChild(closeBtn);
+    popup.appendChild(content);
+    popupContainer.prepend(popup);
+
+    popup.classList.add('slide-in');
+    popup.addEventListener('animationend', () => {
+        progressBar.style = "transition: all 2.9s linear; width: 100%;";
+        popup.classList.add('bounce');
+    });
+    popup.addEventListener('animationend', () => {
+        setTimeout(() => {
+            popup.classList.add('slide-out');
+            popup.addEventListener('animationend', () => { popup.remove(); });
+        }, 3000); 
+    });
 }
+
+{{ $origin := "objshadow.pages.dev" }}
+function isMirror(origin) {
+    if (window.location.hostname != origin) {
+        const content = document.createElement('div');
+        content.innerHTML = `
+        <h3 class="title">
+            {{ $icon := resources.Get "icons/bell.svg" }}
+            {{ $icon.Content | safeHTML }}正在访问镜像
+        </h3><p>本镜像站由博主架设, 以便中国大陆用户访问. 
+            主站: <a class="link" href="{{ printf "https://%s/" $origin }}">objshadow.pages.dev</a>
+        </p>`
+        showPopup(content)
+    }
+}
+
+addEventListener('DOMContentLoaded', () => { isMirror({{ $origin }}); });
 </script>

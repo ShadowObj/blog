@@ -14,7 +14,7 @@ nonRSS = false
 #readingTime = true
 wordNumber = 8000
 readingNumber = 15
-narrowScreenOpt = true
+mobileOptimize = true
 +++
 
 ### ℹ️前言

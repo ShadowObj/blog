@@ -15,7 +15,7 @@ nonRSS = false
 #readingTime = true
 #wordNumber = 0
 #readingNumber = 0
-narrowScreenOpt = true
+mobileOptimize = true
 +++
 
 Here are a few to collect **Anti-censorship is relevant and neutral** links to technical communication communities, auditing platforms, past research, academic conferences, circumvention tools (homepage), and anti-censorship Internet media for Chinese readers and their introductions hope to provide readers with as many trusted sources of information as possible.

@@ -12,5 +12,5 @@ categories = ["博客","折腾"]
 #readingTime = true
 #wordNumber = 0
 #readingNumber = 0
-narrowScreenOpt = true
+mobileOptimize = true
 +++

@@ -7,7 +7,7 @@ nonRSS = true
 readingTime = false
 wordCount = false
 comments = true
-narrowScreenOpt = true
+mobileOptimize = true
 
 [menu.main]
 weight = -90
@@ -31,3 +31,12 @@ weight = -90
 在自由的光辉中, 永远铭记那些  
 曾为反审查作出贡献的研究者、开发者、宣传者,  
 以及, 曾尽力追求自由的每一个普通人。
+
+
+**本站主站: [https://objshadow.pages.dev](https://objshadow.pages.dev)**
+
+
+*镜像站:*
+
+- [https://objshadow.tun.webredirect.org](https://objshadow.tun.webredirect.org)
+- [https://shadow.tun.webredirect.org](https://shadow.tun.webredirect.org)

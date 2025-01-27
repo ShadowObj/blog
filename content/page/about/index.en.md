@@ -6,7 +6,7 @@ aliases = [ "about-us", "about-blog" ]
 nonRSS = true
 readingTime = false
 comments = true
-narrowScreenOpt = true
+mobileOptimize = true
 
 [menu.main]
 weight = -90

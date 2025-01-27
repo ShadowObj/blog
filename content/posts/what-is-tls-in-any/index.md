@@ -6,7 +6,7 @@ draft = false
 tags = ["反审查","流量分类","TLS","加密代理"]
 categories = ["反审查","TLS"]
 keywords = ["反审查","翻墙","梯子","代理","机场","v2ray","xray","xtls","TLS","防火墙","GFW"]
-narrowScreenOpt = true
+mobileOptimize = true
 +++
 
 📢首先回答上面提出的问题 ~~请看VCR~~：

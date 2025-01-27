@@ -15,7 +15,7 @@ nonRSS = false
 #readingTime = true
 #wordNumber = 0
 #readingNumber = 0
-narrowScreenOpt = true
+mobileOptimize = true
 +++
 
 这里收集一些**反审查相关且中立**的技术交流社群、审计平台、过往研究、学术会议、规避工具(主页)、以及面向中文读者的反审查互联网媒体的链接及其简介，希望能够为读者提供尽可能多的可信信息源。

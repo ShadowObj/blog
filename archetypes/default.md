@@ -14,5 +14,5 @@ nonRSS = false
 #readingTime = true
 #wordNumber = 0
 #readingNumber = 0
-narrowScreenOpt = true
+mobileOptimize = true
 +++

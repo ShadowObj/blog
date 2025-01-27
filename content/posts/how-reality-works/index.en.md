@@ -12,7 +12,7 @@ nonRSS = false
 #readingTime = true
 wordNumber = 6300
 readingNumber = 30
-narrowScreenOpt = true
+mobileOptimize = true
 +++
 
 (All the content below is translated from Chinese by Google Translate ↓)<br>

@@ -11,6 +11,7 @@
   --card-text-color-secondary: #53565A;
   --card-text-color-tertiary: #888B8D;
 }
+
 // Links Double Coloum
 @media (min-width: 1024px) {
     .article-list--compact.links {
@@ -32,6 +33,20 @@
     }
   }
 // ScrollTop
+:root[data-scheme="light"] {
+  --btn-color: #FFF;
+  --btn-hover-color: #4d83af;
+  --btn-icon-color: #4d83af;
+  --btn-icon-hover-color: #FFF;
+}
+
+:root[data-scheme="dark"] {
+  --btn-color: #424242;
+  --btn-hover-color: #4d83af;
+  --btn-icon-color: #FFF;
+  --btn-icon-hover-color: #FFF;
+}
+
 #scrollTop {
   display: none;
   position: fixed;
@@ -44,61 +59,35 @@
   border-radius: 30%;
   width: 55px;
   height: 55px;
-	color: #fff;
 	white-space: pre-line;
-  & > svg {
-    left:50%; top:50%; 
+  background-color: var(--btn-color);
+  box-shadow: var(--shadow-l2);
+  transition: .35s;
+
+  svg {
+	  color: var(--btn-icon-color);
+    left:50%;
+    top:50%; 
     transform:translate(-50%,-50%);
     position:absolute;
+    transition-duration: .35s;
   }
-}
 
-:root[data-scheme="dark"] {
-  #scrollTop {
-    background: #424242;
-    box-shadow: var(--shadow-l2);
-
-    &:hover {
-      background: #4d83af;
-      transition-duration: 0.35s;
-  }
-  }
-}
-
-:root[data-scheme="light"] {
-  #scrollTop {
-    background: #FFF;
-    box-shadow: var(--shadow-l2);
-    & > svg {
-      color: #4d83af
-    }
-    &:hover {
-	    background: #4d83af;
-      transition-duration: 0.35s;
-    }
-    &:hover > svg {
-	    color: #FFF;
-      transition-duration: 0.35s;
-    }
-  }
+  &:hover { background-color: var(--btn-hover-color) }
+  &:hover > svg { color: var(--btn-icon-hover-color); }
 }
 
 @include respond(lg) {
   #scrollTop { display: block; }
 }
+
 // pre code style
-
 pre code {
-  //white-space: pre-wrap;
-  //word-wrap: break-word;
-  font-size: 12px;
-}
-
-@include respond(md) {
-  pre code {
-    font-size:16px;
-    display:block;
-    max-height:50em;
+  font-size: 1.4rem;
+  @include respond(md) {
+    font-size: 1.5rem;
+    display: block;
+    max-height: 50em;
   }
 }
 
@@ -107,5 +96,126 @@ pre code {
   .category-count {
     margin-left: 7px;
     color: var(--body-text-color);
+  }
+}
+
+// popup
+:root {
+  --popup-container-width: 360px;
+  --popup-container-padding: 15px;
+  --popup-bounce-distance: 0px;
+  --popup-border-radius: 10px;
+}
+
+#popup-container {
+  position: fixed;
+  top: var(--popup-container-padding);
+  right: var(--popup-container-padding);
+  width: calc(100% - (var(--popup-container-padding) * 2));
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+  z-index: 8964;
+  transition: height 1s ease-out;
+}
+
+.popup {
+  position: relative;
+  width: 100%;
+  transform: translateX(calc(100% + var(--popup-container-padding)));
+  color: var(--accent-color);
+  overflow: hidden;
+  background-color: var(--card-background);
+  border-radius: var(--popup-border-radius);
+  padding: 15px;
+  box-shadow: var(--shadow-l1);
+  animation-fill-mode: forwards;
+  animation-duration: .35s;
+  &:hover { box-shadow: var(--shadow-l2); }
+  .bar-container {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 5px;
+    width: 100%;
+    background-color: #666073;
+    .progress-bar {
+      position: relative;
+      height: 100%;
+      width: 0;
+      background-color: #9985ff;
+    }
+  }
+  .closeBtn {
+    position: absolute;
+    top: 0; right: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 0 var(--popup-border-radius);
+    border: none;
+    color: var(--accent-color);
+    background-color: var(--card-background-selected);
+    box-shadow: var(--shadow-l1);
+    transition: background-color .2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    outline: none;
+    &:hover {
+      background-color: lightcoral;
+      box-shadow: var(--shadow-l2);
+    }
+  }
+  .title {
+    .icon { @extend .widget-icon }
+    display: flex;
+    align-items: center;
+    margin: 0;
+  }
+}
+
+.popup.slide-in {
+  animation-name: slide-in;
+  animation-timing-function: ease;
+}
+
+.popup.bounce {
+  animation-name: bounce;
+  animation-duration: .2s;
+  animation-timing-function: ease;
+}
+
+.popup.slide-out {
+  animation-name: slide-out;
+  animation-timing-function: ease-in;
+}
+
+@include respond(md) {
+  #popup-container { width: var(--popup-container-width); }
+  .popup { transform: translateX(calc(var(--popup-container-width) + var(--popup-container-width))); }
+  :root { --popup-bounce-distance: -10px; }
+}
+
+// Animations
+@keyframes slide-in {
+  to { transform: translateX(var(--popup-bounce-distance)); }
+}
+
+@keyframes bounce {
+  from {
+    transform: translateX(var(--popup-bounce-distance));
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-out {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(var(--popup-container-width) + var(--popup-container-width)));
+    opacity: 0.2;
   }
 }

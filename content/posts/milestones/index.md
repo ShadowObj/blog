@@ -7,7 +7,7 @@ nonRSS = true
 readingTime = false
 wordCount = false
 comments = true
-narrowScreenOpt = true
+mobileOptimize = true
 +++
 - 2024.07.30 启程!梦开始的地方
 

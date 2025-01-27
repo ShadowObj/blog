@@ -1,7 +1,7 @@
 description = "纵使千山多万壑, 犹有青鸾踏云间。"
 mainSections = ["posts"]
 rssFullContent = true
-narrowScreenOpt = true
+mobileOptimize = true
 
 [Sidebar]
 subtitle = '<text style="line-height: 1.4; ">纵使千山多万壑，<br/>犹有青鸾踏云间。</text>'
