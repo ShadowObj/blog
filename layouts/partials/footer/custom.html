@@ -76,7 +76,7 @@ function showPopup(content) {
 
     popup.classList.add('slide-in');
     popup.addEventListener('animationend', () => {
-        progressBar.style = "transition: all 2.9s linear; width: 100%;";
+        progressBar.style = "transition: transform 2.95s linear; transform: scaleX(1);";
         popup.classList.add('bounce');
     });
     popup.addEventListener('animationend', () => {

@@ -103,7 +103,7 @@ pre code {
 :root {
   --popup-container-width: 360px;
   --popup-container-padding: 15px;
-  --popup-bounce-distance: 0px;
+  --popup-bounce-duration: 0;
   --popup-border-radius: 10px;
 }
 
@@ -116,7 +116,6 @@ pre code {
   flex-direction: column;
   row-gap: 8px;
   z-index: 8964;
-  transition: height 1s ease-out;
 }
 
 .popup {
@@ -137,12 +136,13 @@ pre code {
     bottom: 0; left: 0;
     height: 5px;
     width: 100%;
-    background-color: #666073;
+    background-color: #9985ff80;
     .progress-bar {
       position: relative;
       height: 100%;
-      width: 0;
       background-color: #9985ff;
+      transform-origin: left;
+      transform: scaleX(0);
     }
   }
   .closeBtn {
