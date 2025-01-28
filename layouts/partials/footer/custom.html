@@ -36,8 +36,8 @@ function unhighlight(element, color = "#8CC7B5") {
     element.style.fontWeight = "normal";
 }
 
-const params = new URLSearchParams(window.location.search);
-const highlightElements = document.getElementsByClassName(params.get("highlight"));
+let params = new URLSearchParams(window.location.search);
+let highlightElements = document.getElementsByClassName(params.get("highlight"));
 if (highlightElements.length > 0) {
     for (let element of highlightElements) {
         highlight(element);
@@ -51,12 +51,12 @@ if (highlightElements.length > 0) {
 }
 
 // popup
-const popupContainer = document.getElementById('popup-container');
-function showPopup(content) {
-    const popup = document.createElement('div');
-    const closeBtn = document.createElement('button');
-    const barContainer = document.createElement('div');
-    const progressBar = document.createElement('div');
+function showPopup(content, interval) {
+    let popupContainer = document.getElementById('popup-container');
+    let popup = document.createElement('div');
+    let closeBtn = document.createElement('button');
+    let barContainer = document.createElement('div');
+    let progressBar = document.createElement('div');
     barContainer.classList.add('bar-container');
     progressBar.classList.add('progress-bar');
     barContainer.appendChild(progressBar);
@@ -76,31 +76,37 @@ function showPopup(content) {
 
     popup.classList.add('slide-in');
     popup.addEventListener('animationend', () => {
-        progressBar.style = "transition: transform 2.95s linear; transform: scaleX(1);";
+        progressBar.style = `transition: transform ${interval}ms linear; transform: scaleX(1);`;
         popup.classList.add('bounce');
     });
     popup.addEventListener('animationend', () => {
         setTimeout(() => {
             popup.classList.add('slide-out');
             popup.addEventListener('animationend', () => { popup.remove(); });
-        }, 3000); 
+        }, interval); 
     });
 }
 
-{{ $origin := "objshadow.pages.dev" }}
-function isMirror(origin) {
+function isMirror(origin, interval) {
     if (window.location.hostname != origin) {
-        const content = document.createElement('div');
+        let content = document.createElement('div');
         content.innerHTML = `
         <h3 class="title">
             {{ $icon := resources.Get "icons/bell.svg" }}
             {{ $icon.Content | safeHTML }}正在访问镜像
         </h3><p>本镜像站由博主架设, 以便中国大陆用户访问. 
-            主站: <a class="link" href="{{ printf "https://%s/" $origin }}">objshadow.pages.dev</a>
+            主站: <a class="link" href="https://${ origin }/">objshadow.pages.dev</a>
         </p>`
-        showPopup(content)
+        showPopup(content, interval)
     }
 }
 
-addEventListener('DOMContentLoaded', () => { isMirror({{ $origin }}); });
+addEventListener('DOMContentLoaded', () => {
+    let origin = "objshadow.pages.dev";
+    let isMirrorPopupShowTime = Number(localStorage.getItem("isMirrorPopupShowTime"));
+    if (isMirrorPopupShowTime == 0 || isMirrorPopupShowTime == NaN || isMirrorPopupShowTime - Date.now() > 259200 ) {
+        isMirror(origin, 4000);
+        localStorage.setItem("isMirrorPopupShowTime", Date.now().toString());
+    };
+});
 </script>
