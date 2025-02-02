@@ -93,16 +93,16 @@ function isMirror(origin, interval) {
         content.innerHTML = `
         <h3 class="title">
             {{ $icon := resources.Get "icons/bell.svg" }}
-            {{ $icon.Content | safeHTML }}正在访问镜像
-        </h3><p>本镜像站由博主架设, 以便中国大陆用户访问. 
-            主站: <a class="link" href="https://${ origin }/">objshadow.pages.dev</a>
+            {{ $icon.Content | safeHTML }}{{ T "popup.isMirror.title" }}
+        </h3><p>{{ T "popup.isMirror.content.str0" }}
+        {{ T "popup.isMirror.content.str1" }}<a class="link" href="https://${ origin }/">${ origin }</a>
         </p>`
         showPopup(content, interval)
     }
 }
 
 addEventListener('DOMContentLoaded', () => {
-    let origin = "objshadow.pages.dev";
+    let origin = "objshadow.is-a.dev";
     let isMirrorPopupShowTime = Number(localStorage.getItem("isMirrorPopupShowTime"));
     if (isMirrorPopupShowTime == 0 || isMirrorPopupShowTime == NaN || isMirrorPopupShowTime - Date.now() > 259200 ) {
         isMirror(origin, 4000);
