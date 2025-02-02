@@ -32,3 +32,10 @@ mobileOptimize = true
 
 - 2024.08.21
   - Views count broke through 2000!
+
+- 2025.02.01
+  - Views count broke through 500!
+
+- 2025.02.02
+  - The main domain name of this site has been migrated to objshadow.is-a.dev!<br/>
+    (The original main domain name objshadow.pages.dev is still available.)

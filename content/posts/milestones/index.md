@@ -33,3 +33,10 @@ mobileOptimize = true
 
 - 2024.08.21
   - 本站总访问量突破2000次!
+
+- 2025.02.01
+  - 本站总访问量突破5000次!
+
+- 2025.02.02
+  - 本站主域名迁移到 objshadow.is-a.dev !<br/>
+    (原主域名 objshadow.pages.dev 仍然可用)
