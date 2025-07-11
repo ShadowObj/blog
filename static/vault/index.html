@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title></title>
   <script>
-    window.location.href = 'https://miumvrpi.ap-northeast-1.clawcloudrun.com/' + window.location.pathname;
+    window.location.href = 'https://miumvrpi.ap-northeast-1.clawcloudrun.com' + window.location.pathname.replace(/^\/[^\/]+/, '') || '/'; + window.location.search + window.location.hash;
   </script>
 
   <noscript>
