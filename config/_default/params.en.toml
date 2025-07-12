@@ -20,16 +20,16 @@ since = 2024
 customText = """
 Think Different.<br />
 Supports 
-<a href="https://ready.chair6.net/?url=https%3A%2F%2Fobjshadow.pages.dev" target="_blank" rel="noopener">
+<a href="https://ready.chair6.net/?url=https%3A%2F%2Fobjshadow.is-a.dev" target="_blank" rel="noopener">
     <b>IPv6</b>
 </a>, 
-<a href="https://http3check.net/?host=objshadow.pages.dev" target="_blank" rel="noopener">
+<a href="https://http3check.net/?host=objshadow.is-a.dev" target="_blank" rel="noopener">
     <b>HTTP/3</b>
 </a>, 
 <a href="https://datatracker.ietf.org/doc/html/rfc8446" target="_blank" rel="noopener">
     <b>TLS 1.3</b>
 </a> with 
-<a href="https://hstspreload.org/?domain=objshadow.pages.dev" target="_blank" rel="noopener">
+<a href="https://hstspreload.org/?domain=objshadow.is-a.dev" target="_blank" rel="noopener">
     <b>HSTS Preload</b>
 </a> &amp; 
 <a href="https://www.cloudflare.com/dns/dnssec/how-dnssec-works/" target="_blank" rel="noopener">

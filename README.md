@@ -1,6 +1,6 @@
 # blog
 This is Object Shadow's blog site.  
-This site is deployed on [Cloudflare Pages](https://objshadow.pages.dev) using [Hugo](https://gohugo.io).
+This site is deployed on [Cloudflare Pages](https://objshadow.is-a.dev) using [Hugo](https://gohugo.io).
 
 ## License
 ![](https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png)  

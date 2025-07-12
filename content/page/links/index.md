@@ -7,7 +7,7 @@ comments = true
 [[links]]
 title = "ObjShadow's Blog"
 description = "纵使千山多万壑, \n犹有青鸾踏云间。"
-website = "https://objshadow.pages.dev/"
+website = "https://objshadow.is-a.dev/"
 image = "/img/avatar.jpg"
 
 [[links]]

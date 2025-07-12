@@ -33,7 +33,7 @@ weight = -90
 以及, 曾尽力追求自由的每一个普通人。
 
 
-**本站主站: [https://objshadow.pages.dev](https://objshadow.pages.dev)**
+**本站主站: [https://objshadow.is-a.dev](https://objshadow.is-a.dev)**
 
 
 *镜像站:*
